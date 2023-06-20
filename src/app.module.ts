@@ -5,9 +5,10 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { UtilsModule } from './utils/utils.module';
 import { PreAuthMiddleware } from './utils/pre-auth/pre-auth.middleware';
+import { TestUtilsModule } from './test-utils/test-utils.module';
 
 @Module({
-  imports: [AuthModule, UsersModule, UtilsModule],
+  imports: [AuthModule, UsersModule, UtilsModule, TestUtilsModule],
   controllers: [AppController],
   providers: [AppService],
 })

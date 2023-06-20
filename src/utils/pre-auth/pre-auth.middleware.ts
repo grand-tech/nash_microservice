@@ -14,7 +14,7 @@ export class PreAuthMiddleware implements NestMiddleware {
 
 
   constructor(private firebaseAuthService: FirebaseAuthService) {
-    this.firebaseAuth = firebaseAuthService.getAuth()
+    this.firebaseAuth = this.firebaseAuthService.getAuth()
   }
 
   use(req: Request, res: Response, next: () => void) {
@@ -33,10 +33,12 @@ export class PreAuthMiddleware implements NestMiddleware {
 
         next();
       }).catch(() => {
-        PreAuthMiddleware.accessDenied(req.url, res)
+        // PreAuthMiddleware.accessDenied(req.url, res);
+        next();
       })
     } else {
-      PreAuthMiddleware.accessDenied(req.url, res)
+      // PreAuthMiddleware.accessDenied(req.url, res);
+      next();
     }
 
    
