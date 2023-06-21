@@ -22,7 +22,7 @@ export class PreAuthMiddleware implements NestMiddleware {
     const token = req.headers.authorization;
 
     if (token != null && token != '') {
-      this.firebaseAuth.verifyIdToken(token.replace('Bearer ', ''))
+      this.firebaseAuth.verifyIdToken(token.trim())
       .then(async (decodedToken: DecodedIdToken) => {
         req['user'] = {
           email: decodedToken.email,
