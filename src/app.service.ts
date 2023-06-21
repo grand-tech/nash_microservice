@@ -4,9 +4,7 @@ import { nodeToUser } from './datatypes/user/user';
 
 @Injectable()
 export class AppService {
-  constructor(
-    // private readonly neo4j: Neo4jService,
-  ) {}
+  constructor() {} // private readonly neo4j: Neo4jService,
 
   getHello(): string {
     // this.firebaseTestUtils.auth('test@gmail.com', 'test123');
