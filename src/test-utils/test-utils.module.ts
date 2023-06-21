@@ -5,6 +5,6 @@ import { HttpModule } from '@nestjs/axios';
 @Module({
   imports: [HttpModule],
   providers: [FirebaseTestUtilsService],
-  exports: [FirebaseTestUtilsService]
+  exports: [FirebaseTestUtilsService],
 })
 export class TestUtilsModule {}
