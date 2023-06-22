@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { FirebaseTestUtilsService } from './firebase-test-utils/firebase-test-utils.service';
 import { HttpModule } from '@nestjs/axios';
-import { Neo4jConnection } from 'nest-neo4j/dist';
+import { Neo4jConnection, Neo4jService } from 'nest-neo4j/dist';
 
 @Module({
   imports: [HttpModule],
@@ -21,3 +21,18 @@ export const DB_CONNECTIONS_CONFIGS: Neo4jConnection = {
   port: 7687,
   database: 'neo4j',
 };
+
+/**
+ * Deletes a node.
+ * @param id the id of the node to be deleted.
+ * @param dbService the database service instance.
+ */
+export async function deleteNode(id: Number, dbService: Neo4jService) {
+  const rst = await dbService.write(
+    'MATCH (n) WHERE ID(n)=$id DETACH DELETE n',
+    {
+      id: id,
+    },
+  );
+  return rst;
+}

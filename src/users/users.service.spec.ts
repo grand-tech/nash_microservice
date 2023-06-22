@@ -2,7 +2,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from './users.service';
 import { Neo4jModule, Neo4jService } from 'nest-neo4j/dist';
 import { User } from 'src/datatypes/user/user';
-import { DB_CONNECTIONS_CONFIGS } from '../../test/test-utils/test-utils.module';
+import {
+  DB_CONNECTIONS_CONFIGS,
+  deleteNode,
+} from '../../test/test-utils/test-utils.module';
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -57,6 +60,10 @@ describe('UsersService', () => {
       expect(usr.id).toBeGreaterThan(0);
       expect(usr.labels).toContain('Customer');
       expect(usr.labels).toContain('User');
+
+      if (usr.id) {
+        const rst = await deleteNode(usr.id, dbService);
+      }
     });
   });
 });
