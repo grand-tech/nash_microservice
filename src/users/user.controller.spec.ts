@@ -4,7 +4,7 @@ import { UsersService } from './users.service';
 import { Neo4jModule } from 'nest-neo4j/dist';
 import { DB_CONNECTIONS_CONFIGS } from '../../test/test-utils/test-utils.module';
 
-describe('AppController', () => {
+describe('User Controller', () => {
   let userController: UserController;
 
   beforeEach(async () => {

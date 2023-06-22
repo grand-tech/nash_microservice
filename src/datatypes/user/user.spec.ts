@@ -17,12 +17,17 @@ describe('Node to users', () => {
         publicAddress: '12345678',
         phoneNumber: '+254712345678',
       },
+      identity: {
+        low: 10,
+        high: 0,
+      },
     };
 
     const user = nodeToUser(userNode);
 
     // Assertions.
     expect(user).toBeDefined();
+    expect(user.id).toBe(10);
     expect(user.feduid).toBe('1234567890');
     expect(user.name).toBe('John Doe');
     expect(user.idNumber).toBe('1234567');
