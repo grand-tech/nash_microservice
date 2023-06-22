@@ -10,8 +10,9 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { UtilsModule } from './utils/utils.module';
 import { PreAuthMiddleware } from './utils/pre-auth/pre-auth.middleware';
-import { TestUtilsModule } from './test-utils/test-utils.module';
+import { TestUtilsModule } from '../test/test-utils/test-utils.module';
 import { Neo4jModule } from 'nest-neo4j/dist';
+import { DataTypesModule } from './datatypes/datatypes.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { Neo4jModule } from 'nest-neo4j/dist';
       port: 7687,
       database: 'neo4j',
     }),
+    DataTypesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
