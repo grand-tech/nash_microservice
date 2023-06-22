@@ -3,45 +3,47 @@ import { auth } from 'firebase-admin';
 import { FirebaseAuthService } from '../firebase-auth/firebase-auth.service';
 import { Request, Response } from 'express';
 import { DecodedIdToken } from 'firebase-admin/lib/auth/token-verifier';
+import { UsersService } from '../../../src/users/users.service';
 
 @Injectable()
 export class PreAuthMiddleware implements NestMiddleware {
-
   /**
-    * Instance of the firebase app.
-    */
+   * Instance of the firebase app.
+   */
   private firebaseAuth: auth.Auth;
 
-
-  constructor(private firebaseAuthService: FirebaseAuthService) {
-    this.firebaseAuth = this.firebaseAuthService.getAuth()
+  constructor(
+    private firebaseAuthService: FirebaseAuthService,
+    private readonly userService: UsersService,
+  ) {
+    this.firebaseAuth = this.firebaseAuthService.getAuth();
   }
 
   use(req: Request, res: Response, next: () => void) {
-
-    const token = req.headers.authorization;
+    const token = req.headers.authorization.replace('Bearer ', '');
 
     if (token != null && token != '') {
-      this.firebaseAuth.verifyIdToken(token.trim())
-      .then(async (decodedToken: DecodedIdToken) => {
-        req['user'] = {
-          email: decodedToken.email,
-          feduid: decodedToken.uid
-        }
+      this.firebaseAuth
+        .verifyIdToken(token)
+        .then(async (decodedToken: DecodedIdToken) => {
+          req['firebaseUser'] = {
+            email: decodedToken.email,
+            feduid: decodedToken.uid,
+            phoneNumber: decodedToken.phone_number,
+          };
 
-        // Query user details from database.
+          const dbUser = await this.userService.getUser(decodedToken.uid);
+          req['feduid'] = decodedToken.uid;
+          req['user'] = dbUser;
 
-        next();
-      }).catch(() => {
-        // PreAuthMiddleware.accessDenied(req.url, res);
-        next();
-      })
+          next();
+        })
+        .catch((reason: any) => {
+          next();
+        });
     } else {
-      // PreAuthMiddleware.accessDenied(req.url, res);
       next();
     }
-
-   
   }
 
   private static accessDenied(url: string, res: Response) {

@@ -6,7 +6,7 @@ import { Neo4jConnection, Neo4jService } from 'nest-neo4j/dist';
 @Module({
   imports: [HttpModule],
   providers: [FirebaseTestUtilsService],
-  exports: [FirebaseTestUtilsService],
+  exports: [FirebaseTestUtilsService, HttpModule],
 })
 export class TestUtilsModule {}
 

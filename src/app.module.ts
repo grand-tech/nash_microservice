@@ -19,7 +19,6 @@ import { DataTypesModule } from './datatypes/datatypes.module';
     AuthModule,
     UsersModule,
     UtilsModule,
-    TestUtilsModule,
     Neo4jModule.forRoot({
       scheme: 'neo4j+s',
       host: '5991cc59.databases.neo4j.io',

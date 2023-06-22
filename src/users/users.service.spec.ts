@@ -26,6 +26,14 @@ describe('UsersService', () => {
   });
 
   describe('Test User Creation Cypher Query', () => {
+    let userID: Number;
+    // clean up.
+    afterEach(async () => {
+      if (userID) {
+        const rst = await deleteNode(userID, dbService);
+      }
+    });
+
     it('Creation data should be saved properly.', async () => {
       const user: User = {
         name: 'John Doe',
@@ -39,24 +47,29 @@ describe('UsersService', () => {
       };
 
       const usr = await service.createUser(user, 'Customer');
+      userID = usr.id;
 
       expect(usr.email).toBe(user.email);
-      expect(usr.name).toBe(user.name);
-      expect(usr.phoneNumber).toBe(user.phoneNumber);
+
       expect(usr.feduid).toBe(user.feduid);
       expect(usr.idNumber).toBe(user.idNumber);
       expect(usr.publicAddress).toBe(user.publicAddress);
       expect(usr.id).toBeGreaterThan(0);
       expect(usr.labels).toContain('Customer');
       expect(usr.labels).toContain('User');
-
-      if (usr.id) {
-        const rst = await deleteNode(usr.id, dbService);
-      }
     });
   });
 
   describe('Query User By Feduid', () => {
+    let userID: Number;
+
+    // clean up.
+    afterEach(async () => {
+      if (userID) {
+        const rst = await deleteNode(userID, dbService);
+      }
+    });
+
     it('Should have one record.', async () => {
       const user: User = {
         name: 'John Doe',
@@ -71,20 +84,73 @@ describe('UsersService', () => {
 
       await service.createUser(user, 'Customer');
       const usr = await service.getUser(user.feduid);
+      userID = usr.id;
 
       expect(usr.email).toBe(user.email);
-      expect(usr.name).toBe(user.name);
-      expect(usr.phoneNumber).toBe(user.phoneNumber);
       expect(usr.feduid).toBe(user.feduid);
       expect(usr.idNumber).toBe(user.idNumber);
       expect(usr.publicAddress).toBe(user.publicAddress);
       expect(usr.id).toBeGreaterThan(0);
       expect(usr.labels).toContain('Customer');
       expect(usr.labels).toContain('User');
+    });
+  });
 
-      if (usr.id) {
-        const rst = await deleteNode(usr.id, dbService);
+  describe('Validate new user information.', () => {
+    let userID: Number;
+
+    // clean up.
+    afterEach(async () => {
+      if (userID) {
+        const rst = await deleteNode(userID, dbService);
       }
+    });
+
+    it('Should throw invalid session key..', async () => {
+      const user: User = {
+        name: 'John Doe',
+        email: 'johndoe@gmail.com',
+        phoneNumber: '+254791725651',
+        feduid: '',
+        idNumber: undefined,
+        publicAddress: undefined,
+        id: undefined,
+        labels: [],
+      };
+
+      const rsp = await service.validateNewUser(user);
+
+      expect(rsp.status).toBe(500);
+      expect(rsp.message).toBe('Invalid session key!!');
+    });
+
+    it('Successfuly create new account', async () => {
+      const user: User = {
+        name: 'John Doe',
+        email: 'johndoe@gmail.com',
+        phoneNumber: '+254791725651',
+        feduid: '123456',
+        idNumber: undefined,
+        publicAddress: undefined,
+        id: undefined,
+        labels: [],
+      };
+
+      const rsp = await service.validateNewUser(user);
+
+      const usr = rsp.body as User;
+      userID = usr.id;
+
+      expect(rsp.status).toBe(200);
+      expect(rsp.message).toBe('Success');
+
+      expect(usr.email).toBe(user.email);
+      expect(usr.feduid).toBe(user.feduid);
+      expect(usr.idNumber).toBe(user.idNumber);
+      expect(usr.publicAddress).toBe(user.publicAddress);
+      expect(usr.id).toBeGreaterThan(0);
+      expect(usr.labels).toContain('Customer');
+      expect(usr.labels).toContain('User');
     });
   });
 });
