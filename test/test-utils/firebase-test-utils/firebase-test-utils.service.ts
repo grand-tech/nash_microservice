@@ -20,7 +20,7 @@ export class FirebaseTestUtilsService {
 
     const r: AxiosRequestConfig = {
       params: {
-        key: 'AIzaSyBN2Dp9d41IiS7RP_8pa2akd8SCPBMjJlY',
+        key: 'AIzaSyB-URSLaBLZ_roSBeiz_JUD83v_pc2ze9g',
       },
       headers: {
         'Content-Type': 'application/json',

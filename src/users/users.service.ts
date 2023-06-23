@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Neo4jService } from 'nest-neo4j/dist';
 import { nodeToUser, User } from '../../src/datatypes/user/user';
+import { Response } from 'src/utils/response';
 
 @Injectable()
 export class UsersService {
@@ -32,9 +33,7 @@ export class UsersService {
    */
   async createUser(user: User, label: string) {
     const params: Record<string, any> = {
-      name: user.name,
       email: user.email,
-      phoneNumber: user.phoneNumber,
       feduid: user.feduid,
       labels: label,
     };
@@ -42,8 +41,7 @@ export class UsersService {
     const rst = await this.neo4j.write(
       'CREATE (user:User :' +
         label.trim() +
-        ' {name: $name, email: $email, ' +
-        'phoneNumber: $phoneNumber, feduid: $feduid}) RETURN user',
+        ' { email: $email, feduid: $feduid}) RETURN user',
       params,
     );
 
@@ -55,5 +53,51 @@ export class UsersService {
     }
   }
 
-  async createCustomer(user: User) {}
+  /**
+   * Creates a user with a customer role.
+   * @param user the user information.
+   * @returns a proimise of the created record.
+   */
+  async createCustomer(user: User): Promise<User> {
+    user.feduid = user.feduid.trim();
+    if (user.feduid != '') {
+      const usr = await this.getUser(user.feduid);
+      if (usr.feduid) {
+        return usr;
+      } else {
+        return await this.createUser(user, 'Customer');
+      }
+    } else {
+      return new User();
+    }
+  }
+
+  /**
+   * Validates a new user.
+   * @param user the new users information.
+   * @returns the user record created in the database.
+   */
+  async validateNewUser(user: User): Promise<Response> {
+    const response: Response = {
+      status: 200,
+      message: 'Success',
+      body: undefined,
+    };
+
+    if (typeof user.feduid != 'undefined' && user.feduid != '') {
+      const usr = await this.createCustomer(user);
+
+      if (usr?.id?.valueOf() ?? 0 > 0) {
+        response.body = usr;
+      } else {
+        response.status = 501;
+        response.message = 'Error signing up to system.';
+      }
+    } else {
+      response.status = 500;
+      response.message = 'Invalid session key!!';
+    }
+
+    return response;
+  }
 }

@@ -46,12 +46,12 @@ export function nodeToUser(node: any): User {
 
   const props = node.properties;
 
+  user.id = node.identity.low;
   user.feduid = props.feduid;
   user.name = props.name;
   user.idNumber = props.idNumber;
   user.phoneNumber = props.phoneNumber;
   user.email = props.email;
   user.publicAddress = props.publicAddress;
-
   return user;
 }
