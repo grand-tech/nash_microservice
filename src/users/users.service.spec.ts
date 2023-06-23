@@ -21,6 +21,10 @@ describe('UsersService', () => {
     dbService = module.get<Neo4jService>(Neo4jService);
   });
 
+  afterAll(async () => {
+    dbService.getDriver().close();
+  });
+
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
