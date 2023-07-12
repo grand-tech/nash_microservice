@@ -20,16 +20,20 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@celo/base": "^4.1.0",
+    "@celo/cryptographic-utils": "^4.1.0",
     "@nestjs/axios": "^3.0.0",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.0.0",
     "@nestjs/core": "^10.0.0",
     "@nestjs/platform-express": "^10.0.0",
     "axios": "^1.4.0",
+    "bip39": "^3.1.0",
     "firebase-admin": "^11.9.0",
     "nest-neo4j": "^0.3.1",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "web3": "^4.0.3"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",
