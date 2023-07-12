@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Neo4jService } from 'nest-neo4j/dist';
-import { nodeToUser, User } from '../../src/datatypes/user/user';
+import { nodeToUser, User } from '../datatypes/user/user';
 import { Response } from 'src/utils/response';
 import { CryptoWalletCreatorService } from './crypto-wallet-creator/crypto-wallet-creator.service';
 
@@ -108,8 +108,17 @@ export class UsersService {
   /**
    * Creates a crypto wallet for the user.
    * @param user the new user without a crypto wallet.
+   * @returns returns the response with the account details.
    */
-  async createCryptoAccount(user: User) {
+  async createCryptoAccount(user: User): Promise<Response> {
+    const rsp: Response = {
+      status: 200,
+      message: 'Success',
+      body: {},
+    };
+
+    rsp.body = user;
+
     if (typeof user.privateKey == 'undefined' || user.privateKey.trim() == '') {
       const wallet = await this.walletCreator.createNewAccountWithMnemonic();
 
@@ -118,10 +127,16 @@ export class UsersService {
       user.mnemonic = wallet.mnemonic;
       user.publicKey = wallet.publicKey;
 
-      return await this.saveCryptoWalletDetails(user);
-    } else {
-      return user;
+      const u = await this.saveCryptoWalletDetails(user);
+      if (u.feduid != user.feduid) {
+        rsp.message = 'Error creating crypto wallet.';
+        rsp.status = 401;
+      } else {
+        rsp.body = u;
+      }
     }
+
+    return rsp;
   }
 
   /**

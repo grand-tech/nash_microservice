@@ -267,7 +267,12 @@ describe('UsersService', () => {
         mnemonic: '',
       };
 
-      const savedUser = await service.createCryptoAccount(user);
+      const rsp = await service.createCryptoAccount(user);
+
+      expect(rsp.status).toEqual(200);
+      expect(rsp.message).toEqual('Success');
+
+      const savedUser = rsp.body;
 
       expect(savedUser.privateKey).not.toEqual('');
       expect(savedUser.publicAddress).not.toEqual('');
@@ -294,7 +299,12 @@ describe('UsersService', () => {
         mnemonic: 'mnemonic',
       };
 
-      const savedUser = await service.createCryptoAccount(user);
+      const rsp = await service.createCryptoAccount(user);
+
+      expect(rsp.status).toEqual(200);
+      expect(rsp.message).toEqual('Success');
+
+      const savedUser = rsp.body;
 
       expect(savedUser.privateKey).toBe('privateKey');
       expect(savedUser.publicAddress).toBe('publicAddress');

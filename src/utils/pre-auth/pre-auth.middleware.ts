@@ -3,7 +3,7 @@ import { auth } from 'firebase-admin';
 import { FirebaseAuthService } from '../firebase-auth/firebase-auth.service';
 import { Request, Response } from 'express';
 import { DecodedIdToken } from 'firebase-admin/lib/auth/token-verifier';
-import { UsersService } from '../../../src/users/users.service';
+import { UsersService } from '../../users/users.service';
 
 @Injectable()
 export class PreAuthMiddleware implements NestMiddleware {
@@ -20,7 +20,7 @@ export class PreAuthMiddleware implements NestMiddleware {
   }
 
   use(req: Request, res: Response, next: () => void) {
-    const token = req.headers.authorization.replace('Bearer ', '');
+    const token = (req.headers.authorization ?? '').replace('Bearer ', '');
 
     if (token != null && token != '') {
       this.firebaseAuth

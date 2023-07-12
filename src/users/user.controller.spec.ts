@@ -1,45 +1,69 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { UserController } from './user.controller';
+import * as request from 'supertest';
+import { Test } from '@nestjs/testing';
+import { INestApplication } from '@nestjs/common';
+import { AppModule } from '../app.module';
+import { UsersModule } from './users.module';
 import { UsersService } from './users.service';
-import { Neo4jModule, Neo4jService } from 'nest-neo4j/dist';
-import {
-  DB_CONNECTIONS_CONFIGS,
-  TestUtilsModule,
-} from '../../test/test-utils/test-utils.module';
-import { FirebaseTestUtilsService } from '../../test/test-utils/firebase-test-utils/firebase-test-utils.service';
-import { CryptoWalletCreatorService } from './crypto-wallet-creator/crypto-wallet-creator.service';
 
-describe('User Controller', () => {
-  let userController: UserController;
-  let firebaseTestUtils: FirebaseTestUtilsService;
-  let dbService: Neo4jService;
+describe('User Controller RBAC Route Check.', () => {
+  let app: INestApplication;
 
-  beforeEach(async () => {
-    const app: TestingModule = await Test.createTestingModule({
-      controllers: [UserController],
-      providers: [
-        UsersService,
-        FirebaseTestUtilsService,
-        CryptoWalletCreatorService,
-      ],
-      imports: [Neo4jModule.forRoot(DB_CONNECTIONS_CONFIGS), TestUtilsModule],
+  beforeAll(async () => {
+    const moduleRef = await Test.createTestingModule({
+      imports: [AppModule],
     }).compile();
 
-    userController = app.get<UserController>(UserController);
-    dbService = app.get<Neo4jService>(Neo4jService);
-
-    firebaseTestUtils = app.get<FirebaseTestUtilsService>(
-      FirebaseTestUtilsService,
-    );
-
-    const skey = await firebaseTestUtils.auth('test@gmail.com', 'test123');
+    app = moduleRef.createNestApplication();
+    await app.init();
   });
 
   afterAll(async () => {
-    dbService.getDriver().close();
+    await app.close();
   });
 
-  it('should be defined', () => {
-    expect(userController).toBeDefined();
+  it(`Check if create new crypto wallet exists.`, () => {
+    const forbiddenResponse = {
+      message: 'Forbidden resource',
+      error: 'Forbidden',
+      statusCode: 403,
+    };
+    return request(app.getHttpServer())
+      .get('/createnewcryptowallet')
+      .expect(403)
+      .expect(forbiddenResponse);
+  });
+});
+
+describe('User Controller Mock Method Calls.', () => {
+  let app: INestApplication;
+  let userService = {
+    createCryptoAccount: () => {
+      return {
+        status: 200,
+      };
+    },
+  };
+  
+  beforeAll(async () => {
+    const moduleRef = await Test.createTestingModule({
+      imports: [UsersModule],
+    })
+      .overrideProvider(UsersService)
+      .useValue(userService)
+      .compile();
+
+    app = moduleRef.createNestApplication();
+    await app.init();
+  });
+
+  afterAll(async () => {
+    await app.close();
+  });
+
+  it(`Check if create new crypto wallet exists.`, () => {
+    return request(app.getHttpServer())
+      .get('/createnewcryptowallet')
+      .expect(200)
+      .expect(userService.createCryptoAccount());
   });
 });
