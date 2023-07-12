@@ -19,6 +19,9 @@ export class UserController {
       publicAddress: '',
       id: undefined,
       labels: [],
+      privateKey: '',
+      publicKey: '',
+      mnemonic: ''
     };
 
     return await this.userService.validateNewUser(user);

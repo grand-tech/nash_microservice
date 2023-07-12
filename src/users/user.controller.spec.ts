@@ -7,6 +7,7 @@ import {
   TestUtilsModule,
 } from '../../test/test-utils/test-utils.module';
 import { FirebaseTestUtilsService } from '../../test/test-utils/firebase-test-utils/firebase-test-utils.service';
+import { CryptoWalletCreatorService } from './crypto-wallet-creator/crypto-wallet-creator.service';
 
 describe('User Controller', () => {
   let userController: UserController;
@@ -16,7 +17,11 @@ describe('User Controller', () => {
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
       controllers: [UserController],
-      providers: [UsersService, FirebaseTestUtilsService],
+      providers: [
+        UsersService,
+        FirebaseTestUtilsService,
+        CryptoWalletCreatorService,
+      ],
       imports: [Neo4jModule.forRoot(DB_CONNECTIONS_CONFIGS), TestUtilsModule],
     }).compile();
 

@@ -2,10 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { Neo4jService } from 'nest-neo4j/dist';
 import { nodeToUser, User } from '../../src/datatypes/user/user';
 import { Response } from 'src/utils/response';
+import { CryptoWalletCreatorService } from './crypto-wallet-creator/crypto-wallet-creator.service';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly neo4j: Neo4jService) {}
+  constructor(
+    private readonly neo4j: Neo4jService,
+    private readonly walletCreator: CryptoWalletCreatorService,
+  ) {}
 
   /**
    * Queries for user information given their feduidd.
@@ -84,7 +88,10 @@ export class UsersService {
       body: undefined,
     };
 
-    if (typeof user.feduid != 'undefined' && user.feduid != '') {
+    if (typeof user.feduid == 'undefined' || user.feduid == '') {
+      response.status = 500;
+      response.message = 'Invalid session key!!';
+    } else {
       const usr = await this.createCustomer(user);
 
       if (usr?.id?.valueOf() ?? 0 > 0) {
@@ -93,11 +100,57 @@ export class UsersService {
         response.status = 501;
         response.message = 'Error signing up to system.';
       }
-    } else {
-      response.status = 500;
-      response.message = 'Invalid session key!!';
     }
 
     return response;
+  }
+
+  /**
+   * Creates a crypto wallet for the user.
+   * @param user the new user without a crypto wallet.
+   */
+  async createCryptoAccount(user: User) {
+    if (typeof user.privateKey == 'undefined' || user.privateKey.trim() == '') {
+      const wallet = await this.walletCreator.createNewAccountWithMnemonic();
+
+      user.publicAddress = wallet.address;
+      user.privateKey = wallet.privateKey;
+      user.mnemonic = wallet.mnemonic;
+      user.publicKey = wallet.publicKey;
+
+      return await this.saveCryptoWalletDetails(user);
+    } else {
+      return user;
+    }
+  }
+
+  /**
+   * Save the crypto wallet details.
+   * @param user the user with the unsaved crypto wallet.
+   * @returns the saved user crypto wallet.
+   */
+  async saveCryptoWalletDetails(user: User) {
+    const params: Record<string, string> = {
+      feduid: user.feduid,
+      privateKey: user.privateKey,
+      publicAddress: user.publicAddress,
+      mnemonic: user.mnemonic,
+      publicKey: user.publicKey,
+    };
+
+    const rst = await this.neo4j.write(
+      'MATCH (user:User { feduid: $feduid}) ' +
+        ' SET user.privateKey = $privateKey, user.mnemonic = $mnemonic, ' +
+        ' user.publicAddress = $publicAddress, user.publicKey = $publicKey' +
+        ' RETURN user',
+      params,
+    );
+
+    if (rst.records.length > 0) {
+      const usr = rst.records[0].get('user');
+      return nodeToUser(usr);
+    } else {
+      return new User();
+    }
   }
 }
