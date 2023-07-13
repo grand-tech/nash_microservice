@@ -79,7 +79,7 @@ export class CryptoWalletCreatorService {
       ? []
       : invalidMnemonicWords(normalizedPhrase);
 
-    return phraseIsValid && !invalidWords;
+    return phraseIsValid && invalidWords.length == 0;
   }
 
   /**
@@ -87,19 +87,26 @@ export class CryptoWalletCreatorService {
    * @param mnemonic the mnemonic string.
    */
   async getAccountFromMnemonic(mnemonic: string) {
-    const keys = await generateKeys(
-      mnemonic,
-      undefined,
-      undefined,
-      undefined,
-      bip39,
-    );
     const accountInfo: AccountInformation = {
-      mnemonic: mnemonic,
-      privateKey: keys.privateKey,
-      publicKey: keys.publicKey,
-      address: keys.address,
+      mnemonic: undefined,
+      privateKey: undefined,
+      publicKey: undefined,
+      address: undefined,
     };
+    if (this.isMnemonicValid(mnemonic)) {
+      const keys = await generateKeys(
+        mnemonic,
+        undefined,
+        undefined,
+        undefined,
+        bip39,
+      );
+
+      accountInfo.mnemonic = mnemonic;
+      accountInfo.privateKey = keys.privateKey;
+      accountInfo.publicKey = keys.publicKey;
+      accountInfo.address = keys.address;
+    }
     return accountInfo;
   }
 

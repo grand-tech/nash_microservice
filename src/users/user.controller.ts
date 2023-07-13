@@ -34,4 +34,21 @@ export class UserController {
     const user: User = request['user'];
     return await this.userService.createCryptoAccount(user);
   }
+
+  @Post('/add-privatekey-to-account')
+  @Roles(Role.User)
+  async addPrivateKeyToAccount(@Req() request: Request): Promise<Response> {
+    const user: User = request['user'];
+    const body = request.body;
+    return await this.userService.addPrivateKeyToAccount(user, body.privateKey);
+  }
+
+  @Post('/add-mnemonic-to-account')
+  @Roles(Role.User)
+  async addMnemonicToAccount(@Req() request: Request): Promise<Response> {
+    const user: User = request['user'];
+    const body = request.body;
+
+    return await this.userService.addMnemonicToAccount(user, body.mnemonic);
+  }
 }

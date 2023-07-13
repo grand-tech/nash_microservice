@@ -247,7 +247,7 @@ export class UsersService {
     };
 
     if ((acc?.address ?? '') === '') {
-      rsp.message = 'Invalid private key!!';
+      rsp.message = 'Invalid private key or mnemonic(seed phrase)!!';
       rsp.status = 502;
     } else {
       const usr = await this.getUserByPublicAddress(acc.address);
