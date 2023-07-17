@@ -219,7 +219,7 @@ describe('UsersService', () => {
   });
 
   describe('Test User Create Crypto Wallet Method.', () => {
-    let userID: Number;
+    let userID: number = -1;
     let feduid = Math.random().toString();
     // after each
     beforeEach(async () => {
@@ -240,7 +240,7 @@ describe('UsersService', () => {
 
     // clean up.
     afterEach(async () => {
-      if (userID) {
+      if (userID > -1) {
         const rst = await deleteNode(userID, dbService);
       }
     });
@@ -316,8 +316,7 @@ describe('UsersService', () => {
 
     beforeEach(async () => {
       const rst = await dbService.write(
-        'CREATE (user:User ' +
-          ' { publicAddress: $address, feduid: $feduid}) RETURN user',
+        'CREATE (user:User { publicAddress: $address, feduid: $feduid}) RETURN user',
         {
           feduid: address,
           address: address,
