@@ -315,4 +315,41 @@ describe('UsersService', () => {
       expect(savedUser.email).toEqual('');
     });
   });
+
+  describe('getUserByPublicAddress', () => {
+    let userID: Number;
+
+    const address = Math.random().toString();
+
+    beforeEach(async () => {
+      const rst = await dbService.write(
+        'CREATE (user:User ' +
+          ' { publicAddress: $address, feduid: $feduid}) RETURN user',
+        {
+          feduid: address,
+          address: address,
+        },
+      );
+
+      const usr = rst.records[0].get('user');
+      const user = nodeToUser(usr);
+
+      userID = user.id;
+    });
+
+    // clean up.
+    afterEach(async () => {
+      if (userID) {
+        const rst = await deleteNode(userID, dbService);
+      }
+    });
+
+    it('Should have one record.', async () => {
+      const usr = await service.getUserByPublicAddress(address);
+      userID = usr.id;
+
+      expect(usr.feduid).toBe(address);
+      expect(usr.publicAddress).toBe(address);
+    });
+  });
 });

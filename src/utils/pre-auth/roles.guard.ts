@@ -29,7 +29,7 @@ export class RolesGuard implements CanActivate {
 
     // do the rbac.
     return requiredRoles.some((role) => {
-      (u?.labels ?? []).includes(role.toString());
+      return (u?.labels ?? []).includes(role.toString());
     });
   }
 }
