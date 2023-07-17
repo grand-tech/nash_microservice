@@ -6,7 +6,7 @@ import {
   AccountInformation,
   CryptoWalletCreatorService,
   getAccountInformation,
-} from './crypto-wallet-creator/crypto-wallet-creator.service';
+} from './crypto-wallet-creator.service';
 
 @Injectable()
 export class UsersService {
@@ -279,5 +279,98 @@ export class UsersService {
     user.publicAddress = acc.address;
     user.publicKey = acc.publicKey ?? '';
     user.mnemonic = acc.mnemonic ?? '';
+  }
+
+  /**
+   * Queries for a user given the phone number.
+   * @param phoneNumber the phone number to be queried.
+   * @returns the queried phone number.
+   */
+  async queryClientWithPhoneNumber(phoneNumber: string) {
+    const rst = await this.neo4j.read(
+      'MATCH (user:User) WHERE user.phoneNumber = $phoneNumber RETURN user',
+      { phoneNumber: phoneNumber },
+    );
+
+    if (rst.records.length > 0) {
+      const usr = rst.records[0].get('user');
+      return nodeToUser(usr);
+    } else {
+      return new User();
+    }
+  }
+
+  /**
+   * Save the user`s profile.
+   * @param feduid the user`s federate user id.
+   * @param user the user who intends to update their phone number.
+   * @param fullName the user name.
+   * @returns the saved user.
+   */
+  async updateProfile(feduid: string, phoneNumber: string, fullName: string) {
+    const params: Record<string, string> = {
+      feduid: feduid,
+      phoneNumber: phoneNumber,
+      fullName: fullName,
+    };
+
+    const rst = await this.neo4j.write(
+      'MATCH (user:User { feduid: $feduid}) ' +
+        ' SET user.phoneNumber = $phoneNumber, user.name = $fullName' +
+        ' RETURN user',
+      params,
+    );
+
+    if (rst.records.length > 0) {
+      const usr = rst.records[0].get('user');
+      return nodeToUser(usr);
+    } else {
+      return new User();
+    }
+  }
+
+  /**
+   * Validates the user`s phone number and saves the user`s profile.
+   * @param user the user`s account details.
+   * @param phoneNumber the users phone number.
+   * @param fullName the users full names.
+   */
+  async saveUserProfile(
+    user: User,
+    phoneNumber: string,
+    fullName: string,
+  ): Promise<Response> {
+    const rsp: Response = {
+      status: 200,
+      message: 'Success',
+      body: undefined,
+    };
+    const existingUsr = await this.queryClientWithPhoneNumber(phoneNumber);
+
+    if (
+      ((existingUsr?.feduid ?? '') != '' &&
+        (existingUsr?.feduid ?? '') == user.feduid) ||
+      (existingUsr?.feduid ?? '') == ''
+    ) {
+      // save profile information.
+      const savedUser = await this.updateProfile(
+        user.feduid,
+        phoneNumber,
+        fullName,
+      );
+
+      if (savedUser.phoneNumber == phoneNumber) {
+        rsp.body = savedUser;
+      } else {
+        rsp.status = 501;
+        rsp.message = 'Error updating user`s phone number!!';
+      }
+    } else {
+      // phone number already in use by other user.
+      rsp.status = 500;
+      rsp.message = 'Phone number already in use by another account.';
+    }
+
+    return rsp;
   }
 }

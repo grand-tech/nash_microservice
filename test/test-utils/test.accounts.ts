@@ -1,4 +1,4 @@
-import { AccountInformation } from '../../src/users/crypto-wallet-creator/crypto-wallet-creator.service';
+import { AccountInformation } from '../../src/users/crypto-wallet-creator.service';
 
 export const TEST_ACC_1: AccountInformation = {
   privateKey:
