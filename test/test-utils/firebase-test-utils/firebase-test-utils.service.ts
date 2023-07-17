@@ -44,7 +44,6 @@ export class FirebaseTestUtilsService {
       user.skey = rsp.data.idToken;
     }
 
-    console.log('====>', rsp.data);
     return user;
   }
 }
