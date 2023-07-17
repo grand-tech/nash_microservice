@@ -58,17 +58,13 @@ export class UsersService {
    * @param feduid the user`s feduid.
    * @return the queried user.
    */
-  async createUser(user: User, label: string) {
+  async createUserQuery(user: User) {
     const params: Record<string, any> = {
-      email: user.email,
       feduid: user.feduid,
-      labels: label,
     };
 
     const rst = await this.neo4j.write(
-      'CREATE (user:User :' +
-        label.trim() +
-        ' { email: $email, feduid: $feduid}) RETURN user',
+      'CREATE (user:User { feduid: $feduid}) RETURN user',
       params,
     );
 
@@ -85,14 +81,14 @@ export class UsersService {
    * @param user the user information.
    * @returns a proimise of the created record.
    */
-  async createCustomer(user: User): Promise<User> {
+  async createUser(user: User): Promise<User> {
     user.feduid = user.feduid.trim();
     if (user.feduid != '') {
       const usr = await this.getUser(user.feduid);
       if (usr.feduid) {
         return usr;
       } else {
-        return await this.createUser(user, 'Customer');
+        return await this.createUserQuery(user);
       }
     } else {
       return new User();
@@ -115,7 +111,7 @@ export class UsersService {
       response.status = 500;
       response.message = 'Invalid session key!!';
     } else {
-      const usr = await this.createCustomer(user);
+      const usr = await this.createUser(user);
 
       if (usr?.id?.valueOf() ?? 0 > 0) {
         response.body = usr;
