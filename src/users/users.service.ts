@@ -219,7 +219,7 @@ export class UsersService {
    * @param mnemonic the users private mnemonic.
    */
   async addMnemonicToAccount(user: User, mnemonic: string): Promise<Response> {
-    if ((user.privateKey ?? '').trim() != '') {
+    if ((user?.privateKey ?? '').trim() != '') {
       return {
         message: 'Account alreay has a private key!!',
         status: 501,

@@ -17,6 +17,8 @@ export class FirebaseTestUtilsService {
       skey: '',
     };
 
+    console.log('===============>');
+
     const body = JSON.stringify({
       email: email,
       password: pass,
@@ -24,16 +26,16 @@ export class FirebaseTestUtilsService {
     });
 
     const r: AxiosRequestConfig = {
-      params: {
-        key: 'AIzaSyB-URSLaBLZ_roSBeiz_JUD83v_pc2ze9g',
-      },
+      // params: {
+      //   key: 'AIzaSyCPvjk38KbXZub-82Zjp3K9XCTDFFmQrkQ',
+      // },
       headers: {
         'Content-Type': 'application/json',
       },
     };
 
     const url =
-      'https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword';
+      'https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyCPvjk38KbXZub-82Zjp3K9XCTDFFmQrkQ';
 
     const rsp = await this.httpService.axiosRef.post(url, body, r);
 
@@ -42,6 +44,7 @@ export class FirebaseTestUtilsService {
       user.skey = rsp.data.idToken;
     }
 
+    console.log('====>', rsp.data);
     return user;
   }
 }

@@ -68,7 +68,7 @@ describe('UsersService', () => {
       const rsp = await service.validateExistingCryptoAccount(feduid, account);
 
       expect(rsp.status).toBe(502);
-      expect(rsp.message).toBe('Invalid private key!!');
+      expect(rsp.message).toBe('Invalid private key or mnemonic(seed phrase)!!');
     });
 
     it('Save Valid Account Details.', async () => {
