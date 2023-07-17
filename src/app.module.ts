@@ -4,8 +4,6 @@ import {
   NestModule,
   RequestMethod,
 } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { UtilsModule } from './utils/utils.module';
 import { PreAuthMiddleware } from './utils/pre-auth/pre-auth.middleware';
@@ -26,8 +24,6 @@ import { DataTypesModule } from './datatypes/datatypes.module';
     }),
     DataTypesModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

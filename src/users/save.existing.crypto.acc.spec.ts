@@ -31,7 +31,7 @@ describe('UsersService', () => {
   });
 
   describe('Test Validate Existing Crypto Account.', () => {
-    let userID: Number;
+    let userID: number = -1;
     let feduid = Math.random().toString();
 
     beforeEach(async () => {
@@ -52,7 +52,7 @@ describe('UsersService', () => {
 
     // clean up.
     afterEach(async () => {
-      if (userID) {
+      if (userID > -1) {
         const rst = await deleteNode(userID, dbService);
       }
     });

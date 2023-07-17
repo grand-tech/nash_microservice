@@ -1,8 +1,37 @@
 import * as request from 'supertest';
 import { Test } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
+import { AppModule } from '../app.module';
 import { UsersModule } from './users.module';
 import { UsersService } from './users.service';
+
+describe('User Controller RBAC Route Check.', () => {
+  let app: INestApplication;
+
+  beforeAll(async () => {
+    const moduleRef = await Test.createTestingModule({
+      imports: [AppModule],
+      providers: [],
+    }).compile();
+
+    app = moduleRef.createNestApplication();
+
+    await app.init();
+  });
+
+  afterAll(async () => {
+    await app.close();
+  });
+
+  it(`Add mnemonic to account.`, () => {
+    return request(app.getHttpServer())
+      .post('/add-mnemonic-to-account')
+      .set('Authorization', `Bearer `)
+      .set('Content-Type', 'application/json')
+      .send({ mnemonic: '123 123 123' })
+      .expect(403);
+  });
+});
 
 describe('User Controller Mock Method Calls.', () => {
   let app: INestApplication;

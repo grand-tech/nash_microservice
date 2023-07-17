@@ -54,16 +54,13 @@ describe('UsersService', () => {
         mnemonic: '',
       };
 
-      const usr = await service.createUser(user, 'Customer');
+      const usr = await service.createUserQuery(user);
       userID = usr.id;
-
-      expect(usr.email).toBe(user.email);
 
       expect(usr.feduid).toBe(user.feduid);
       expect(usr.idNumber).toBe(user.idNumber);
       expect(usr.publicAddress).toBe(user.publicAddress);
       expect(usr.id).toBeGreaterThan(0);
-      expect(usr.labels).toContain('Customer');
       expect(usr.labels).toContain('User');
     });
   });
@@ -93,16 +90,14 @@ describe('UsersService', () => {
         mnemonic: '',
       };
 
-      await service.createUser(user, 'Customer');
+      await service.createUserQuery(user);
       const usr = await service.getUser(user.feduid);
       userID = usr.id;
 
-      expect(usr.email).toBe(user.email);
       expect(usr.feduid).toBe(user.feduid);
       expect(usr.idNumber).toBe(user.idNumber);
       expect(usr.publicAddress).toBe(user.publicAddress);
       expect(usr.id).toBeGreaterThan(-1);
-      expect(usr.labels).toContain('Customer');
       expect(usr.labels).toContain('User');
     });
   });
@@ -161,12 +156,10 @@ describe('UsersService', () => {
       expect(rsp.status).toBe(200);
       expect(rsp.message).toBe('Success');
 
-      expect(usr.email).toBe(user.email);
       expect(usr.feduid).toBe(user.feduid);
       expect(usr.idNumber).toBe(user.idNumber);
       expect(usr.publicAddress).toBe(user.publicAddress);
       expect(usr.id).toBeGreaterThan(0);
-      expect(usr.labels).toContain('Customer');
       expect(usr.labels).toContain('User');
     });
   });
