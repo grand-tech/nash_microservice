@@ -29,7 +29,7 @@ describe('User Controller RBAC Route Check.', () => {
       .set('Authorization', `Bearer `)
       .set('Content-Type', 'application/json')
       .send({ mnemonic: '123 123 123' })
-      .expect(200);
+      .expect(403);
   });
 });
 
