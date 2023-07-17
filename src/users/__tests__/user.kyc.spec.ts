@@ -6,7 +6,7 @@ import {
   DB_CONNECTIONS_CONFIGS,
   deleteNode,
 } from '../../../test/test-utils/test-utils.module';
-import { CryptoWalletCreatorService } from '../crypto-wallet-creator/crypto-wallet-creator.service';
+import { CryptoWalletCreatorService } from '../crypto-wallet-creator.service';
 
 describe('UsersService', () => {
   let service: UsersService;

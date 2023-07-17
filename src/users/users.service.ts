@@ -6,7 +6,7 @@ import {
   AccountInformation,
   CryptoWalletCreatorService,
   getAccountInformation,
-} from './crypto-wallet-creator/crypto-wallet-creator.service';
+} from './crypto-wallet-creator.service';
 
 @Injectable()
 export class UsersService {

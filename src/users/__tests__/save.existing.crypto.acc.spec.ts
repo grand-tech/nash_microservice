@@ -9,7 +9,7 @@ import {
 import {
   AccountInformation,
   CryptoWalletCreatorService,
-} from '../crypto-wallet-creator/crypto-wallet-creator.service';
+} from '../crypto-wallet-creator.service';
 import { TEST_ACC_1 } from '../../../test/test-utils/test.accounts';
 
 describe('UsersService', () => {
