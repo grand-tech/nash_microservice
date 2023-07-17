@@ -6,6 +6,8 @@ name: Node.js CI
 on:
   pull_request:
     branches: [ "main", "dev", "staging" ]
+  push: 
+    branches: [ "main", "dev", "staging" ]
 
 jobs:
   build:
@@ -26,4 +28,4 @@ jobs:
         cache: 'npm'
     - run: npm ci
     - run: npm run build --if-present
-    - run: npm test
+    - run: npm run test:cov

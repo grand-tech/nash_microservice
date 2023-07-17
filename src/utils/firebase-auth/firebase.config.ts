@@ -1,12 +1,20 @@
-import { ServiceAccount } from "firebase-admin";
-
+import { ServiceAccount } from 'firebase-admin';
 
 /**
  * Firebase configurations.
  */
-export const firebaseConfig: ServiceAccount = {
-  projectId: "kukuza-5ee43",
-  privateKey: "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDIlSAMvMuvVT4M\nEMJMomc7S02eS4b7P2vPi1J5UMYqiSLz3wpiwhUoVs4TaQQbsj7fJ7t8F6Pw1oKj\nwj0aM1jxelUAPD9ckf5XW22YCBqVP/lhCkHSN0ZuOk0EVbu8IjdKYdHQvZWMNbrQ\nck2DbHnuxfTbFTeraY2dl+Gi8FYFRUe+OE7MkzBMPIPsnsM0t2NPo0WReWz/Ihu3\neQes4HZH6Bo2/FZjpSYxc5PQG2h/84Vw/ikKpMNYChl5Y8Ef2RUz0T9cMXqSkT/7\nJci4u8UqNBlrELeVnAKj17DnAY0AMl/5ypTr/LkyajhtcOb1Lhc+ik7qBQgeTJV+\nTiogWRaBAgMBAAECggEAA168RY/ZJ8zEZscM3KxQhl+fhZA6aCJDiwJCsLMdK+hz\nR3Gp5skZyJG5Pfx3td6HP3Ozqu6/MbslXlGo69I3s64Ot/6ECD0FfS1dL5QRgAx0\nrGZFt/MhzOqI9Z7MBrD0eqOtNwG7/bmGtjlqv/wWX3uH+IkEucMABeWY7unm0sIK\nDzDGcB5zQkADptSvA/POf1KSV2amJjgRLmx96SomuLKUMA6o5exKca/RtYZv5URb\nJdV5P1nvsZFs4Wb/NY4Hr/YRTKQTlnUrwOuUnEL6L08gRBDMfZK73uWgsXreVwJJ\nmW3y1/5wYGH+tjMbv/b2E8XkSkcVcItyuneOd5IlmQKBgQDnj4AeU78mtF55bkiJ\nl7UzQDtzu90cUOjW94oOIR7SwiUw97opKhbcLO5v4xuM6KTQ5UzrF3uglZgJjiqV\ndks7QBlS07Wd9OPr6lPuPGtR5yJylCLbrf59H59amGQEzQB9Sc0OhzSmWHDpG1mv\nhXZhzZvHQJSdYfurS/hN/XV+dwKBgQDdwKJRbttqTWFlbx76sUbZae6xFc57q7GH\ncD0eJyZ2r8XOIU1sleoq3m72JeZ4Tt3FwfN7wYuf52+U0L9otJSkBAzGV8422pGW\nOjQF0UuyVHw7aMpJmzpnBEJaIY/h+HX+V6UdRNAMGVUE4LpVq1Qj/Q3tdEQ0rVVf\nPM8OMiR4xwKBgGsRqDzdnlIoLlLZkoLEeg1jktnVsMxqAO988AHOgLEVAhtdQF/O\nTVmrEOj9SvzhiWvpyqIdbpV29iDc8oW/d9PCtLLen2iVFlo8NGjA2SK6y+vM4T1Q\ne46hc45xTjYGEEbePAmOrOKJnFO8yMBm5rEcX/5GtzD6YGL5MqvlGVHLAoGBALMt\nJXqbEltQbvQg121EtLSTrbQUpKS01FtVS20DwUaBPFkT+5VThMRiulHVyeVIBFX4\nIx7KAmGQBU6/ZQnbb4cfZpsU86DK9nvmR4az2HAdZ8wxHdJfxM7cWCivmazCr8R1\nWQrPQTOlfFbWpnj2WKRDom9NVJcjvymW3s7foSydAoGAPkI74qvgmfaXwO9Sha1w\npjlpRbgOBSCB4uSfLX0vxLYX6bSB6c+Gn76rlSygAUz3suXajXFJyKAMq6f6jJoS\nFFyorCaObttdPdXyxf6OApfnm9YS4cz7ZcZ4wy+x93j+QfcPkQaXGOCsSVsywRSo\nOZs09nrdntYzVOpctjaKuS8=\n-----END PRIVATE KEY-----\n",
-  clientEmail: "firebase-adminsdk-8ww8i@kukuza-5ee43.iam.gserviceaccount.com",
-}
-;
+export const firebaseConfig = {
+  type: 'service_account',
+  projectId: 'nash-dev',
+  privateKeyId: 'e800ba62ed56d71031e5ea620d2b20fe5c7fdd43',
+  privateKey:
+    '-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCQfOFW4C7xx0h6\nUYft+DdVy+ZhU4Q8/C9mypC6D/bJdiZDNOzfHkOqnrB/JNGsQjuH+UweJkTN0Uzo\nJ/uLaK8gAdp1Qfaa1APZJvTmh+XG3ZC/IwvoRdDiq7mDJJFvWIccjQFK0oTt51j9\nS6w+iDUFjXL1qHl8fH1HlfQh3tUur7DmFnEbFYzPOJIm8xvVQMGKX8lPCq1elpLE\nu3tS7KjaR5DZm5jM6nCMC7u/kD8j8iG5UIaJIu7PhbdrBGSMJrPeKbD2uaraHcNF\nk23sRcbQlVXZ41Qb9aXNiAnEs9atThisYLTKp0KYO1XQj+fcmcMihfYf3sPBLF4w\nO4uZBvBxAgMBAAECggEAE+YnBgHND/5b/ytFtw1ALbWYY8oOmcmPi66/3Ogq8FcF\nxla+fVdb3Ak2keQpE6TG3HSwj4HCExMiw4xndS00hTTMIz8I7reJVM8BMSir3sYP\n/nWeA7Ntz8dKaYMlRnpLmAUxat5wcUVd46XthxUs3DgStOjVhm1XYamyHDdmESOV\n6yZE4gR3JUtA2c9+MFz824BIqvvbDhiI+hZHrkcs3wxTvdbIgktAvADbeX8B7pld\neIrvKlccmDuwbv4sR7vnrsArBGYlZdTD/rgKcSYGNCdi86QW3ID3ZhFIxcH+ZBwB\nhKVB7gi0FdVbMU2VhbP9JS50jS7waBNNZLSEuwtLowKBgQDA2rXyB7mBCBONgRMw\nzb/AZIcby/nt+iExuwRXF6oLql5E0nqYK7h8kG34BCvSQ+m36qIsmeDXfpnsFQfF\nTzBdGxG3KlFUgdfKi3qbny9jKQ7wB3YPgXSWc4TajBvLF46L8KZWvOjtQyzndh4H\nLd4nL9GwheHDKhFGFVSGZlyB7wKBgQC/zAcLDtcHORdaPuqk4J9mDyDaKEF6m9R+\nDy/Y1Nmg9TQjiO+1BDBZiL+EZ/77csZW8tPksWUv/KRIGFAnIf5DlsfY60kZ5ix1\nkThXqdhQ9UZjiu6R/BUkMo3kx/YlFJTIvFlRAM5g8iRXPNXfK9F3mcm3mRrFgAzb\nV4CmhmqTnwKBgEH3Tb8A92n0akO/v+G0rv9PI4vVhKLrKQmKr9xegtLErsQZvsdo\nRQ2OlZ79RkQA6OP5BQn+hJMRgfLn6qWKBcADL1cYyYL/euGUPhcXJy1i8PIXi0GY\nhVmlH+9ld2hLoX2qjisjKQVnMefmVjUccl2zFKWt1eBc9lWjnCrwvnnPAoGAEOga\nQtZHDCLzNQhQxMHsKyHwQmrEAtvTql0KWbHBkVesBenfP3SkEnBkeXZ1WpLueuGi\n3gjpI4bAsH48Kobrk+eprCxpYDgS+TYY4lldcR192+52QzYWYv911JHv16rtxpgb\nw3EvwAn4PBxnuelx6HoM9vsvCfPUrk0TURqOMH8CgYAAg3U/LlkDE2atv5rn+Xmq\nLjo6a3qVL/1HchvaFDrEdJwUvbVhXTiC4XeQs8FiJqSvQ5oI8I2UaeJnrA0sKrDq\nIc26ocT4uGooGXHEqLzL/zr4DTdg/0pfYQOLarQ8zd3NHn4fd5KIjiA8gmcSs8yk\n/n+wtJz2iVCl9y19Y2GQyg==\n-----END PRIVATE KEY-----\n',
+  clientEmail: 'firebase-adminsdk-43hs1@nash-dev.iam.gserviceaccount.com',
+  clientId: '106955217189327273663',
+  authUri: 'https://accounts.google.com/o/oauth2/auth',
+  tokenUri: 'https://oauth2.googleapis.com/token',
+  authProviderX509CertUrl: 'https://www.googleapis.com/oauth2/v1/certs',
+  clientX509CertUrl:
+    'https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-43hs1%40nash-dev.iam.gserviceaccount.com',
+  universeDomain: 'googleapis.com',
+};

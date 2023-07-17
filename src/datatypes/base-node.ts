@@ -5,7 +5,7 @@ export default class BaseNode {
   /**
    * Then id of the node in the database.
    */
-  public id!: Number;
+  public id!: number;
 
   /**
    * The lables of the node in the database.

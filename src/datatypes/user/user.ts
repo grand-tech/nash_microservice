@@ -15,6 +15,16 @@ export class User extends BaseNode {
   public feduid!: string;
 
   /**
+   * The users phone number.
+   */
+  public email!: string;
+
+  /**
+   * The users phone number.
+   */
+  public phoneNumber!: string;
+
+  /**
    * The user`s id number.
    */
   public idNumber!: string;
@@ -25,9 +35,19 @@ export class User extends BaseNode {
   public publicAddress!: string;
 
   /**
-   * The users phone number.
+   * The user`s private key for blockchain transactions.
    */
-  public phoneNumber!: string;
+  public privateKey!: string;
+
+  /**
+   * The user`s public key for blockchain encryption.
+   */
+  public publicKey!: string;
+
+  /**
+   * The user`s 24 word recovery phrase.
+   */
+  public mnemonic!: string;
 }
 
 /**
@@ -41,11 +61,15 @@ export function nodeToUser(node: any): User {
 
   const props = node.properties;
 
+  user.id = node.identity.low;
   user.feduid = props.feduid;
   user.name = props.name;
   user.idNumber = props.idNumber;
   user.phoneNumber = props.phoneNumber;
+  user.email = props.email;
   user.publicAddress = props.publicAddress;
-
+  user.privateKey = props.privateKey;
+  user.publicKey = props.publicKey;
+  user.mnemonic = props.mnemonic;
   return user;
 }

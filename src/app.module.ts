@@ -6,19 +6,16 @@ import {
 } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { UtilsModule } from './utils/utils.module';
 import { PreAuthMiddleware } from './utils/pre-auth/pre-auth.middleware';
-import { TestUtilsModule } from './test-utils/test-utils.module';
 import { Neo4jModule } from 'nest-neo4j/dist';
+import { DataTypesModule } from './datatypes/datatypes.module';
 
 @Module({
   imports: [
-    AuthModule,
     UsersModule,
     UtilsModule,
-    TestUtilsModule,
     Neo4jModule.forRoot({
       scheme: 'neo4j+s',
       host: '5991cc59.databases.neo4j.io',
@@ -27,6 +24,7 @@ import { Neo4jModule } from 'nest-neo4j/dist';
       port: 7687,
       database: 'neo4j',
     }),
+    DataTypesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
