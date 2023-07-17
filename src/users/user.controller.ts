@@ -51,4 +51,17 @@ export class UserController {
 
     return await this.userService.addMnemonicToAccount(user, body.mnemonic);
   }
+
+  @Post('/save-user-profile')
+  @Roles(Role.User)
+  async saveUserProfile(@Req() request: Request): Promise<Response> {
+    const user: User = request['user'];
+    const body = request.body;
+
+    return await this.userService.saveUserProfile(
+      user,
+      body.phoneNumber,
+      body.fullName,
+    );
+  }
 }

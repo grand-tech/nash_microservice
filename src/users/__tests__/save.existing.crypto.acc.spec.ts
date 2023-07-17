@@ -1,16 +1,16 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UsersService } from './users.service';
+import { UsersService } from '../users.service';
 import { Neo4jModule, Neo4jService } from 'nest-neo4j/dist';
-import { User, nodeToUser } from '../datatypes/user/user';
+import { User, nodeToUser } from '../../datatypes/user/user';
 import {
   DB_CONNECTIONS_CONFIGS,
   deleteNode,
-} from '../../test/test-utils/test-utils.module';
+} from '../../../test/test-utils/test-utils.module';
 import {
   AccountInformation,
   CryptoWalletCreatorService,
-} from './crypto-wallet-creator/crypto-wallet-creator.service';
-import { TEST_ACC_1 } from '../../test/test-utils/test.accounts';
+} from '../crypto-wallet-creator/crypto-wallet-creator.service';
+import { TEST_ACC_1 } from '../../../test/test-utils/test.accounts';
 
 describe('UsersService', () => {
   let service: UsersService;
