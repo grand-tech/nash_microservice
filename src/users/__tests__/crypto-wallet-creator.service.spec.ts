@@ -4,11 +4,13 @@ import {
   getAccountInformation,
 } from '../crypto-wallet-creator.service';
 import { TEST_ACC_1 } from '../../../test/test-utils/test.accounts';
+import { initializeContractKit } from '../../utils/block-chain-utils/contract.kit.utils';
 
 describe('CryptoWalletCreatorService', () => {
   let service: CryptoWalletCreatorService;
 
   beforeEach(async () => {
+    initializeContractKit();
     const module: TestingModule = await Test.createTestingModule({
       providers: [CryptoWalletCreatorService],
     }).compile();
