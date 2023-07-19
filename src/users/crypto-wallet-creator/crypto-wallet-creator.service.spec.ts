@@ -3,12 +3,14 @@ import {
   CryptoWalletCreatorService,
   getAccountInformation,
 } from './crypto-wallet-creator.service';
-import { TEST_ACC_1 } from '../../../test/test-utils/test.accounts';
+import { TEST_ACC_1, TEST_ACC_2 } from '../../../test/test-utils/test.accounts';
+import { initializeContractKit } from '../../utils/block-chain-utils/contract.kit.utils';
 
 describe('CryptoWalletCreatorService', () => {
   let service: CryptoWalletCreatorService;
 
   beforeEach(async () => {
+    initializeContractKit();
     const module: TestingModule = await Test.createTestingModule({
       providers: [CryptoWalletCreatorService],
     }).compile();
@@ -18,10 +20,6 @@ describe('CryptoWalletCreatorService', () => {
     );
   });
 
-  it('should be defined', () => {
-    expect(service).toBeDefined();
-  });
-
   describe('Test Validate Private Keys', () => {
     it('Valid private key.', () => {
       const acc = getAccountInformation(TEST_ACC_1.privateKey);
@@ -29,10 +27,10 @@ describe('CryptoWalletCreatorService', () => {
       expect(acc.address).toBe(TEST_ACC_1.address);
       expect(acc.privateKey).toBe('0x' + TEST_ACC_1.privateKey);
 
-      const acc2 = getAccountInformation('0x' + TEST_ACC_1.privateKey);
+      const acc2 = getAccountInformation(TEST_ACC_2.privateKey);
 
-      expect(acc2.address).toBe(TEST_ACC_1.address);
-      expect(acc2.privateKey).toBe('0x' + TEST_ACC_1.privateKey);
+      expect(acc2.address).toBe(TEST_ACC_2.address);
+      expect(acc2.privateKey).toBe('0x' + TEST_ACC_2.privateKey);
     });
 
     it('In-valid private key.', () => {

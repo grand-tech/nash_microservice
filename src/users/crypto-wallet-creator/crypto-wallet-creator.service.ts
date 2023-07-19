@@ -1,4 +1,4 @@
-import { hexToBuffer } from '@celo/base';
+import { bufferToHex, hexToBuffer } from '@celo/base';
 import {
   MnemonicLanguages,
   MnemonicStrength,
@@ -9,7 +9,7 @@ import {
   validateMnemonic,
 } from '@celo/cryptographic-utils';
 import { Injectable } from '@nestjs/common';
-import Web3 from 'web3';
+import { web3 } from '../../../src/utils/block-chain-utils/contract.kit.utils';
 const bip39 = require('bip39');
 
 @Injectable()
@@ -155,13 +155,14 @@ export function getAccountInformation(privateKey: string): AccountInformation {
     publicKey: undefined,
   };
   try {
-    const web3 = new Web3();
-
-    const acc = web3.eth.accounts.privateKeyToAccount(hexToBuffer(privateKey));
-
+    const acc = web3.eth.accounts.privateKeyToAccount(
+      bufferToHex(hexToBuffer(privateKey)),
+    );
     account.address = acc.address;
     account.privateKey = acc.privateKey;
-  } catch (error) {}
+  } catch (error) {
+    // console.log(error);
+  }
 
   return account;
 }
