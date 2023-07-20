@@ -9,6 +9,7 @@ import { UtilsModule } from './utils/utils.module';
 import { PreAuthMiddleware } from './utils/pre-auth/pre-auth.middleware';
 import { Neo4jModule } from 'nest-neo4j/dist';
 import { DataTypesModule } from './datatypes/datatypes.module';
+import { TransactionsModule } from './transactions/transactions.module';
 
 @Module({
   imports: [
@@ -23,7 +24,9 @@ import { DataTypesModule } from './datatypes/datatypes.module';
       database: 'neo4j',
     }),
     DataTypesModule,
+    TransactionsModule,
   ],
+  providers: [],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
