@@ -11,12 +11,14 @@ import {
   CryptoWalletCreatorService,
 } from '../crypto-wallet-creator.service';
 import { TEST_ACC_1 } from '../../../test/test-utils/test.accounts';
+import { initializeContractKit } from '../../utils/block-chain-utils/contract.kit.utils';
 
 describe('UsersService', () => {
   let service: UsersService;
   let dbService: Neo4jService;
 
   beforeAll(async () => {
+    initializeContractKit();
     const module: TestingModule = await Test.createTestingModule({
       providers: [UsersService, CryptoWalletCreatorService],
       imports: [Neo4jModule.forRoot(DB_CONNECTIONS_CONFIGS)],
@@ -68,7 +70,9 @@ describe('UsersService', () => {
       const rsp = await service.validateExistingCryptoAccount(feduid, account);
 
       expect(rsp.status).toBe(502);
-      expect(rsp.message).toBe('Invalid private key or mnemonic(seed phrase)!!');
+      expect(rsp.message).toBe(
+        'Invalid private key or mnemonic(seed phrase)!!',
+      );
     });
 
     it('Save Valid Account Details.', async () => {
