@@ -1,24 +1,23 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UsersService } from '../users.service';
+import { UsersService } from './users.service';
 import { Neo4jModule, Neo4jService } from 'nest-neo4j/dist';
-import { User, nodeToUser } from '../../datatypes/user/user';
+import { User, nodeToUser } from '../datatypes/user/user';
 import {
   DB_CONNECTIONS_CONFIGS,
   deleteNode,
-} from '../../../test/test-utils/test-utils.module';
+} from '../../test/test-utils/test-utils.module';
+
+import { TEST_ACC_1 } from '../../test/test-utils/test.accounts';
 import {
-  AccountInformation,
   CryptoWalletCreatorService,
-} from '../crypto-wallet-creator.service';
-import { TEST_ACC_1 } from '../../../test/test-utils/test.accounts';
-import { initializeContractKit } from '../../utils/block-chain-utils/contract.kit.utils';
+  AccountInformation,
+} from './crypto-wallet-creator.service';
 
 describe('UsersService', () => {
   let service: UsersService;
   let dbService: Neo4jService;
 
   beforeAll(async () => {
-    initializeContractKit();
     const module: TestingModule = await Test.createTestingModule({
       providers: [UsersService, CryptoWalletCreatorService],
       imports: [Neo4jModule.forRoot(DB_CONNECTIONS_CONFIGS)],
@@ -33,7 +32,7 @@ describe('UsersService', () => {
   });
 
   describe('Test Validate Existing Crypto Account.', () => {
-    let userID: number = -1;
+    let userID: Number;
     let feduid = Math.random().toString();
 
     beforeEach(async () => {
@@ -54,7 +53,7 @@ describe('UsersService', () => {
 
     // clean up.
     afterEach(async () => {
-      if (userID > -1) {
+      if (userID) {
         const rst = await deleteNode(userID, dbService);
       }
     });
