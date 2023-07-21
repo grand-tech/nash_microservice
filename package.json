@@ -31,6 +31,7 @@
     "@nestjs/platform-express": "^10.0.0",
     "axios": "^1.4.0",
     "bip39": "^3.1.0",
+    "date-and-time": "^3.0.2",
     "firebase-admin": "^11.9.0",
     "nest-neo4j": "^0.3.1",
     "reflect-metadata": "^0.1.13",
