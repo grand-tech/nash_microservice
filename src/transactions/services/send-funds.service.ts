@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Neo4jService } from 'nest-neo4j/dist';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from '../../users/users.service';
 
 @Injectable()
 export class SendFundsService {
@@ -8,8 +8,4 @@ export class SendFundsService {
     private readonly neo4j: Neo4jService,
     private readonly userService: UsersService,
   ) {}
-
-  
-
-
 }
