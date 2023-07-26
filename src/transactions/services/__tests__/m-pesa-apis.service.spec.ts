@@ -4,14 +4,19 @@ import { HttpModule } from '@nestjs/axios';
 
 describe('MPesaApisService', () => {
   let service: MPesaApisService;
+  let app: TestingModule;
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+  beforeAll(async () => {
+    app = await Test.createTestingModule({
       providers: [MPesaApisService],
       imports: [HttpModule],
     }).compile();
 
-    service = module.get<MPesaApisService>(MPesaApisService);
+    service = app.get<MPesaApisService>(MPesaApisService);
+  });
+
+  afterAll(() => {
+    app.close();
   });
 
   it('should be defined', () => {

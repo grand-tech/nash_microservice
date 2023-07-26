@@ -11,9 +11,10 @@ import { CryptoWalletCreatorService } from '../crypto-wallet-creator.service';
 describe('UsersService', () => {
   let service: UsersService;
   let dbService: Neo4jService;
+  let module: TestingModule;
 
   beforeAll(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    module = await Test.createTestingModule({
       providers: [UsersService, CryptoWalletCreatorService],
       imports: [Neo4jModule.forRoot(DB_CONNECTIONS_CONFIGS)],
     }).compile();
@@ -24,6 +25,7 @@ describe('UsersService', () => {
 
   afterAll(async () => {
     dbService.getDriver().close();
+    module.close();
   });
 
   it('should be defined', () => {

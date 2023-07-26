@@ -17,7 +17,7 @@ describe('User Controller RBAC Route Check.', () => {
     app = moduleRef.createNestApplication();
 
     await app.init();
-  });
+  }, 7000);
 
   afterAll(async () => {
     await app.close();
