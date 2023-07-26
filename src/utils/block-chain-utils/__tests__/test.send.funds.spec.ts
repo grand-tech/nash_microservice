@@ -6,6 +6,7 @@ import {
 import { getBalance } from '../account.balance.utils';
 import {
   contractKit,
+  dismantleContractKit,
   initializeContractKit,
   sendFunds,
 } from '../contract.kit.utils';
@@ -14,6 +15,10 @@ import { User } from '../../../datatypes/user/user';
 describe('Account Balance Utils', () => {
   beforeAll(() => {
     initializeContractKit();
+  });
+
+  afterAll(() => {
+    dismantleContractKit();
   });
 
   it('Get Wallet Balance.', async () => {
@@ -71,7 +76,7 @@ describe('Account Balance Utils', () => {
       expect(receipt.status).toBe(true);
       const accs = await contractKit.connection.getAccounts();
       expect(accs.includes(senderAccount.publicAddress)).toBe(false);
-    }, 5000);
+    }, 7000);
 
     // it('Send cREAL', () => {
     //     const receipt = await sendCREAL(

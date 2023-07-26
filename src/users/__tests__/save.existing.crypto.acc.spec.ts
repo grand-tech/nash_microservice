@@ -11,15 +11,16 @@ import {
   CryptoWalletCreatorService,
 } from '../crypto-wallet-creator.service';
 import { TEST_ACC_1 } from '../../../test/test-utils/test.accounts';
-import { initializeContractKit } from '../../utils/block-chain-utils/contract.kit.utils';
+import { dismantleContractKit, initializeContractKit } from '../../utils/block-chain-utils/contract.kit.utils';
 
 describe('UsersService', () => {
   let service: UsersService;
   let dbService: Neo4jService;
+  let module: TestingModule;
 
   beforeAll(async () => {
     initializeContractKit();
-    const module: TestingModule = await Test.createTestingModule({
+    module = await Test.createTestingModule({
       providers: [UsersService, CryptoWalletCreatorService],
       imports: [Neo4jModule.forRoot(DB_CONNECTIONS_CONFIGS)],
     }).compile();
@@ -30,6 +31,8 @@ describe('UsersService', () => {
 
   afterAll(async () => {
     dbService.getDriver().close();
+    module.close();
+    dismantleContractKit()
   });
 
   describe('Test Validate Existing Crypto Account.', () => {

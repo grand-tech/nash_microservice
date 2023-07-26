@@ -21,6 +21,14 @@ export function initializeContractKit() {
 }
 
 /**
+ * Dismantles the contract kit instance.
+ */
+export function dismantleContractKit() {
+  web3 = undefined;
+  contractKit = undefined;
+}
+
+/**
  * Send funds to a specific account.
  * @param token the token used for the transaction.
  * @param senderAccount the senders account information.

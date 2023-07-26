@@ -4,20 +4,26 @@ import {
   getAccountInformation,
 } from '../crypto-wallet-creator.service';
 import { TEST_ACC_1 } from '../../../test/test-utils/test.accounts';
-import { initializeContractKit } from '../../utils/block-chain-utils/contract.kit.utils';
+import { dismantleContractKit, initializeContractKit } from '../../utils/block-chain-utils/contract.kit.utils';
 
 describe('CryptoWalletCreatorService', () => {
   let service: CryptoWalletCreatorService;
+  let module: TestingModule;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     initializeContractKit();
-    const module: TestingModule = await Test.createTestingModule({
+    module = await Test.createTestingModule({
       providers: [CryptoWalletCreatorService],
     }).compile();
 
     service = module.get<CryptoWalletCreatorService>(
       CryptoWalletCreatorService,
     );
+  });
+
+  afterAll(() => {
+    module.close();
+    dismantleContractKit()
   });
 
   it('should be defined', () => {
