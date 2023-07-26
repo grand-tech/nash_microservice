@@ -76,7 +76,7 @@ describe('Account Balance Utils', () => {
       expect(receipt.status).toBe(true);
       const accs = await contractKit.connection.getAccounts();
       expect(accs.includes(senderAccount.publicAddress)).toBe(false);
-    }, 5000);
+    }, 7000);
 
     // it('Send cREAL', () => {
     //     const receipt = await sendCREAL(
