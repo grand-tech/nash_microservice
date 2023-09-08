@@ -38,6 +38,7 @@ class Logger {
 }
 
 class CommonUtils {
+  [x: string]: any;
   static generateRandomString(length = 15) {
     let result = '';
     const characters =

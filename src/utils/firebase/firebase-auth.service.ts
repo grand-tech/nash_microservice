@@ -1,25 +1,142 @@
 import { Injectable } from '@nestjs/common';
-import * as admin from 'firebase-admin';
-import { firebaseConfig } from './firebase.config';
+import { FirebaseService } from './firebase.service';
+import { CommonUtils, Logger } from '../common/common.utils';
 
 @Injectable()
-export class FirebaseAuthService {
-  /**
-   * Instance of the firebase app.
-   */
-  private firebaseApp: admin.app.App;
+class FirebaseUsersUtils {
+  logger = new Logger('FirebaseUsersUtils');
 
-  constructor() {
-    this.firebaseApp = admin.initializeApp({
-      credential: admin.credential.cert(firebaseConfig),
-    });
+  constructor(private readonly firebaseService: FirebaseService) {}
+
+  async verifyToken(idToken: string) {
+    if (!this.firebaseService.getFirebaseInitialized()) {
+      this.logger.error('Firebase is not initialized');
+      throw new Error('Firebase is not initialized');
+    }
+    try {
+      return await this.firebaseService
+        .getFirebaseApp()
+        .auth()
+        .verifyIdToken(idToken);
+    } catch (e) {
+      throw new Error(e);
+    }
   }
 
-  /**
-   * Getter for the auth service instance.
-   * @returns the auth service instance.
-   */
-  getAuth = (): admin.auth.Auth => {
-    return this.firebaseApp.auth();
-  };
+  async createUser(password: string, email?: string, phoneNumber?: string) {
+    if (!this.firebaseService.getFirebaseInitialized()) {
+      this.logger.error('Firebase is not initialized');
+      throw new Error('Firebase is not initialized');
+    }
+    const randomString = CommonUtils.generateRandomString(15).toUpperCase();
+    const uid = `NASH${randomString}`;
+    try {
+      return await this.firebaseService.getFirebaseApp().auth().createUser({
+        uid,
+        email,
+        phoneNumber,
+        password,
+      });
+    } catch (e) {
+      throw new Error(e);
+    }
+  }
+
+  async getUserById(uid: string) {
+    if (!this.firebaseService.getFirebaseInitialized()) {
+      this.logger.error('Firebase is not initialized');
+      throw new Error('Firebase is not initialized');
+    }
+    try {
+      return await this.firebaseService.getFirebaseApp().auth().getUser(uid);
+    } catch (e) {
+      throw new Error(e);
+    }
+  }
+
+  async deleteUser(uid: string) {
+    if (!this.firebaseService.getFirebaseInitialized()) {
+      this.logger.error('Firebase is not initialized');
+      throw new Error('Firebase is not initialized');
+    }
+    try {
+      return await this.firebaseService.getFirebaseApp().auth().deleteUser(uid);
+    } catch (e) {
+      throw new Error(e);
+    }
+  }
+
+  async getUserByPhoneNumber(phoneNumber: string) {
+    if (!this.firebaseService.getFirebaseInitialized()) {
+      this.logger.error('Firebase is not initialized');
+      throw new Error('Firebase is not initialized');
+    }
+    try {
+      return await this.firebaseService
+        .getFirebaseApp()
+        .auth()
+        .getUserByPhoneNumber(phoneNumber);
+    } catch (e) {
+      throw new Error(e);
+    }
+  }
+
+  async getUserByEmail(uid: string) {
+    if (!this.firebaseService.getFirebaseInitialized()) {
+      this.logger.error('Firebase is not initialized');
+      throw new Error('Firebase is not initialized');
+    }
+    try {
+      return await this.firebaseService.getFirebaseApp().auth().getUser(uid);
+    } catch (e) {
+      throw new Error(e);
+    }
+  }
+
+  async listUsers(maxResults: number, pageToken: string) {
+    if (!this.firebaseService.getFirebaseInitialized()) {
+      this.logger.error('Firebase is not initialized');
+      throw new Error('Firebase is not initialized');
+    }
+    try {
+      return await this.firebaseService
+        .getFirebaseApp()
+        .auth()
+        .listUsers(maxResults, pageToken);
+    } catch (e) {
+      throw new Error(e);
+    }
+  }
+
+  async updateUser(
+    uid: string,
+    email?: string,
+    phoneNumber?: string,
+    emailVerified?: boolean,
+    photoURL?: string,
+    disabled?: boolean,
+    password?: string,
+  ) {
+    try {
+      if (!this.firebaseService.getFirebaseInitialized()) {
+        this.logger.error('Firebase is not initialized');
+        throw new Error('Firebase is not initialized');
+      }
+      return await this.firebaseService
+        .getFirebaseApp()
+        .auth()
+        .updateUser(uid, {
+          email,
+          phoneNumber,
+          emailVerified,
+          photoURL,
+          disabled,
+          password,
+        });
+    } catch (e) {
+      throw new Error(e);
+    }
+  }
 }
+
+export { FirebaseUsersUtils };
