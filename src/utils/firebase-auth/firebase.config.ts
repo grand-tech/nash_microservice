@@ -1,5 +1,3 @@
-import { ServiceAccount } from 'firebase-admin';
-
 /**
  * Firebase configurations.
  */
