@@ -1,6 +1,6 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { auth } from 'firebase-admin';
-import { FirebaseAuthService } from '../firebase-auth/firebase-auth.service';
+import { FirebaseAuthService } from '../firebase/firebase-auth.service';
 import { Request, Response } from 'express';
 import { DecodedIdToken } from 'firebase-admin/lib/auth/token-verifier';
 import { UsersService } from '../../users/users.service';

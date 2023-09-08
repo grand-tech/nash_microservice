@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { FirebaseAuthService } from './firebase-auth/firebase-auth.service';
+import { FirebaseAuthService } from './firebase/firebase-auth.service';
 import { PreAuthMiddleware } from './pre-auth/pre-auth.middleware';
 import { UsersModule } from '../users/users.module';
 import { APP_GUARD } from '@nestjs/core';

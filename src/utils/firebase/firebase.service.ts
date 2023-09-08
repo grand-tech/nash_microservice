@@ -1,22 +1,18 @@
 import * as admin from 'firebase-admin';
-import * as fs from 'fs';
 import { Injectable } from '@nestjs/common';
+import { firebaseConfig } from './firebase.config';
 
 @Injectable()
 export class FirebaseService {
   private readonly app: admin.app.App;
   private readonly firebaseInitialized: boolean = false;
-  private readonly file: string = '/home/jamie/Code/Saltie/Nash/nash_backend/cert/jamie-playgound-firebase-adminsdk.json';
 
   constructor() {
     try {
-      const firebaseConfig = JSON.parse(
-        fs.readFileSync(this.file, 'utf8').toString(),
-      );
       if (!admin.apps.length || admin.apps.length === 0) {
         this.app = admin.initializeApp({
           credential: admin.credential.cert(firebaseConfig),
-          databaseURL: 'https://jamie-playgound.firebaseio.com',
+          databaseURL: `https://${firebaseConfig.projectId}.firebaseio.com`,
         });
       } else {
         let fbIsInit = false;
@@ -28,7 +24,7 @@ export class FirebaseService {
         if (!fbIsInit) {
           this.app = admin.initializeApp({
             credential: admin.credential.cert(firebaseConfig),
-            databaseURL: 'https://<your-project-id>.firebaseio.com',
+            databaseURL: `https://${firebaseConfig.projectId}.firebaseio.com`,
           });
         }
       }
