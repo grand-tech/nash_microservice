@@ -30,7 +30,8 @@ export class FirebaseService {
       }
       this.firebaseInitialized = true;
     } catch (e) {
-      console.log(e);
+      this.firebaseInitialized = false;
+      console.error(e);
     }
   }
 
