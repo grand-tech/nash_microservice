@@ -23,6 +23,21 @@ export class AppUserRepositoryImpl implements IAppUsersService {
       throw new Error(e.message);
     }
   }
+  async getAppUserByUsername(username: string): Promise<AppUser> {
+    try {
+      const result = await this.neo4jService.read(
+        `MATCH (u:AppUser {username: $username}) RETURN u`,
+        { username: username },
+      );
+      if (result.records.length > 0) {
+        return AppUser.fromJSON(result.records[0].get('u').properties);
+      } else {
+        return null;
+      }
+    } catch (e) {
+      throw new Error(e.message);
+    }
+  }
   async getAppUserByEmail(email: string): Promise<AppUser> {
     try {
       const result = await this.neo4jService.read(
@@ -80,7 +95,7 @@ export class AppUserRepositoryImpl implements IAppUsersService {
       throw new Error(e.message);
     }
   }
-  deleteAppUser(uid: string): Promise<AppUser> {
+  async deleteAppUser(uid: string): Promise<AppUser> {
     try {
       return this.neo4jService
         .write(`MATCH (u:AppUser {uid: $uid}) DELETE u RETURN u`, {
@@ -103,6 +118,40 @@ export class ProfileRepositoryImpl implements IProfileService {
       const result = await this.neo4jService.read(
         `MATCH (p:Profile {uid: $uid}) RETURN p`,
         { uid: uid },
+      );
+      if (result.records.length > 0) {
+        return Profile.fromJSON(result.records[0].get('p').properties);
+      } else {
+        return null;
+      }
+    } catch (e) {
+      throw new Error(e.message);
+    }
+  }
+  async getProfileByUidWithAppUser(uid: string): Promise<Profile> {
+    try {
+      const result = await this.neo4jService.read(
+        `MATCH (p:Profile {uid: $uid})-[r:HAS_PROFILE]->(u:AppUser) RETURN p, u`,
+        { uid: uid },
+      );
+      if (result.records.length > 0) {
+        const profile = Profile.fromJSON(result.records[0].get('p').properties);
+        profile.appUser = AppUser.fromJSON(
+          result.records[0].get('u').properties,
+        );
+        return profile;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      throw new Error(e.message);
+    }
+  }
+  async getProfileByUsername(username: string): Promise<Profile> {
+    try {
+      const result = await this.neo4jService.read(
+        `MATCH (p:Profile {username: $username}) RETURN p`,
+        { username: username },
       );
       if (result.records.length > 0) {
         return Profile.fromJSON(result.records[0].get('p').properties);
@@ -170,7 +219,7 @@ export class ProfileRepositoryImpl implements IProfileService {
       throw new Error(e.message);
     }
   }
-  deleteProfile(uid: string): Promise<Profile> {
+  async deleteProfile(uid: string): Promise<Profile> {
     try {
       return this.neo4jService
         .write(`MATCH (p:Profile {uid: $uid}) DELETE p RETURN p`, {
