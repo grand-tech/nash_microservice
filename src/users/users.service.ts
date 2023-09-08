@@ -35,6 +35,24 @@ export class UsersService {
   }
 
   /**
+   * Queries user by their uid.
+   * @param uid the user`s uid.
+   * @returns the queried user.
+   */
+  async getUserByUid(uid: string) {
+    const rst = await this.neo4j.read(
+      'MATCH (user:User) WHERE user.uid = $uid RETURN user',
+      { uid: uid },
+    );
+    if (rst.records.length > 0) {
+      const usr = rst.records[0].get('user');
+      return nodeToUser(usr);
+    } else {
+      return new User();
+    }
+  }
+
+  /**
    * Queries for user information given their feduidd.
    * @param feduid the user`s feduid.
    * @return the queried user.
