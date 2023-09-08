@@ -1,4 +1,5 @@
 export class Profile {
+  [x: string]: import("/home/jamie/Code/Work/Nash/nash_microservice/src/users/dto/app_user.dto").AppUser;
   constructor(
     public readonly emailAddress: string,
     public readonly phoneNumber: string,
