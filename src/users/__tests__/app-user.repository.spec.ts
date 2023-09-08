@@ -131,7 +131,7 @@ describe('ProfileRepositoryImpl', () => {
     const profileRepositoryImpl = module.get<ProfileRepositoryImpl>(
       ProfileRepositoryImpl,
     );
-    const profile = await profileRepositoryImpl.getProfileByUid('test');
+    const profile = await profileRepositoryImpl.getProfileById('test');
     expect(profile).toBeDefined();
   });
 });

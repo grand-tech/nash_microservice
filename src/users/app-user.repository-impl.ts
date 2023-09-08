@@ -128,6 +128,21 @@ export class ProfileRepositoryImpl implements IProfileService {
       throw new Error(e.message);
     }
   }
+  async getProfileById(id: string): Promise<Profile> {
+    try {
+      const result = await this.neo4jService.read(
+        `MATCH (p:Profile {id: $id}) RETURN p`,
+        { id: id },
+      );
+      if (result.records.length > 0) {
+        return Profile.fromJSON(result.records[0].get('p').properties);
+      } else {
+        return null;
+      }
+    } catch (e) {
+      throw new Error(e.message);
+    }
+  }
   async getProfileByUidWithAppUser(uid: string): Promise<Profile> {
     try {
       const result = await this.neo4jService.read(
