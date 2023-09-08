@@ -1,5 +1,6 @@
+import { AppUser } from './app_user.dto';
+
 export class Profile {
-  [x: string]: import("/home/jamie/Code/Work/Nash/nash_microservice/src/users/dto/app_user.dto").AppUser;
   constructor(
     public readonly emailAddress: string,
     public readonly phoneNumber: string,
@@ -12,6 +13,7 @@ export class Profile {
     public readonly firstName?: string,
     public readonly lastName?: string,
     public readonly id?: string,
+    public appUser?: AppUser,
   ) {}
 
   public static fromJSON(json: any): Profile {
