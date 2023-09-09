@@ -1,8 +1,8 @@
 import { Controller, Get, Post, Req } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { Response } from 'src/utils/response';
+import { Response } from 'utils/response';
 import { Request } from 'express';
-import { User } from 'src/datatypes/user/user';
+import { User } from 'datatypes/user/user';
 import { Role, Roles } from '../utils/pre-auth/roles';
 
 @Controller('')
