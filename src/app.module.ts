@@ -17,9 +17,9 @@ import { TransactionsModule } from './transactions/transactions.module';
     UtilsModule,
     Neo4jModule.forRoot({
       scheme: 'neo4j+s',
-      host: '5991cc59.databases.neo4j.io',
+      host: 'd5ae9814.databases.neo4j.io',
       username: 'neo4j',
-      password: 'E5WWlP7pTcYuCQaVGF29nAF4ytmmO_HSs3kFOrK8n_g',
+      password: '2WTLSBf6xAdoLN_4SD-L_JF3ATH7_ahUaMspIqjVFRw',
       port: 7687,
       database: 'neo4j',
     }),
