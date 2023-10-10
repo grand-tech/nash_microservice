@@ -9,18 +9,18 @@ import { nodeToUser, User } from '../../src/datatypes/user/user';
   providers: [FirebaseTestUtilsService],
   exports: [FirebaseTestUtilsService, HttpModule],
 })
-export class TestUtilsModule {}
+export class TestUtilsModule { }
 
 /**
  * Database connections configs for testing.
  */
 export const DB_CONNECTIONS_CONFIGS: Neo4jConnection = {
   scheme: 'neo4j+s',
-  host: '5991cc59.databases.neo4j.io',
+  host: '13bba6ee.databases.neo4j.io',
   username: 'neo4j',
-  password: 'E5WWlP7pTcYuCQaVGF29nAF4ytmmO_HSs3kFOrK8n_g',
-  port: 7687,
-  database: 'neo4j',
+  password: 'ntyKvExj_Gact-wswp37_E_VtqiWn_wxaw-ZY0T42BY',
+  port: '7687',
+  database: 'neo4j'
 };
 
 /**
