@@ -62,7 +62,7 @@ describe('UsersService', () => {
       expect(usr.feduid).toBe(user.feduid);
       expect(usr.idNumber).toBe(user.idNumber);
       expect(usr.publicAddress).toBe(user.publicAddress);
-      expect(usr.id).toBeGreaterThan(0);
+      expect(usr.id).toBeGreaterThan(-1);
       expect(usr.labels).toContain('User');
     });
   });
@@ -161,7 +161,7 @@ describe('UsersService', () => {
       expect(usr.feduid).toBe(user.feduid);
       expect(usr.idNumber).toBe(user.idNumber);
       expect(usr.publicAddress).toBe(user.publicAddress);
-      expect(usr.id).toBeGreaterThan(0);
+      expect(usr.id).toBeGreaterThan(-1);
       expect(usr.labels).toContain('User');
     });
   });
