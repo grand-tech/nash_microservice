@@ -1,0 +1,20 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Mutation {
+  signUp(feduid: String!): User!
+}
+
+type Query {
+  getUsers: [User!]!
+}
+
+type User {
+  email: String
+  feduid: String
+  idNumber: String
+  name: String
+  phoneNumber: String
+  publicAddress: String
+}

@@ -10,6 +10,9 @@ import { PreAuthMiddleware } from './utils/pre-auth/pre-auth.middleware';
 import { Neo4jModule } from 'nest-neo4j/dist';
 import { DataTypesModule } from './datatypes/datatypes.module';
 import { TransactionsModule } from './transactions/transactions.module';
+import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo';
+import { GraphQLModule } from '@nestjs/graphql';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -25,6 +28,13 @@ import { TransactionsModule } from './transactions/transactions.module';
     }),
     DataTypesModule,
     TransactionsModule,
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      autoSchemaFile: join(process.cwd(), 'graphql/schema.gql'),
+      include: [UsersModule, TransactionsModule],
+      sortSchema: true
+      
+    }),
   ],
   providers: [],
 })
