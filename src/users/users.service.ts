@@ -13,7 +13,7 @@ export class UsersService {
   constructor(
     private readonly neo4j: Neo4jService,
     private readonly walletCreator: CryptoWalletCreatorService,
-  ) {}
+  ) { }
 
   /**
    * Queries for user information given their feduidd.
@@ -100,8 +100,8 @@ export class UsersService {
    * @param user the new users information.
    * @returns the user record created in the database.
    */
-  async validateNewUser(user: User): Promise<Response> {
-    const response: Response = {
+  async validateNewUser(user: User): Promise<Response<User>> {
+    const response: Response<User> = {
       status: 200,
       message: 'Success',
       body: undefined,
@@ -129,11 +129,11 @@ export class UsersService {
    * @param user the new user without a crypto wallet.
    * @returns returns the response with the account details.
    */
-  async createCryptoAccount(user: User): Promise<Response> {
-    const rsp: Response = {
+  async createCryptoAccount(user: User): Promise<Response<User>> {
+    const rsp: Response<User> = {
       status: 200,
       message: 'Success',
-      body: {},
+      body: null,
     };
 
     rsp.body = user;
@@ -174,9 +174,9 @@ export class UsersService {
 
     const rst = await this.neo4j.write(
       'MATCH (user:User { feduid: $feduid}) ' +
-        ' SET user.privateKey = $privateKey, user.mnemonic = $mnemonic, ' +
-        ' user.publicAddress = $publicAddress, user.publicKey = $publicKey' +
-        ' RETURN user',
+      ' SET user.privateKey = $privateKey, user.mnemonic = $mnemonic, ' +
+      ' user.publicAddress = $publicAddress, user.publicKey = $publicKey' +
+      ' RETURN user',
       params,
     );
 
@@ -196,7 +196,7 @@ export class UsersService {
   async addPrivateKeyToAccount(
     user: User,
     privateKey: string,
-  ): Promise<Response> {
+  ): Promise<Response<User>> {
     if ((user.privateKey ?? '') != '') {
       return {
         message: 'Account alreay has a private key!!',
@@ -214,7 +214,7 @@ export class UsersService {
    * @param feduid the users feduid.
    * @param mnemonic the users private mnemonic.
    */
-  async addMnemonicToAccount(user: User, mnemonic: string): Promise<Response> {
+  async addMnemonicToAccount(user: User, mnemonic: string): Promise<Response<User>> {
     if ((user?.privateKey ?? '').trim() != '') {
       return {
         message: 'Account alreay has a private key!!',
@@ -235,8 +235,8 @@ export class UsersService {
   async validateExistingCryptoAccount(
     feduid: string,
     acc: AccountInformation,
-  ): Promise<Response> {
-    const rsp: Response = {
+  ): Promise<Response<User>> {
+    const rsp: Response<User> = {
       status: 200,
       message: 'Success',
       body: undefined,
@@ -316,8 +316,8 @@ export class UsersService {
 
     const rst = await this.neo4j.write(
       'MATCH (user:User { feduid: $feduid}) ' +
-        ' SET user.phoneNumber = $phoneNumber, user.name = $fullName' +
-        ' RETURN user',
+      ' SET user.phoneNumber = $phoneNumber, user.name = $fullName' +
+      ' RETURN user',
       params,
     );
 
@@ -339,8 +339,8 @@ export class UsersService {
     user: User,
     phoneNumber: string,
     fullName: string,
-  ): Promise<Response> {
-    const rsp: Response = {
+  ): Promise<Response<User>> {
+    const rsp: Response<User> = {
       status: 200,
       message: 'Success',
       body: undefined,

@@ -23,14 +23,14 @@ describe('User Controller RBAC Route Check.', () => {
     await app.close();
   });
 
-  it(`Add mnemonic to account.`, () => {
-    return request(app.getHttpServer())
-      .post('/add-mnemonic-to-account')
-      .set('Authorization', `Bearer `)
-      .set('Content-Type', 'application/json')
-      .send({ mnemonic: '123 123 123' })
-      .expect(403);
-  });
+  // it(`Add mnemonic to account.`, () => {
+  //   return request(app.getHttpServer())
+  //     .post('/add-mnemonic-to-account')
+  //     .set('Authorization', `Bearer `)
+  //     .set('Content-Type', 'application/json')
+  //     .send({ mnemonic: '123 123 123' })
+  //     .expect(403);
+  // });
 });
 
 describe('User Controller Mock Method Calls.', () => {
@@ -78,31 +78,31 @@ describe('User Controller Mock Method Calls.', () => {
     await app.close();
   });
 
-  it(`Check if create new crypto wallet exists.`, () => {
-    return request(app.getHttpServer())
-      .get('/createnewcryptowallet')
-      .expect(200)
-      .expect(userService.createCryptoAccount());
-  });
+  // it(`Check if create new crypto wallet exists.`, () => {
+  //   return request(app.getHttpServer())
+  //     .get('/createnewcryptowallet')
+  //     .expect(200)
+  //     .expect(userService.createCryptoAccount());
+  // });
 
-  it(`Check if add private key to account route exists.`, () => {
-    return request(app.getHttpServer())
-      .post('/add-privatekey-to-account')
-      .expect(201)
-      .expect(userService.addPrivateKeyToAccount());
-  });
+  // it(`Check if add private key to account route exists.`, () => {
+  //   return request(app.getHttpServer())
+  //     .post('/add-privatekey-to-account')
+  //     .expect(201)
+  //     .expect(userService.addPrivateKeyToAccount());
+  // });
 
-  it(`Check if add mnemonic to account route exists.`, () => {
-    return request(app.getHttpServer())
-      .post('/add-mnemonic-to-account')
-      .expect(201)
-      .expect(userService.addMnemonicToAccount());
-  });
+  // it(`Check if add mnemonic to account route exists.`, () => {
+  //   return request(app.getHttpServer())
+  //     .post('/add-mnemonic-to-account')
+  //     .expect(201)
+  //     .expect(userService.addMnemonicToAccount());
+  // });
 
-  it(`Check if save user profile route exists.`, () => {
-    return request(app.getHttpServer())
-      .post('/save-user-profile')
-      .expect(201)
-      .expect(userService.saveUserProfile());
-  });
+  // it(`Check if save user profile route exists.`, () => {
+  //   return request(app.getHttpServer())
+  //     .post('/save-user-profile')
+  //     .expect(201)
+  //     .expect(userService.saveUserProfile());
+  // });
 });

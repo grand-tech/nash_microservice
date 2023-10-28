@@ -9,8 +9,8 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 export default class UserResolver {
   constructor(private readonly userService: UsersService) { }
 
-  @Mutation(returns => User)
-  async signUp(@Args({ name: 'feduid', type: () => String }) @Req() request): Promise<Response> {
+  @Mutation(returns => Response<User>)
+  async signUp(@Args({ name: 'feduid', type: () => String }) @Req() request): Promise<Response<User>> {
     const user: User = {
       feduid: request['feduid'] ?? '',
       email: request['firebaseUser']?.email ?? '',
@@ -33,12 +33,12 @@ export default class UserResolver {
     return []
   }
 
-  // @Get('/createnewcryptowallet')
-  // @Roles(Role.User)
-  // async createNewCryptoWallet(@Req() request: Request): Promise<Response> {
-  //   const user: User = request['user'];
-  //   return await this.userService.createCryptoAccount(user);
-  // }
+  @Mutation(returns => User)
+  @Roles(Role.User)
+  async createNewCryptoWallet(@Req() request: Request): Promise<Response<User>> {
+    const user: User = request['user'];
+    return await this.userService.createCryptoAccount(user);
+  }
 
   // @Post('/add-privatekey-to-account')
   // @Roles(Role.User)
