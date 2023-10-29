@@ -9,7 +9,7 @@ import {
   validateMnemonic,
 } from '@celo/cryptographic-utils';
 import { Injectable } from '@nestjs/common';
-import { web3 } from '../../src/utils/block-chain-utils/contract.kit.utils';
+import { web3 } from '../utils/block-chain-utils/contract.kit.utils';
 
 const bip39 = require('bip39');
 

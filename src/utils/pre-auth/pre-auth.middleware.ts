@@ -1,7 +1,7 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { auth } from 'firebase-admin';
 import { FirebaseAuthService } from '../firebase-auth/firebase-auth.service';
-import { Request, Response } from 'express';
+import { FastifyRequest, FastifyReply } from 'fastify';
 import { DecodedIdToken } from 'firebase-admin/lib/auth/token-verifier';
 import { UsersService } from '../../users/users.service';
 
@@ -19,7 +19,7 @@ export class PreAuthMiddleware implements NestMiddleware {
     this.firebaseAuth = this.firebaseAuthService.getAuth();
   }
 
-  use(req: Request, res: Response, next: () => void) {
+  use(req: FastifyRequest['raw'], res: FastifyReply['raw'], next: () => void) {
     const token = (req.headers.authorization ?? '').replace('Bearer ', '');
 
     if (token != null && token != '') {
@@ -46,12 +46,15 @@ export class PreAuthMiddleware implements NestMiddleware {
     }
   }
 
-  private static accessDenied(url: string, res: Response) {
-    res.status(403).json({
-      statusCode: 403,
-      timestamp: new Date().toISOString(),
-      path: url,
-      message: 'access denied',
-    });
-  }
+  // private static accessDenied(url: string, res: FastifyReply['raw']) {
+  //   res.statusCode
+    
+    
+  //   // .status(403).json({
+  //   //   statusCode: 403,
+  //   //   timestamp: new Date().toISOString(),
+  //   //   path: url,
+  //   //   message: 'access denied',
+  //   // });
+  // }
 }
