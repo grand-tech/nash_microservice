@@ -131,21 +131,6 @@ describe('User Controller Mock Method Calls.', () => {
         expect(body.feduid).toBe('1234567890')
       });
 
-    // return app
-    //   .inject({
-    //     method: 'POST',
-    //     url: '/graphql',
-    //     body: {
-    //       query: mutation
-    //     }
-    //   })
-    //   .then((result) => {
-    //     // console.log(result)
-    //     expect(result.statusCode).toEqual(200);
-    //     const rsp = result.body
-    //     console.log(rsp);
-    //     // expect(result.payload).toEqual(/* expectedPayload */);
-    //   });
   })
 
   // it(`Check if add private key to account route exists.`, () => {
