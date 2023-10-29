@@ -3,7 +3,7 @@
 # ------------------------------------------------------
 
 type Mutation {
-  signUp(feduid: String!): User!
+  signUp(feduid: String!): UserResponse!
 }
 
 type Query {
@@ -17,4 +17,10 @@ type User {
   name: String
   phoneNumber: String
   publicAddress: String
+}
+
+type UserResponse {
+  body: User!
+  message: String!
+  status: Int!
 }

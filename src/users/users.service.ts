@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Neo4jService } from 'nest-neo4j/dist';
 import { nodeToUser, User } from '../datatypes/user/user';
-import { Response } from 'src/utils/response';
+import { Response, UserResponse } from 'src/utils/response';
 import {
   AccountInformation,
   CryptoWalletCreatorService,
@@ -100,8 +100,8 @@ export class UsersService {
    * @param user the new users information.
    * @returns the user record created in the database.
    */
-  async validateNewUser(user: User): Promise<Response<User>> {
-    const response: Response<User> = {
+  async validateNewUser(user: User): Promise<UserResponse> {
+    const response: UserResponse = {
       status: 200,
       message: 'Success',
       body: undefined,
@@ -129,8 +129,8 @@ export class UsersService {
    * @param user the new user without a crypto wallet.
    * @returns returns the response with the account details.
    */
-  async createCryptoAccount(user: User): Promise<Response<User>> {
-    const rsp: Response<User> = {
+  async createCryptoAccount(user: User): Promise<UserResponse> {
+    const rsp: UserResponse = {
       status: 200,
       message: 'Success',
       body: null,
@@ -196,7 +196,7 @@ export class UsersService {
   async addPrivateKeyToAccount(
     user: User,
     privateKey: string,
-  ): Promise<Response<User>> {
+  ): Promise<UserResponse> {
     if ((user.privateKey ?? '') != '') {
       return {
         message: 'Account alreay has a private key!!',
@@ -214,7 +214,7 @@ export class UsersService {
    * @param feduid the users feduid.
    * @param mnemonic the users private mnemonic.
    */
-  async addMnemonicToAccount(user: User, mnemonic: string): Promise<Response<User>> {
+  async addMnemonicToAccount(user: User, mnemonic: string): Promise<UserResponse> {
     if ((user?.privateKey ?? '').trim() != '') {
       return {
         message: 'Account alreay has a private key!!',
@@ -235,8 +235,8 @@ export class UsersService {
   async validateExistingCryptoAccount(
     feduid: string,
     acc: AccountInformation,
-  ): Promise<Response<User>> {
-    const rsp: Response<User> = {
+  ): Promise<UserResponse> {
+    const rsp: UserResponse = {
       status: 200,
       message: 'Success',
       body: undefined,
@@ -339,8 +339,8 @@ export class UsersService {
     user: User,
     phoneNumber: string,
     fullName: string,
-  ): Promise<Response<User>> {
-    const rsp: Response<User> = {
+  ): Promise<UserResponse> {
+    const rsp: UserResponse = {
       status: 200,
       message: 'Success',
       body: undefined,
