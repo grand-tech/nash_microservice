@@ -1,10 +1,22 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
-import { AxiosRequestConfig } from 'axios';
+import { initializeApp } from "firebase/app";
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+
+// Dev firebase configs
+const firebaseConfig = {
+  apiKey: "AIzaSyCc5q04PhHh4ueZnr59qwp2-polZ_fU9CU",
+  authDomain: "nash-dev.firebaseapp.com",
+  projectId: "nash-dev",
+  storageBucket: "nash-dev.appspot.com",
+  messagingSenderId: "1073559611016",
+  appId: "1:1073559611016:web:e5c388d37f2e8040e8a13d",
+  measurementId: "G-XVW1ZTKGJQ"
+}
 
 @Injectable()
 export class FirebaseTestUtilsService {
-  constructor(private httpService: HttpService) {}
+  constructor() { }
 
   /**
    * Authenticates the user for testing.
@@ -17,32 +29,13 @@ export class FirebaseTestUtilsService {
       skey: '',
     };
 
-    console.log('===============>');
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app)
 
-    const body = JSON.stringify({
-      email: email,
-      password: pass,
-      returnsecureToken: true,
-    });
+    const userCredential = await signInWithEmailAndPassword(auth, email, pass)
 
-    const r: AxiosRequestConfig = {
-      // params: {
-      //   key: 'AIzaSyCPvjk38KbXZub-82Zjp3K9XCTDFFmQrkQ',
-      // },
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
-
-    const url =
-      'https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyCPvjk38KbXZub-82Zjp3K9XCTDFFmQrkQ';
-
-    const rsp = await this.httpService.axiosRef.post(url, body, r);
-
-    if (rsp.status == 200) {
-      user.feduid = rsp.data.localId;
-      user.skey = rsp.data.idToken;
-    }
+    user.skey = await userCredential.user.getIdToken()
+    user.feduid = userCredential.user.providerId
 
     return user;
   }

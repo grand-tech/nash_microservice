@@ -3,6 +3,7 @@
 # ------------------------------------------------------
 
 type Mutation {
+  createNewCryptoWallet(feduid: String!): UserResponse!
   signUp(feduid: String!): UserResponse!
 }
 
@@ -20,7 +21,7 @@ type User {
 }
 
 type UserResponse {
-  body: User!
+  body: User
   message: String!
   status: Int!
 }
