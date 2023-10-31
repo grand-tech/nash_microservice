@@ -38,7 +38,7 @@ export function Response<T>(classRef: Type<T>): Type<IResponse<T>> {
     message: String;
 
 
-    @Field((type) => classRef)
+    @Field((type) => classRef, { nullable: true })
     body: T;
   }
 

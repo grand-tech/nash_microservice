@@ -1,7 +1,7 @@
 import { ContractKit, newKitFromWeb3, StableToken } from '@celo/contractkit';
 import Web3 from 'web3';
 import { CeloTxReceipt } from '@celo/connect';
-import { User } from 'src/datatypes/user/user';
+import { User } from '../../datatypes/user/user';
 
 export let web3: Web3;
 

@@ -5,7 +5,7 @@ import { User } from 'src/datatypes/user/user';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
-  constructor(private readonly reflector: Reflector) {}
+  constructor(private readonly reflector: Reflector) { }
 
   /**
    * Performs RBAC on all routes.
@@ -24,8 +24,8 @@ export class RolesGuard implements CanActivate {
     }
 
     // get the user details from the request context.
-    const { user } = context.switchToHttp().getRequest<any>();
-    const u = user as User;
+    const x = context.switchToHttp().getNext();
+    const u = x.req.raw.user as User;
 
     // do the rbac.
     return requiredRoles.some((role) => {

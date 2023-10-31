@@ -1,13 +1,12 @@
 import { Module } from '@nestjs/common';
 import { FirebaseTestUtilsService } from './firebase-test-utils/firebase-test-utils.service';
-import { HttpModule } from '@nestjs/axios';
 import { Neo4jConnection, Neo4jService } from 'nest-neo4j/dist';
 import { nodeToUser, User } from '../../src/datatypes/user/user';
 
 @Module({
-  imports: [HttpModule],
+  imports: [],
   providers: [FirebaseTestUtilsService],
-  exports: [FirebaseTestUtilsService, HttpModule],
+  exports: [FirebaseTestUtilsService],
 })
 export class TestUtilsModule { }
 
@@ -48,27 +47,22 @@ export async function deleteNode(id: Number, dbService: Neo4jService) {
  */
 export async function addTestUser(
   feduid: string,
-  roles: string[],
   dbService: Neo4jService,
 ) {
-  let label = '';
-
-  for (let index = 0; index < roles.length; index++) {
-    label = ' :' + roles[index];
-  }
 
   const params: Record<string, any> = {
     feduid: feduid,
-    labels: label,
   };
 
   const rst = await dbService.write(
-    'CREATE (user:User' + label + ' { feduid: $feduid} ) RETURN user',
+    'MERGE (u:User {feduid: $feduid}) ON CREATE ' +
+    ' SET u.name = "Test User", u.created = timestamp() ' +
+    ' RETURN u',
     params,
   );
 
   if (rst.records.length > 0) {
-    const usr = rst.records[0].get('user');
+    const usr = rst.records[0].get('u');
     return nodeToUser(usr);
   } else {
     return new User();
