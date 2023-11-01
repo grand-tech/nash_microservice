@@ -3,7 +3,10 @@
 # ------------------------------------------------------
 
 type Mutation {
+  addMnemonicToAccount(mnemonic: String!): UserResponse!
+  addPrivateKeyToAccount(privateKey: String!): UserResponse!
   createNewCryptoWallet(feduid: String!): UserResponse!
+  saveUserProfile(fullName: String!, phoneNumber: String!): UserResponse!
   signUp(feduid: String!): UserResponse!
 }
 
