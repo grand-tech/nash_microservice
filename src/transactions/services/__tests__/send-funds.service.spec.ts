@@ -46,7 +46,7 @@ describe('SendFundsService', () => {
     user2.feduid = '1234567891'
 
 
-    const tx = await service.sendcUSD(0.000001, "Test Transaction", user1, user2);
+    const tx = await service.sendcUSD(0.0001, "Test Transaction", user1, user2);
     expect(tx.records[0].get('tx')).toBeDefined
     expect(tx.records[0].get('senderDay')).toBeDefined
     expect(tx.records[0].get('receipientDay')).toBeDefined
