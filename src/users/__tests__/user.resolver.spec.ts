@@ -115,9 +115,9 @@ describe('User Controller Mock Method Calls.', () => {
 
     // Get skey;
     const user = await testUtils.auth('test@gmail.com', 'test123');
-    await addTestUser(user.feduid, db);
+    const u = await addTestUser(user.feduid, db);
     skey = user.skey;
-
+    
   }, 7000);
 
   afterAll(async () => {

@@ -146,7 +146,6 @@ describe('UsersService', () => {
   });
 
   describe('addMnemonicToAccount', () => {
-    let userID: Number;
     let feduid = Math.random().toString();
 
     it('Test user with private key', async () => {
@@ -169,7 +168,6 @@ describe('UsersService', () => {
   });
 
   describe('addPrivateKeyToAccount', () => {
-    let userID: Number;
     let feduid = Math.random().toString();
 
     it('Test user with private key', async () => {

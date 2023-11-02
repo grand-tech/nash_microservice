@@ -7,7 +7,6 @@ import assert from 'assert';
 import { TEST_ACC_1, TEST_ACC_2 } from '../../../../test/test-utils/test.accounts';
 import { User } from '../../../datatypes/user/user';
 import { initializeContractKit } from '../../../utils/block-chain-utils/contract.kit.utils';
-import { assertNonNullType } from 'graphql';
 import { Transaction, nodeToTransaction } from '../../../datatypes/transaction/transaction';
 
 describe('SendFundsService', () => {
