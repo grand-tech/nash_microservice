@@ -6,7 +6,7 @@ import {
   DB_CONNECTIONS_CONFIGS,
   deleteNode,
 } from '../../../test/test-utils/test-utils.module';
-import { CryptoWalletCreatorService } from '../crypto-wallet-creator.service';
+import { CryptoWalletCreatorService, getAccountInformation } from '../crypto-wallet-creator.service';
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -82,7 +82,7 @@ describe('UsersService', () => {
         name: 'John Doe',
         email: 'johndoe@gmail.com',
         phoneNumber: '+254791725651',
-        feduid: '1234567890',
+        feduid: '123456789-fetch-user-by-feduid',
         idNumber: undefined,
         publicAddress: undefined,
         id: undefined,
@@ -173,7 +173,7 @@ describe('UsersService', () => {
     beforeEach(async () => {
       const rst = await dbService.write(
         'CREATE (user:User ' +
-          ' { email: $email, feduid: $feduid}) RETURN user',
+        ' { email: $email, feduid: $feduid}) RETURN user',
         {
           feduid: feduid,
           email: feduid,
@@ -227,7 +227,7 @@ describe('UsersService', () => {
     beforeEach(async () => {
       const rst = await dbService.write(
         'CREATE (user:User ' +
-          ' { email: $email, feduid: $feduid}) RETURN user',
+        ' { email: $email, feduid: $feduid}) RETURN user',
         {
           feduid: feduid,
           email: feduid,
