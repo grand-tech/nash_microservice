@@ -115,9 +115,9 @@ describe('User Controller Mock Method Calls.', () => {
 
     // Get skey;
     const user = await testUtils.auth('test@gmail.com', 'test123');
-    await addTestUser(user.feduid, db);
+    const u = await addTestUser(user.feduid, db);
     skey = user.skey;
-
+    
   }, 7000);
 
   afterAll(async () => {
@@ -280,11 +280,9 @@ describe('User Controller Mock Method Calls.', () => {
         const rsp = res.body.data.saveUserProfile
         expect(rsp.status).toBe(200)
         expect(rsp.message).toBe('Success')
-
         const body = rsp.body;
         expect(body.phoneNumber).toBe('0712345678')
         expect(body.name).toBe('John Doe')
       });
   }, 6000);
-
 });

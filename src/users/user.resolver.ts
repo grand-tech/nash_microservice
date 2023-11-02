@@ -1,10 +1,9 @@
-import { ExecutionContext, Req } from '@nestjs/common';
+import { Req } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UserResponse } from '../utils/response';
 import { User } from '../datatypes/user/user';
 import { Role, Roles } from '../utils/pre-auth/roles';
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { FastifyRequest } from 'fastify';
 
 @Resolver()
 export default class UserResolver {

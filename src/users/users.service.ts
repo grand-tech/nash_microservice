@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Neo4jService } from 'nest-neo4j/dist';
 import { nodeToUser, User } from '../datatypes/user/user';
-import { Response, UserResponse } from 'src/utils/response';
+import { UserResponse } from 'src/utils/response';
 import {
   AccountInformation,
   CryptoWalletCreatorService,

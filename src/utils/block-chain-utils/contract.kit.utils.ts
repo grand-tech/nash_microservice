@@ -38,24 +38,25 @@ export async function sendFunds(
   token: StableToken,
   senderAccount: User,
   recipientAccount: User,
-  amount: string,
+  amount: number,
 ) {
   // prepare for transaction.
   contractKit.connection.addAccount(senderAccount.privateKey);
+  const amountWei = contractKit.web3.utils.toWei(amount.toString());
 
   // perform transaction.
   let txReceipt: CeloTxReceipt;
-  if (token == StableToken.cEUR) {
+  if (token == StableToken.cUSD) {
     txReceipt = await sendCUSD(
       senderAccount.publicAddress,
       recipientAccount.publicAddress,
-      amount,
+      amountWei,
     );
   } else {
     txReceipt = await sendCEUR(
       senderAccount.publicAddress,
       recipientAccount.publicAddress,
-      amount,
+      amountWei,
     );
   }
 
@@ -79,7 +80,7 @@ export async function sendCUSD(
 ) {
   let cUSDToken = await contractKit.contracts.getStableToken(StableToken.cUSD);
   let cUSDtx = await cUSDToken
-    ?.transfer(senderAddress, amount)
+    ?.transfer(recipientAddress, amount)
     .sendAndWaitForReceipt({
       from: senderAddress,
       feeCurrency: cUSDToken?.address,

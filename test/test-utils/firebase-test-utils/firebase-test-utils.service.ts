@@ -35,8 +35,7 @@ export class FirebaseTestUtilsService {
     const userCredential = await signInWithEmailAndPassword(auth, email, pass)
 
     user.skey = await userCredential.user.getIdToken()
-    user.feduid = userCredential.user.providerId
-
+    user.feduid = userCredential.user.uid
     return user;
   }
 }
