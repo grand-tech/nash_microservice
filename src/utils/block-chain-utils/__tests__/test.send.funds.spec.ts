@@ -2,6 +2,7 @@ import { StableToken } from '@celo/base';
 import {
   TEST_ACC_1,
   TEST_ACC_2,
+  TEST_ACC_3,
 } from '../../../../test/test-utils/test.accounts';
 import { getBalance } from '../account.balance.utils';
 import {
@@ -22,7 +23,7 @@ describe('Account Balance Utils', () => {
   });
 
   it('Get Wallet Balance.', async () => {
-    const balance = await getBalance(TEST_ACC_2.address);
+    const balance = await getBalance(TEST_ACC_3.address);
     const ttl = balance.cEUR + balance.cREAL + balance.cUSD;
     expect(ttl).toBeGreaterThan(-1);
   });

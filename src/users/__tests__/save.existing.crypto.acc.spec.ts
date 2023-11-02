@@ -10,7 +10,7 @@ import {
   AccountInformation,
   CryptoWalletCreatorService,
 } from '../crypto-wallet-creator.service';
-import { TEST_ACC_1 } from '../../../test/test-utils/test.accounts';
+import { TEST_ACC_3 } from '../../../test/test-utils/test.accounts';
 import { dismantleContractKit, initializeContractKit } from '../../utils/block-chain-utils/contract.kit.utils';
 
 describe('UsersService', () => {
@@ -42,7 +42,7 @@ describe('UsersService', () => {
     beforeEach(async () => {
       const rst = await dbService.write(
         'CREATE (user:User ' +
-          ' { email: $email, feduid: $feduid}) RETURN user',
+        ' { email: $email, feduid: $feduid}) RETURN user',
         {
           feduid: feduid,
           email: feduid,
@@ -79,29 +79,29 @@ describe('UsersService', () => {
     });
 
     it('Save Valid Account Details.', async () => {
-      const account: AccountInformation = TEST_ACC_1;
+      const account: AccountInformation = TEST_ACC_3;
 
       const rsp = await service.validateExistingCryptoAccount(feduid, account);
 
       expect(rsp.status).toBe(200);
       expect(rsp.message).toBe('Success');
 
-      expect(rsp.body.privateKey).toBe(TEST_ACC_1.privateKey);
-      expect(rsp.body.publicAddress).toBe(TEST_ACC_1.address);
-      expect(rsp.body.publicKey).toBe(TEST_ACC_1.publicKey);
-      expect(rsp.body.mnemonic).toBe(TEST_ACC_1.mnemonic);
+      expect(rsp.body.privateKey).toBe(TEST_ACC_3.privateKey);
+      expect(rsp.body.publicAddress).toBe(TEST_ACC_3.address);
+      expect(rsp.body.publicKey).toBe(TEST_ACC_3.publicKey);
+      expect(rsp.body.mnemonic).toBe(TEST_ACC_3.mnemonic);
       expect(rsp.body.feduid).toBe(feduid);
     });
 
     it('Already existing public address.', async () => {
-      const account: AccountInformation = TEST_ACC_1;
+      const account: AccountInformation = TEST_ACC_3;
 
       const rst = await dbService.write(
         'MATCH (user:User { feduid: $feduid}) ' +
-          ' SET user.publicAddress = $publicAddress RETURN user',
+        ' SET user.publicAddress = $publicAddress RETURN user',
         {
           feduid: feduid,
-          publicAddress: TEST_ACC_1.address,
+          publicAddress: TEST_ACC_3.address,
         },
       );
 
@@ -136,12 +136,12 @@ describe('UsersService', () => {
     it('Test valid public key and mnemonic', () => {
       const user = new User();
 
-      service.composeAddWeb3AccQryParams(user, TEST_ACC_1);
+      service.composeAddWeb3AccQryParams(user, TEST_ACC_3);
 
-      expect(user.privateKey).toBe(TEST_ACC_1.privateKey);
-      expect(user.publicAddress).toBe(TEST_ACC_1.address);
-      expect(user.publicKey).toBe(TEST_ACC_1.publicKey);
-      expect(user.mnemonic).toBe(TEST_ACC_1.mnemonic);
+      expect(user.privateKey).toBe(TEST_ACC_3.privateKey);
+      expect(user.publicAddress).toBe(TEST_ACC_3.address);
+      expect(user.publicKey).toBe(TEST_ACC_3.publicKey);
+      expect(user.mnemonic).toBe(TEST_ACC_3.mnemonic);
     });
   });
 
@@ -162,7 +162,7 @@ describe('UsersService', () => {
       const user = new User();
       user.feduid = feduid;
 
-      const rsp = await service.addMnemonicToAccount(user, TEST_ACC_1.mnemonic);
+      const rsp = await service.addMnemonicToAccount(user, TEST_ACC_3.mnemonic);
       expect(rsp.status).toBe(504);
     });
   });
@@ -186,7 +186,7 @@ describe('UsersService', () => {
 
       const rsp = await service.addPrivateKeyToAccount(
         user,
-        TEST_ACC_1.privateKey,
+        TEST_ACC_3.privateKey,
       );
       expect(rsp.status).toBe(504);
     });
