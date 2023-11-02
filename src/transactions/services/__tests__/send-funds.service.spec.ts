@@ -91,7 +91,7 @@ async function setUpTestUsers(dbService: Neo4jService) {
 async function deletUsers(dbService: Neo4jService) {
   const qry = `MATCH (u:User)-[:TRANSACTED_ON]-(d:Day)-[:RECORDED]-(t:Transaction)
    WHERE u.publicAddress = $address1 OR u.publicAddress = $address2
-   DETACH DELETE u, d, t`
+   DETACH DELETE t DETACH DELETE u DETACH DELETE d`
 
   const rst = await dbService.write(qry, {
     address1: TEST_ACC_1.address,
