@@ -15,7 +15,7 @@ describe('Node to transaction request.', () => {
                 amount: 1.2,
                 stableCoin: 'cUSD',
                 network: 'CELO',
-                senderAddress: '123456789',
+                initiatorAddress: '123456789',
                 timestamp: 123456789,
                 fulfilled: false,
             },
@@ -34,7 +34,7 @@ describe('Node to transaction request.', () => {
         expect(transaction.amount).toBe(1.2);
         expect(transaction.stableCoin).toBe('cUSD');
         expect(transaction.network).toBe('CELO');
-        expect(transaction.senderAddress).toBe('123456789');
+        expect(transaction.initiatorAddress).toBe('123456789');
         expect(transaction.timestamp).toBe(123456789);
         expect(transaction.fulfilled).toBe(false);
 

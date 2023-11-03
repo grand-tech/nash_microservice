@@ -34,8 +34,8 @@ type TransactionRequest {
   amount: Float
   description: String
   fulfilled: Boolean
+  initiatorAddress: String
   network: String
-  senderAddress: String
   stableCoin: String
   timestamp: Float
 }

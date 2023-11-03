@@ -46,7 +46,7 @@ export class RequestFundsService {
           targetPhoneNumber,
         );
         if (target.phoneNumber == targetPhoneNumber) {
-          const tx = await this.requestcUSD(
+          const tx = await this.requestFundsCypherQry(
             amountUSD,
             description,
             initiator,
@@ -76,7 +76,7 @@ export class RequestFundsService {
    * @param initiator the initiator details.
    * @param target the target details.
    */
-  async requestcUSD(
+  async requestFundsCypherQry(
     usdAmount: number,
     description: string,
     initiator: User,
@@ -92,25 +92,26 @@ export class RequestFundsService {
 
     const r: Record<string, any> = tx;
     r.initiatorFeduid = initiator.feduid;
-    r.initiator = initiator.publicAddress;
+    r.initiatorAddress = initiator.publicAddress;
     r.targetFeduid = target.feduid;
     r.todaysTimestamp = 1234567890;
     r.timestamp = 1234567890;
 
     const transactionRequest = await this.neo4j.write(
       'MATCH (initiator: User) MATCH (target: User) ' +
-      ' WHERE initiator.feduid = $initiatorFeduid AND recipient.target = $targetFeduid ' +
-      ' MERGE (initiator)-[:TRANSACTED_ON]->(initiatorDay: Day {timestamp: $todaysTimestamp}) MERGE' +
-      ' (target)-[:REQUESTED]->(targetDay: Day {timestamp: $todaysTimestamp}) ' +
+      ' WHERE initiator.feduid = $initiatorFeduid AND target.feduid = $targetFeduid ' +
+      ' MERGE (initiator)-[:REQUESTED_ON]->(initiatorDay: Day {timestamp: $todaysTimestamp}) MERGE' +
+      ' (target)-[:REQUESTED_ON]->(targetDay: Day {timestamp: $todaysTimestamp}) ' +
       ' CREATE (initiatorDay)-[:RECORDED]->(tx:Transaction { ' +
       '     description: $description, ' +
       '     amount: $amount, ' +
       '     stableCoin: $stableCoin, ' +
       '     network: $network, ' +
-      '     senderAddress: $senderAddress, ' +
-      '     timestamp: $timestamp' +
+      '     initiatorAddress: $initiatorAddress, ' +
+      '     timestamp: $timestamp,' +
+      '     fulfilled: false' +
       ' })<-[:RECORDED]-(targetDay) ' +
-      ' return tx, initiatorDay, targetDay, sender, recipient',
+      ' return tx, initiatorDay, targetDay, initiator, target',
       tx,
     );
 
