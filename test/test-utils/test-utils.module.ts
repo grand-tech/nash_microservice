@@ -8,7 +8,7 @@ import { nodeToUser, User } from '../../src/datatypes/user/user';
   providers: [FirebaseTestUtilsService],
   exports: [FirebaseTestUtilsService],
 })
-export class TestUtilsModule { }
+export class TestUtilsModule {}
 
 /**
  * Database connections configs for testing.
@@ -19,7 +19,7 @@ export const DB_CONNECTIONS_CONFIGS: Neo4jConnection = {
   username: 'neo4j',
   password: 'ntyKvExj_Gact-wswp37_E_VtqiWn_wxaw-ZY0T42BY',
   port: '7687',
-  database: 'neo4j'
+  database: 'neo4j',
 };
 
 /**
@@ -27,7 +27,7 @@ export const DB_CONNECTIONS_CONFIGS: Neo4jConnection = {
  * @param id the id of the node to be deleted.
  * @param dbService the database service instance.
  */
-export async function deleteNode(id: Number, dbService: Neo4jService) {
+export async function deleteNode(id: number, dbService: Neo4jService) {
   const rst = await dbService.write(
     'MATCH (n) WHERE ID(n)=$id DETACH DELETE n',
     {
@@ -45,19 +45,15 @@ export async function deleteNode(id: Number, dbService: Neo4jService) {
  * @param dbService the database connection.
  * @return the saved user record.
  */
-export async function addTestUser(
-  feduid: string,
-  dbService: Neo4jService,
-) {
-
+export async function addTestUser(feduid: string, dbService: Neo4jService) {
   const params: Record<string, any> = {
     feduid: feduid,
   };
 
   const rst = await dbService.write(
     'MERGE (u:User {feduid: $feduid}) ON CREATE ' +
-    ' SET u.name = "Test User", u.created = timestamp() ' +
-    ' RETURN u',
+      ' SET u.name = "Test User", u.created = timestamp() ' +
+      ' RETURN u',
     params,
   );
 

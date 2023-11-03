@@ -13,7 +13,7 @@ export class UsersService {
   constructor(
     private readonly neo4j: Neo4jService,
     private readonly walletCreator: CryptoWalletCreatorService,
-  ) { }
+  ) {}
 
   /**
    * Queries for user information given their feduidd.
@@ -54,10 +54,10 @@ export class UsersService {
   }
 
   /**
- * Queries for user information given their phone number.
- * @param phoneNumber the user`s phone number.
- * @return the queried user.
- */
+   * Queries for user information given their phone number.
+   * @param phoneNumber the user`s phone number.
+   * @return the queried user.
+   */
   async getUserByPhoneNumber(phoneNumber: string) {
     const rst = await this.neo4j.read(
       'MATCH (user:User) WHERE user.phoneNumber = $phoneNumber RETURN user',
@@ -193,9 +193,9 @@ export class UsersService {
 
     const rst = await this.neo4j.write(
       'MATCH (user:User { feduid: $feduid}) ' +
-      ' SET user.privateKey = $privateKey, user.mnemonic = $mnemonic, ' +
-      ' user.publicAddress = $publicAddress, user.publicKey = $publicKey' +
-      ' RETURN user',
+        ' SET user.privateKey = $privateKey, user.mnemonic = $mnemonic, ' +
+        ' user.publicAddress = $publicAddress, user.publicKey = $publicKey' +
+        ' RETURN user',
       params,
     );
 
@@ -233,7 +233,10 @@ export class UsersService {
    * @param feduid the users feduid.
    * @param mnemonic the users private mnemonic.
    */
-  async addMnemonicToAccount(user: User, mnemonic: string): Promise<UserResponse> {
+  async addMnemonicToAccount(
+    user: User,
+    mnemonic: string,
+  ): Promise<UserResponse> {
     if ((user?.privateKey ?? '').trim() != '') {
       return {
         message: 'Account alreay has a private key!!',
@@ -335,8 +338,8 @@ export class UsersService {
 
     const rst = await this.neo4j.write(
       'MATCH (user:User { feduid: $feduid}) ' +
-      ' SET user.phoneNumber = $phoneNumber, user.name = $fullName' +
-      ' RETURN user',
+        ' SET user.phoneNumber = $phoneNumber, user.name = $fullName' +
+        ' RETURN user',
       params,
     );
 

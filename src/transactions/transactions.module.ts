@@ -17,9 +17,9 @@ import { TransactionsResolver } from './transactions.resolver';
     MPesaApisService,
 
     // resolver
-    TransactionsResolver
+    TransactionsResolver,
   ],
   exports: [],
   controllers: [],
 })
-export class TransactionsModule { }
+export class TransactionsModule {}

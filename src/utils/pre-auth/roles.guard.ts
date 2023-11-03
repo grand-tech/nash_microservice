@@ -5,7 +5,7 @@ import { User } from 'src/datatypes/user/user';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
-  constructor(private readonly reflector: Reflector) { }
+  constructor(private readonly reflector: Reflector) {}
 
   /**
    * Performs RBAC on all routes.

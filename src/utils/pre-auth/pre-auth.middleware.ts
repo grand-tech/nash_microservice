@@ -1,4 +1,4 @@
-import { ExecutionContext, Injectable, NestMiddleware } from '@nestjs/common';
+import { Injectable, NestMiddleware } from '@nestjs/common';
 import { auth } from 'firebase-admin';
 import { FirebaseAuthService } from '../firebase-auth/firebase-auth.service';
 import { FastifyRequest, FastifyReply } from 'fastify';
@@ -14,9 +14,9 @@ export class PreAuthMiddleware implements NestMiddleware {
   private firebaseAuth: auth.Auth;
 
   /**
-   * 
-   * @param firebaseAuthService 
-   * @param userService 
+   *
+   * @param firebaseAuthService
+   * @param userService
    */
   constructor(
     private firebaseAuthService: FirebaseAuthService,
@@ -26,24 +26,25 @@ export class PreAuthMiddleware implements NestMiddleware {
   }
 
   /**
-   * 
-   * @param req 
-   * @param res 
-   * @param next 
+   *
+   * @param req
+   * @param res
+   * @param next
    */
   use(req: FastifyRequest, res: FastifyReply, next: () => void) {
     const token = (req.headers.authorization ?? '').replace('Bearer ', '');
 
     if (token != null && token != '') {
-      this.firebaseAuth.verifyIdToken(token)
+      this.firebaseAuth
+        .verifyIdToken(token)
         .then(async (decodedToken: DecodedIdToken) => {
-
           const dbUser = await this.getUser(decodedToken.uid);
           req['feduid'] = decodedToken.uid;
           req['user'] = dbUser;
           next();
         })
         .catch((reason: any) => {
+          console.error(reason);
           next();
         });
     } else {
@@ -52,10 +53,10 @@ export class PreAuthMiddleware implements NestMiddleware {
   }
 
   /**
- * Queries for user information given their feduidd.
- * @param feduid the user`s feduid.
- * @return the queried user.
- */
+   * Queries for user information given their feduidd.
+   * @param feduid the user`s feduid.
+   * @return the queried user.
+   */
   async getUser(feduid: string) {
     const rst = await this.neo4j.read(
       'MATCH (user:User) WHERE user.feduid = $feduid RETURN user',
@@ -72,7 +73,6 @@ export class PreAuthMiddleware implements NestMiddleware {
 
   // private static accessDenied(url: string, res: FastifyReply['raw']) {
   //   res.statusCode
-
 
   //   // .status(403).json({
   //   //   statusCode: 403,

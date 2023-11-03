@@ -11,7 +11,10 @@ import {
   CryptoWalletCreatorService,
 } from '../crypto-wallet-creator.service';
 import { TEST_ACC_3 } from '../../../test/test-utils/test.accounts';
-import { dismantleContractKit, initializeContractKit } from '../../utils/block-chain-utils/contract.kit.utils';
+import {
+  dismantleContractKit,
+  initializeContractKit,
+} from '../../utils/block-chain-utils/contract.kit.utils';
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -32,17 +35,18 @@ describe('UsersService', () => {
   afterAll(async () => {
     dbService.getDriver().close();
     module.close();
-    dismantleContractKit()
+    dismantleContractKit();
   });
 
   describe('Test Validate Existing Crypto Account.', () => {
-    let userID: number = -1;
-    let feduid = Math.random().toString();
+    let userID = -1;
+    const feduid = Math.random().toString();
+    let existingUID: number;
 
     beforeEach(async () => {
       const rst = await dbService.write(
         'CREATE (user:User ' +
-        ' { email: $email, feduid: $feduid}) RETURN user',
+          ' { email: $email, feduid: $feduid}) RETURN user',
         {
           feduid: feduid,
           email: feduid,
@@ -58,7 +62,11 @@ describe('UsersService', () => {
     // clean up.
     afterEach(async () => {
       if (userID > -1) {
-        const rst = await deleteNode(userID, dbService);
+        await deleteNode(userID, dbService);
+      }
+
+      if (existingUID) {
+        await deleteNode(existingUID, dbService);
       }
     });
 
@@ -96,15 +104,16 @@ describe('UsersService', () => {
     it('Already existing public address.', async () => {
       const account: AccountInformation = TEST_ACC_3;
 
-      const rst = await dbService.write(
+      const existingUser = await dbService.write(
         'MATCH (user:User { feduid: $feduid}) ' +
-        ' SET user.publicAddress = $publicAddress RETURN user',
+          ' SET user.publicAddress = $publicAddress RETURN user',
         {
           feduid: feduid,
           publicAddress: TEST_ACC_3.address,
         },
       );
 
+      existingUID = nodeToUser(existingUser.records[0].get('user')).id;
       const rsp = await service.validateExistingCryptoAccount(feduid, account);
 
       expect(rsp.status).toBe(503);
@@ -146,7 +155,7 @@ describe('UsersService', () => {
   });
 
   describe('addMnemonicToAccount', () => {
-    let feduid = Math.random().toString();
+    const feduid = Math.random().toString();
 
     it('Test user with private key', async () => {
       const user = new User();
@@ -168,7 +177,7 @@ describe('UsersService', () => {
   });
 
   describe('addPrivateKeyToAccount', () => {
-    let feduid = Math.random().toString();
+    const feduid = Math.random().toString();
 
     it('Test user with private key', async () => {
       const user = new User();

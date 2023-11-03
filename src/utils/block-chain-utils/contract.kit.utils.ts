@@ -78,8 +78,10 @@ export async function sendCUSD(
   recipientAddress: string,
   amount: string,
 ) {
-  let cUSDToken = await contractKit.contracts.getStableToken(StableToken.cUSD);
-  let cUSDtx = await cUSDToken
+  const cUSDToken = await contractKit.contracts.getStableToken(
+    StableToken.cUSD,
+  );
+  const cUSDtx = await cUSDToken
     ?.transfer(recipientAddress, amount)
     .sendAndWaitForReceipt({
       from: senderAddress,
@@ -100,8 +102,10 @@ export async function sendCEUR(
   recipientAddress: string,
   amount: string,
 ): Promise<CeloTxReceipt> {
-  let cEURToken = await contractKit.contracts.getStableToken(StableToken.cEUR);
-  let cUSDtx = await cEURToken
+  const cEURToken = await contractKit.contracts.getStableToken(
+    StableToken.cEUR,
+  );
+  const cUSDtx = await cEURToken
     ?.transfer(recipientAddress, amount)
     .sendAndWaitForReceipt({
       from: senderAddress,
