@@ -14,6 +14,27 @@ type Query {
   getUsers: [User!]!
 }
 
+type Transaction {
+  amount: Float
+  blockchainTransactionHash: String
+  blockchainTransactionIndex: Float
+  blockchainTransactionStatus: Boolean
+  description: String
+  network: String
+  senderAddress: String
+  stableCoin: String
+  timestamp: Float
+  transactionBlockHash: String
+  transactionCode: String
+  transactionTimestamp: Float
+}
+
+type TransactionResponse {
+  body: Transaction
+  message: String!
+  status: Int!
+}
+
 type User {
   email: String
   feduid: String
