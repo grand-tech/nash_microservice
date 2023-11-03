@@ -4,7 +4,8 @@ import { UsersService } from '../../users/users.service';
 import { User } from '../../datatypes/user/user';
 import { sendFunds } from '../../utils/block-chain-utils/contract.kit.utils';
 import { StableToken } from '@celo/base';
-import { Transaction } from '../../datatypes/transaction/transaction';
+import { Transaction, nodeToTransaction } from '../../datatypes/transaction/transaction';
+import { TransactionResponse } from 'src/utils/response';
 
 @Injectable()
 export class SendFundsService {
@@ -12,6 +13,56 @@ export class SendFundsService {
     private readonly neo4j: Neo4jService,
     private readonly userService: UsersService,
   ) { }
+
+
+  /**
+   * Validates the trasnaction request and send the money.
+   * @param sender the sender.
+   * @param amountUSD the amount of money to be sent.
+   * @param description the description of the trasnactions.
+   */
+  async validateSendFunds(
+    sender: User,
+    amountUSD: number,
+    recipientPhoneNumber: string,
+    description: string,
+  ): Promise<TransactionResponse> {
+    const response: TransactionResponse = {
+      status: 200,
+      message: 'Success',
+      body: undefined
+    }
+
+    if (amountUSD <= 0) {
+      response.status = 501;
+      response.message = 'Invalid amount should be greater 0.';
+    } else {
+
+      // query recipient
+      if ((recipientPhoneNumber ?? '').length < 7) {
+        response.status = 502;
+        response.message = 'Invalid phone number.';
+      } else {
+        const recipient = await this.userService.getUserByPhoneNumber(recipientPhoneNumber)
+        if (recipient.phoneNumber == recipientPhoneNumber) {
+          const tx = await this.sendcUSD(amountUSD, description, sender, recipient);
+          const transaction = nodeToTransaction(tx.records[0].get('tx'));
+          // Recipient does not exist.
+          response.body = transaction;
+          if (!transaction.blockchainTransactionStatus) {
+            response.message = "Transaction failed!!"
+            response.status = 503
+          }
+        } else {
+          response.status = 504;
+          response.message = 'Account with phone number does not exist.';
+        }
+
+      }
+    }
+
+    return response;
+  }
 
   /**
    * Sends money in usd from one account to another.
