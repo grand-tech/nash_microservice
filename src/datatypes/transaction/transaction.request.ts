@@ -35,7 +35,7 @@ export class TransactionRequest extends BaseNode {
      * The senders address.
      */
     @Field((type) => String, { nullable: true })
-    public senderAddress: string;
+    public initiatorAddress: string;
 
     /**
      * The timestamp for the transaction.
@@ -75,7 +75,7 @@ export function nodeToTransactionRequest(node: any): TransactionRequest {
     tx.amount = props.amount;
     tx.stableCoin = props.stableCoin;
     tx.network = props.network;
-    tx.senderAddress = props.senderAddress;
+    tx.initiatorAddress = props.initiatorAddress;
     tx.timestamp = props.timestamp
     tx.fulfilled = props.fulfilled
 

@@ -30,6 +30,16 @@ type Transaction {
   transactionTimestamp: Float
 }
 
+type TransactionRequest {
+  amount: Float
+  description: String
+  fulfilled: Boolean
+  initiatorAddress: String
+  network: String
+  stableCoin: String
+  timestamp: Float
+}
+
 type TransactionResponse {
   body: Transaction
   message: String!
