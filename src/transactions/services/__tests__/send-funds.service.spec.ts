@@ -15,7 +15,7 @@ import {
   nodeToTransaction,
 } from '../../../datatypes/transaction/transaction';
 
-describe('SendFundsService', () => {
+describe('SendFundsService: SEND FUNDS CYPHER QUERY : TEST SUIT', () => {
   let service: SendFundsService;
   let dbService: Neo4jService;
   let app: TestingModule;
@@ -38,7 +38,7 @@ describe('SendFundsService', () => {
     await app.close();
   }, 7000);
 
-  it('should be defined', async () => {
+  it('Send funds cypher query test.', async () => {
     const user1 = new User();
     user1.publicAddress = TEST_ACC_1.address;
     user1.privateKey = TEST_ACC_1.privateKey;
