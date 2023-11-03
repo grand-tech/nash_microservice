@@ -1,28 +1,28 @@
 import { TestingModule, Test } from '@nestjs/testing';
 import { Neo4jService, Neo4jModule } from 'nest-neo4j/dist';
-import { User, nodeToUser } from '../../datatypes/user/user';
+import { User, nodeToUser } from '../../../datatypes/user/user';
 import {
   DB_CONNECTIONS_CONFIGS,
   deleteNode,
-} from '../../../test/test-utils/test-utils.module';
-import { TEST_ACC_1, TEST_ACC_2 } from '../../../test/test-utils/test.accounts';
-import { SendFundsService } from '../services/send-funds.service';
-import { UsersService } from '../../users/users.service';
-import { CryptoWalletCreatorService } from '../../users/crypto-wallet-creator.service';
-import { initializeContractKit } from '../../utils/block-chain-utils/contract.kit.utils';
+} from '../../../../test/test-utils/test-utils.module';
+import { TEST_ACC_1, TEST_ACC_2 } from '../../../../test/test-utils/test.accounts';
+import { UsersService } from '../../../users/users.service';
+import { CryptoWalletCreatorService } from '../../../users/crypto-wallet-creator.service';
+import { initializeContractKit } from '../../../utils/block-chain-utils/contract.kit.utils';
+import { RequestFundsService } from '../request-funds.service';
 
-describe('Test send funds request validation.', () => {
-  let service: SendFundsService;
+describe('RequestFundsService: VALIDATE REQUEST FUNDS REQUEST DETAILS : TEST SUIT', () => {
+  let service: RequestFundsService;
   let dbService: Neo4jService;
   let module: TestingModule;
 
   beforeAll(async () => {
     module = await Test.createTestingModule({
-      providers: [SendFundsService, UsersService, CryptoWalletCreatorService],
+      providers: [RequestFundsService, UsersService, CryptoWalletCreatorService],
       imports: [Neo4jModule.forRoot(DB_CONNECTIONS_CONFIGS)],
     }).compile();
 
-    service = module.get<SendFundsService>(SendFundsService);
+    service = module.get<RequestFundsService>(RequestFundsService);
     dbService = module.get<Neo4jService>(Neo4jService);
   });
 
@@ -32,20 +32,20 @@ describe('Test send funds request validation.', () => {
   });
 
   it('Test Invalid Amount.', async () => {
-    const response = await service.validateSendFunds(new User(), 0, '', '');
+    const response = await service.validateSendRequestFunds(new User(), 0, '', '');
 
     expect(response.status).toBe(501);
     expect(response.message).toBe('Invalid amount should be greater 0.');
   });
 
   it('Test Invalid Phone Number.', async () => {
-    const response = await service.validateSendFunds(new User(), 1, '', '');
+    const response = await service.validateSendRequestFunds(new User(), 1, '', '');
     expect(response.status).toBe(502);
     expect(response.message).toBe('Invalid phone number.');
   });
 
   it('Test unregistered phone number.', async () => {
-    const response = await service.validateSendFunds(
+    const response = await service.validateSendRequestFunds(
       new User(),
       1,
       '+25479231433',
@@ -65,7 +65,7 @@ describe('Test send funds request validation.', () => {
       initializeContractKit();
       const rst = await dbService.write(
         'CREATE (sender:User {name: "Test User", publicAddress: $senderAddress, privateKey: $privateKey, feduid: $senderFeduid}), ' +
-          ' (receiver:User {name: "Test User", publicAddress: $receiverAddress,  phoneNumber: $phoneNumber, feduid: $receiverFeduid }) RETURN sender, receiver',
+        ' (receiver:User {name: "Test User", publicAddress: $receiverAddress,  phoneNumber: $phoneNumber, feduid: $receiverFeduid }) RETURN sender, receiver',
         {
           phoneNumber: testPhoneNumber,
           senderFeduid: TEST_ACC_1.address,
@@ -93,7 +93,7 @@ describe('Test send funds request validation.', () => {
     });
 
     it('Actual test case', async () => {
-      const response = await service.validateSendFunds(
+      const response = await service.validateSendRequestFunds(
         sender,
         0.000001,
         testPhoneNumber,

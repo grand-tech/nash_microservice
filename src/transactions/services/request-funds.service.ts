@@ -55,10 +55,6 @@ export class RequestFundsService {
           const transaction = nodeToTransactionRequest(tx.records[0].get('tx'));
           // Recipient does not exist.
           response.body = transaction;
-          if (transaction.id > 0) {
-            response.message = 'Transaction request failed!!';
-            response.status = 503;
-          }
         } else {
           response.status = 504;
           response.message = 'Account with phone number does not exist.';
