@@ -2,6 +2,7 @@ import { Type } from '@nestjs/common';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { User } from '../datatypes/user/user';
 import { Transaction } from '../datatypes/transaction/transaction';
+import { TransactionRequest } from '../datatypes/transaction/transaction.request';
 
 /**
  * Response object interface.
@@ -46,8 +47,10 @@ export function Response<T>(classRef: Type<T>): Type<IResponse<T>> {
 
 // List of all the expected response objects in the project.
 @ObjectType()
-export class UserResponse extends Response(User!) {}
+export class UserResponse extends Response(User!) { }
 
-// List of all the expected response objects in the project.
 @ObjectType()
-export class TransactionResponse extends Response(Transaction!) {}
+export class TransactionResponse extends Response(Transaction!) { }
+
+@ObjectType()
+export class TransactionRequestResponse extends Response(TransactionRequest!) { }
