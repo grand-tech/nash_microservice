@@ -100,9 +100,9 @@ export class RequestFundsService {
     const transactionRequest = await this.neo4j.write(
       'MATCH (initiator: User) MATCH (target: User) ' +
       ' WHERE initiator.feduid = $initiatorFeduid AND target.feduid = $targetFeduid ' +
-      ' MERGE (initiator)-[:REQUESTED_ON]->(initiatorDay: Day {timestamp: $todaysTimestamp}) MERGE' +
-      ' (target)-[:REQUESTED_ON]->(targetDay: Day {timestamp: $todaysTimestamp}) ' +
-      ' CREATE (initiatorDay)-[:RECORDED]->(tx:Transaction { ' +
+      ' MERGE (initiator)-[:REQUESTED_FUNDS_ON]->(initiatorDay: Day {timestamp: $todaysTimestamp}) ' +
+      ' MERGE (target)-[:REQUESTED_FUNDS_ON]->(targetDay: Day {timestamp: $todaysTimestamp}) ' +
+      ' CREATE (initiatorDay)-[:RECORDED]->(tx:TransactionRequest { ' +
       '     description: $description, ' +
       '     amount: $amount, ' +
       '     stableCoin: $stableCoin, ' +

@@ -87,7 +87,7 @@ async function setUpTestUsers(dbService: Neo4jService) {
 }
 
 async function deleteUsers(dbService: Neo4jService) {
-    const qry = `MATCH (u:User)-[:TRANSACTED_ON]-(d:Day)-[:RECORDED]-(t:Transaction)
+    const qry = `MATCH (u:User)-[:REQUESTED_FUNDS_ON]-(d:Day)-[:RECORDED]-(t:TransactionRequest)
    WHERE u.publicAddress = $address1 OR u.publicAddress = $address2
    DETACH DELETE t DETACH DELETE u DETACH DELETE d`;
 
