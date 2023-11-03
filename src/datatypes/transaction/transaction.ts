@@ -110,7 +110,7 @@ export function nodeToTransaction(node: any): Transaction {
   tx.blockchainTransactionIndex = props.blockchainTransactionIndex;
   tx.transactionBlockHash = props.transactionBlockHash;
   tx.blockchainTransactionStatus = props.blockchainTransactionStatus;
-  tx.transactionTimestamp = props.transactionTimestamp;
+  tx.timestamp = props.timestamp;
   tx.senderAddress = props.senderAddress;
 
   return tx;

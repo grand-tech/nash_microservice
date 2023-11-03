@@ -11,7 +11,7 @@ export default class BaseNode {
   public id!: number;
 
   /**
-   * The lables of the node in the database.
+   * The labels of the node in the database.
    */
   @Field((type) => [String], { nullable: true })
   public labels!: string[];
