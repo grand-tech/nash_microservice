@@ -33,7 +33,7 @@ describe('SendFundsService', () => {
   });
 
   afterAll(async () => {
-    await deletUsers(dbService);
+    await deleteUsers(dbService);
     await dbService.getDriver().close();
     await app.close();
   }, 7000);
@@ -89,7 +89,7 @@ async function setUpTestUsers(dbService: Neo4jService) {
   assert(rst.records[0].keys.length == 2, 'Id is valid.');
 }
 
-async function deletUsers(dbService: Neo4jService) {
+async function deleteUsers(dbService: Neo4jService) {
   const qry = `MATCH (u:User)-[:TRANSACTED_ON]-(d:Day)-[:RECORDED]-(t:Transaction)
    WHERE u.publicAddress = $address1 OR u.publicAddress = $address2
    DETACH DELETE t DETACH DELETE u DETACH DELETE d`;
