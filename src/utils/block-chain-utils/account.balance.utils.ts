@@ -20,7 +20,7 @@ export async function getBalance(address: string) {
   try {
     const balanceObj: Record<string, number> = {};
     // Get Balances
-    let balances = await contractKit.celoTokens.balancesOf(address);
+    const balances = await contractKit.celoTokens.balancesOf(address);
     // Convert and add to balance object
 
     for (const value in balances) {

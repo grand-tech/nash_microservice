@@ -29,13 +29,13 @@ describe('UsersService', () => {
   });
 
   describe('KYC record tests', () => {
-    let userID: number = -1;
-    let feduid = Math.random().toString();
+    let userID = -1;
+    const feduid = Math.random().toString();
 
     beforeEach(async () => {
       const rst = await dbService.write(
         'CREATE (user:User ' +
-        ' { email: $email, feduid: $feduid, phoneNumber: $phoneNumber}) RETURN user',
+          ' { email: $email, feduid: $feduid, phoneNumber: $phoneNumber}) RETURN user',
         {
           feduid: feduid,
           email: feduid,
@@ -52,7 +52,7 @@ describe('UsersService', () => {
     // clean up.
     afterEach(async () => {
       if (userID) {
-        const rst = await deleteNode(userID, dbService);
+        await deleteNode(userID, dbService);
       }
     });
 
@@ -72,8 +72,6 @@ describe('UsersService', () => {
       };
 
       const rsp = await service.saveUserProfile(user, feduid, feduid);
-
-      const usr = rsp.body;
 
       expect(rsp.status).toBe(500);
       expect(rsp.message).toBe(

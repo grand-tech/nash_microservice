@@ -24,7 +24,7 @@ import { join } from 'path';
       username: 'neo4j',
       password: 'ntyKvExj_Gact-wswp37_E_VtqiWn_wxaw-ZY0T42BY',
       port: '7687',
-      database: 'neo4j'
+      database: 'neo4j',
     }),
     DataTypesModule,
     TransactionsModule,
@@ -32,8 +32,7 @@ import { join } from 'path';
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'graphql/schema.gql'),
       include: [UsersModule, TransactionsModule],
-      sortSchema: true
-      
+      sortSchema: true,
     }),
   ],
   providers: [],

@@ -9,7 +9,7 @@ import { initializeContractKit } from './utils/block-chain-utils/contract.kit.ut
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
-    new FastifyAdapter()
+    new FastifyAdapter(),
   );
   // make sure that the contract kit utils are initialized.
   initializeContractKit();

@@ -9,37 +9,37 @@ export class User extends BaseNode {
   /**
    * The name of the user.
    */
-  @Field(type => String, { nullable: true })
+  @Field((type) => String, { nullable: true })
   public name!: string;
 
   /**
    * The users federate ID from firebase.
    */
-  @Field(type => String, { nullable: true })
+  @Field((type) => String, { nullable: true })
   public feduid!: string;
 
   /**
    * The users phone number.
    */
-  @Field(type => String, { nullable: true })
+  @Field((type) => String, { nullable: true })
   public email!: string;
 
   /**
    * The users phone number.
    */
-  @Field(type => String, { nullable: true })
+  @Field((type) => String, { nullable: true })
   public phoneNumber!: string;
 
   /**
    * The user`s id number.
    */
-  @Field(type => String, { nullable: true })
+  @Field((type) => String, { nullable: true })
   public idNumber!: string;
 
   /**
    * The user`s public address on the blockchain.
    */
-  @Field(type => String, { nullable: true })
+  @Field((type) => String, { nullable: true })
   public publicAddress!: string;
 
   /**

@@ -21,8 +21,11 @@ export const TEST_ACC_2: AccountInformation = {
 };
 
 export const TEST_ACC_3: AccountInformation = {
-  mnemonic: 'muscle glow few camera gorilla smart trigger bread legal fancy unit slam foot book spoil demise topic motion advance cost soup someone surround exchange',
-  privateKey: 'efdb266ff91d7a0565a2f0d9d03892276108026f5393bbba8d6fe8858282dfa1',
-  publicKey: '02fd7b82b7470eaf0ae08aa945d049ab996d2431bcaddaea0fea6fc29535834105',
-  address: '0xAb9cb6272d8116919301A365B241697dBdEe46Ff'
-}
+  mnemonic:
+    'muscle glow few camera gorilla smart trigger bread legal fancy unit slam foot book spoil demise topic motion advance cost soup someone surround exchange',
+  privateKey:
+    'efdb266ff91d7a0565a2f0d9d03892276108026f5393bbba8d6fe8858282dfa1',
+  publicKey:
+    '02fd7b82b7470eaf0ae08aa945d049ab996d2431bcaddaea0fea6fc29535834105',
+  address: '0xAb9cb6272d8116919301A365B241697dBdEe46Ff',
+};

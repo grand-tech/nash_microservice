@@ -2,13 +2,16 @@ import request from 'supertest';
 import { Test } from '@nestjs/testing';
 import { AppModule } from '../../app.module';
 import { UsersService } from '../users.service';
-import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
+import {
+  FastifyAdapter,
+  NestFastifyApplication,
+} from '@nestjs/platform-fastify';
 import { FirebaseTestUtilsService } from '../../../test/test-utils/firebase-test-utils/firebase-test-utils.service';
 import { Neo4jService } from 'nest-neo4j/dist';
 import { addTestUser } from '../../../test/test-utils/test-utils.module';
 
 // User service mock.
-let userService = {
+const userService = {
   createCryptoAccount: () => {
     return {
       status: 200,
@@ -17,8 +20,8 @@ let userService = {
         feduid: '1234567890',
         email: 'testuser@gmail.com',
         idNumber: '1234567890',
-        name: 'John Doe'
-      }
+        name: 'John Doe',
+      },
     };
   },
   addPrivateKeyToAccount: () => {
@@ -33,12 +36,12 @@ let userService = {
       publicKey: undefined,
       mnemonic: undefined,
       id: 0,
-      labels: []
-    }
+      labels: [],
+    };
     return {
       status: 200,
       message: 'Success',
-      body: u
+      body: u,
     };
   },
   addMnemonicToAccount: () => {
@@ -53,12 +56,12 @@ let userService = {
       publicKey: undefined,
       mnemonic: undefined,
       id: 0,
-      labels: []
-    }
+      labels: [],
+    };
     return {
       status: 200,
       message: 'Success',
-      body: u
+      body: u,
     };
   },
   saveUserProfile: () => {
@@ -67,12 +70,12 @@ let userService = {
       publicAddress: '1234567892',
       phoneNumber: '0712345678',
       id: 0,
-      labels: []
-    }
+      labels: [],
+    };
     return {
       status: 200,
       message: 'Success',
-      body: u
+      body: u,
     };
   },
   validateNewUser: () => {
@@ -83,12 +86,11 @@ let userService = {
         feduid: '1234567890',
         email: 'testuser@gmail.com',
         idNumber: '1234567890',
-        name: 'John Doe'
-      }
+        name: 'John Doe',
+      },
     };
   },
 };
-
 
 describe('User Controller Mock Method Calls.', () => {
   let testUtils: FirebaseTestUtilsService;
@@ -96,37 +98,37 @@ describe('User Controller Mock Method Calls.', () => {
   let db: Neo4jService;
   let skey: string;
 
-
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule],
-      providers: [FirebaseTestUtilsService]
+      providers: [FirebaseTestUtilsService],
     })
       .overrideProvider(UsersService)
       .useValue(userService)
       .compile();
 
-    app = moduleRef.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
+    app = moduleRef.createNestApplication<NestFastifyApplication>(
+      new FastifyAdapter(),
+    );
     await app.init();
     await app.getHttpAdapter().getInstance().ready();
 
-    testUtils = moduleRef.get<FirebaseTestUtilsService>(FirebaseTestUtilsService)
-    db = moduleRef.get<Neo4jService>(Neo4jService)
+    testUtils = moduleRef.get<FirebaseTestUtilsService>(
+      FirebaseTestUtilsService,
+    );
+    db = moduleRef.get<Neo4jService>(Neo4jService);
 
     // Get skey;
     const user = await testUtils.auth('test@gmail.com', 'test123');
-    const u = await addTestUser(user.feduid, db);
+    await addTestUser(user.feduid, db);
     skey = user.skey;
-    
   }, 7000);
 
   afterAll(async () => {
     await app.close();
   });
 
-
   it(`Test sign up mutation.`, () => {
-
     const mutation = `mutation {
       signUp(feduid: "1234567890" ) {
         status
@@ -138,27 +140,24 @@ describe('User Controller Mock Method Calls.', () => {
           email
         }
       }
-    }`
+    }`;
 
     return request(app.getHttpServer())
       .post('/graphql')
-      .send(
-        {
-          query: mutation
-        }
-      )
+      .send({
+        query: mutation,
+      })
       .expect(200)
       .expect((res) => {
-        const rsp = res.body.data.signUp
-        expect(rsp.status).toBe(200)
-        expect(rsp.message).toBe('Success')
+        const rsp = res.body.data.signUp;
+        expect(rsp.status).toBe(200);
+        expect(rsp.message).toBe('Success');
 
         const body = rsp.body;
 
-        expect(body.feduid).toBe('1234567890')
+        expect(body.feduid).toBe('1234567890');
       });
-
-  }, 6000)
+  }, 6000);
 
   it(`Check if create new crypto wallet mutation exists.`, () => {
     const mutation = `mutation {
@@ -171,25 +170,23 @@ describe('User Controller Mock Method Calls.', () => {
           publicAddress
         }
       }
-    }`
+    }`;
 
     return request(app.getHttpServer())
       .post('/graphql')
-      .set("Authorization", skey)
-      .send(
-        {
-          query: mutation
-        }
-      )
+      .set('Authorization', skey)
+      .send({
+        query: mutation,
+      })
       .expect(200)
       .expect((res) => {
-        const rsp = res.body.data.addPrivateKeyToAccount
-        expect(rsp.status).toBe(200)
-        expect(rsp.message).toBe('Success')
+        const rsp = res.body.data.addPrivateKeyToAccount;
+        expect(rsp.status).toBe(200);
+        expect(rsp.message).toBe('Success');
 
         const body = rsp.body;
-        expect(body.feduid).toBe('1234567892')
-        expect(body.publicAddress).toBe('1234567892')
+        expect(body.feduid).toBe('1234567892');
+        expect(body.publicAddress).toBe('1234567892');
       });
   }, 6000);
 
@@ -205,24 +202,22 @@ describe('User Controller Mock Method Calls.', () => {
           email
         }
       }
-    }`
+    }`;
 
     return request(app.getHttpServer())
       .post('/graphql')
-      .set("Authorization", skey)
-      .send(
-        {
-          query: mutation
-        }
-      )
+      .set('Authorization', skey)
+      .send({
+        query: mutation,
+      })
       .expect(200)
       .expect((res) => {
-        const rsp = res.body.data.createNewCryptoWallet
-        expect(rsp.status).toBe(200)
-        expect(rsp.message).toBe('Success')
+        const rsp = res.body.data.createNewCryptoWallet;
+        expect(rsp.status).toBe(200);
+        expect(rsp.message).toBe('Success');
 
         const body = rsp.body;
-        expect(body.feduid).toBe('1234567890')
+        expect(body.feduid).toBe('1234567890');
       });
   }, 6000);
 
@@ -235,23 +230,21 @@ describe('User Controller Mock Method Calls.', () => {
           publicAddress
         }
       }
-    }`
+    }`;
 
     return request(app.getHttpServer())
       .post('/graphql')
-      .set("Authorization", skey)
-      .send(
-        {
-          query: mutation
-        }
-      )
+      .set('Authorization', skey)
+      .send({
+        query: mutation,
+      })
       .expect(200)
       .expect((res) => {
-        const rsp = res.body.data.addMnemonicToAccount
-        expect(rsp.status).toBe(200)
-        expect(rsp.message).toBe('Success')
+        const rsp = res.body.data.addMnemonicToAccount;
+        expect(rsp.status).toBe(200);
+        expect(rsp.message).toBe('Success');
         const body = rsp.body;
-        expect(body.publicAddress).toBe('1234567892')
+        expect(body.publicAddress).toBe('1234567892');
       });
   }, 6000);
 
@@ -265,24 +258,22 @@ describe('User Controller Mock Method Calls.', () => {
           phoneNumber
         }
       }
-    }`
+    }`;
 
     return request(app.getHttpServer())
       .post('/graphql')
-      .set("Authorization", skey)
-      .send(
-        {
-          query: mutation
-        }
-      )
+      .set('Authorization', skey)
+      .send({
+        query: mutation,
+      })
       .expect(200)
       .expect((res) => {
-        const rsp = res.body.data.saveUserProfile
-        expect(rsp.status).toBe(200)
-        expect(rsp.message).toBe('Success')
+        const rsp = res.body.data.saveUserProfile;
+        expect(rsp.status).toBe(200);
+        expect(rsp.message).toBe('Success');
         const body = rsp.body;
-        expect(body.phoneNumber).toBe('0712345678')
-        expect(body.name).toBe('John Doe')
+        expect(body.phoneNumber).toBe('0712345678');
+        expect(body.name).toBe('John Doe');
       });
   }, 6000);
 });

@@ -33,11 +33,11 @@ describe('UsersService', () => {
   });
 
   describe('Test User Creation Cypher Query', () => {
-    let userID: Number;
+    let userID: number;
     // clean up.
     afterEach(async () => {
       if (userID) {
-        const rst = await deleteNode(userID, dbService);
+        await deleteNode(userID, dbService);
       }
     });
 
@@ -68,12 +68,12 @@ describe('UsersService', () => {
   });
 
   describe('Query User By Feduid', () => {
-    let userID: Number;
+    let userID: number;
 
     // clean up.
     afterEach(async () => {
       if (userID) {
-        const rst = await deleteNode(userID, dbService);
+        await deleteNode(userID, dbService);
       }
     });
 
@@ -105,12 +105,12 @@ describe('UsersService', () => {
   });
 
   describe('Validate new user information.', () => {
-    let userID: Number;
+    let userID: number;
 
     // clean up.
     afterEach(async () => {
       if (userID) {
-        const rst = await deleteNode(userID, dbService);
+        await deleteNode(userID, dbService);
       }
     });
 
@@ -167,13 +167,13 @@ describe('UsersService', () => {
   });
 
   describe('Test User Save Crypto Wallet Cypher Query.', () => {
-    let userID: Number;
-    let feduid = Math.random().toString();
+    let userID: number;
+    const feduid = Math.random().toString();
     // after each
     beforeEach(async () => {
       const rst = await dbService.write(
         'CREATE (user:User ' +
-        ' { email: $email, feduid: $feduid}) RETURN user',
+          ' { email: $email, feduid: $feduid}) RETURN user',
         {
           feduid: feduid,
           email: feduid,
@@ -189,7 +189,7 @@ describe('UsersService', () => {
     // clean up.
     afterEach(async () => {
       if (userID) {
-        const rst = await deleteNode(userID, dbService);
+        await deleteNode(userID, dbService);
       }
     });
 
@@ -221,13 +221,13 @@ describe('UsersService', () => {
   });
 
   describe('Test User Create Crypto Wallet Method.', () => {
-    let userID: number = -1;
-    let feduid = Math.random().toString();
+    let userID = -1;
+    const feduid = Math.random().toString();
     // after each
     beforeEach(async () => {
       const rst = await dbService.write(
         'CREATE (user:User ' +
-        ' { email: $email, feduid: $feduid}) RETURN user',
+          ' { email: $email, feduid: $feduid}) RETURN user',
         {
           feduid: feduid,
           email: feduid,
@@ -243,7 +243,7 @@ describe('UsersService', () => {
     // clean up.
     afterEach(async () => {
       if (userID > -1) {
-        const rst = await deleteNode(userID, dbService);
+        await deleteNode(userID, dbService);
       }
     });
 
@@ -312,7 +312,7 @@ describe('UsersService', () => {
   });
 
   describe('getUserByPublicAddress', () => {
-    let userID: Number;
+    let userID: number;
 
     const address = Math.random().toString();
 
@@ -334,7 +334,7 @@ describe('UsersService', () => {
     // clean up.
     afterEach(async () => {
       if (userID) {
-        const rst = await deleteNode(userID, dbService);
+        await deleteNode(userID, dbService);
       }
     });
 
