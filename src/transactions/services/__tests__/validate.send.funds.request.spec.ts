@@ -11,7 +11,7 @@ import { UsersService } from '../../../users/users.service';
 import { CryptoWalletCreatorService } from '../../../users/crypto-wallet-creator.service';
 import { initializeContractKit } from '../../../utils/block-chain-utils/contract.kit.utils';
 
-describe('Test send funds request validation.', () => {
+describe('SendFundsService : SEND FUNDS VALIDATOR : TEST SUIT', () => {
   let service: SendFundsService;
   let dbService: Neo4jService;
   let module: TestingModule;

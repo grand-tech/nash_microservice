@@ -12,7 +12,7 @@ import { initializeContractKit } from '../../../utils/block-chain-utils/contract
 import { RequestFundsService } from '../request-funds.service';
 import { TransactionRequest, nodeToTransactionRequest } from '../../../datatypes/transaction/transaction.request';
 
-describe('RequestFundsService TEST SUIT', () => {
+describe('RequestFundsService : CREATE TRANSACTION REQUEST CYPHER QUERY : TEST SUIT', () => {
     let service: RequestFundsService;
     let dbService: Neo4jService;
     let app: TestingModule;
