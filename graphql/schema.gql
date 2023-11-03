@@ -7,6 +7,7 @@ type Mutation {
   addPrivateKeyToAccount(privateKey: String!): UserResponse!
   createNewCryptoWallet(feduid: String!): UserResponse!
   saveUserProfile(fullName: String!, phoneNumber: String!): UserResponse!
+  sendUsd(amountUSD: Float!, description: String!, recipientPhoneNumber: String!): TransactionResponse!
   signUp(feduid: String!): UserResponse!
 }
 

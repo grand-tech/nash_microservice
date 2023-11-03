@@ -33,25 +33,31 @@ export class SendFundsService {
       body: undefined
     }
 
-    if (amountUSD > 0) {
+    if (amountUSD <= 0) {
       response.status = 501;
-      response.message = 'Invalid amount should be greater 0';
+      response.message = 'Invalid amount should be greater 0.';
     } else {
-      const recipient = await this.userService.getUserByPhoneNumber(recipientPhoneNumber)
 
       // query recipient
-      if ((recipient?.phoneNumber ?? '') === '') {
+      if ((recipientPhoneNumber ?? '').length < 7) {
         response.status = 502;
         response.message = 'Invalid phone number.';
       } else {
-        const tx = await this.sendcUSD(amountUSD, description, sender, recipient);
-        const transaction = nodeToTransaction(tx.records[0].get('tx'));
-        // Recipient does not exist.
-        response.body = transaction;
-        if (!transaction.blockchainTransactionStatus) {
-          response.message = "Transaction failed!!"
-          response.status = 503
+        const recipient = await this.userService.getUserByPhoneNumber(recipientPhoneNumber)
+        if (recipient.phoneNumber == recipientPhoneNumber) {
+          const tx = await this.sendcUSD(amountUSD, description, sender, recipient);
+          const transaction = nodeToTransaction(tx.records[0].get('tx'));
+          // Recipient does not exist.
+          response.body = transaction;
+          if (!transaction.blockchainTransactionStatus) {
+            response.message = "Transaction failed!!"
+            response.status = 503
+          }
+        } else {
+          response.status = 504;
+          response.message = 'Account with phone number does not exist.';
         }
+
       }
     }
 

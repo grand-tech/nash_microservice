@@ -18,13 +18,18 @@ export class TransactionsResolver {
 
   @Mutation(returns => TransactionResponse)
   @Roles(Role.User)
-  async createNewCryptoWallet(
+  async sendUsd(
     @Args('recipientPhoneNumber') recipientPhoneNumber: string,
     @Args('amountUSD') amountUSD: number,
     @Args('description') description: string,
     @Context() context
   ): Promise<TransactionResponse> {
     const user: User = context.req.raw.user as User;
-    return await this.sendFundsService.validateSendFunds(user, amountUSD, recipientPhoneNumber, description);
+    return await this.sendFundsService.validateSendFunds(
+      user,
+      amountUSD,
+      recipientPhoneNumber,
+      description
+    );
   }
 }
