@@ -10,6 +10,7 @@ import { UsersService } from '../../../users/users.service';
 import { CryptoWalletCreatorService } from '../../../users/crypto-wallet-creator.service';
 import { initializeContractKit } from '../../../utils/block-chain-utils/contract.kit.utils';
 import { RequestFundsService } from '../../services/request-funds.service';
+import { SendFundsService } from '../send-funds.service';
 
 describe('RequestFundsService: VALIDATE REQUEST FUNDS REQUEST DETAILS : TEST SUIT', () => {
   let service: RequestFundsService;
@@ -18,7 +19,7 @@ describe('RequestFundsService: VALIDATE REQUEST FUNDS REQUEST DETAILS : TEST SUI
 
   beforeAll(async () => {
     module = await Test.createTestingModule({
-      providers: [RequestFundsService, UsersService, CryptoWalletCreatorService],
+      providers: [RequestFundsService, UsersService, CryptoWalletCreatorService, SendFundsService],
       imports: [Neo4jModule.forRoot(DB_CONNECTIONS_CONFIGS)],
     }).compile();
 

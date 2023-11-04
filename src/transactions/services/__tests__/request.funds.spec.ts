@@ -11,6 +11,7 @@ import { User } from '../../../datatypes/user/user';
 import { initializeContractKit } from '../../../utils/block-chain-utils/contract.kit.utils'
 import { RequestFundsService } from '../request-funds.service';
 import { FundsRequest, nodeToFundsRequest } from '../../../datatypes/transaction/funds.request';
+import { SendFundsService } from '../send-funds.service';
 
 describe('RequestFundsService : CREATE TRANSACTION REQUEST CYPHER QUERY : TEST SUIT', () => {
     let service: RequestFundsService;
@@ -20,7 +21,7 @@ describe('RequestFundsService : CREATE TRANSACTION REQUEST CYPHER QUERY : TEST S
     beforeAll(async () => {
         initializeContractKit();
         app = await Test.createTestingModule({
-            providers: [RequestFundsService],
+            providers: [RequestFundsService, SendFundsService],
             imports: [Neo4jModule.forRoot(DB_CONNECTIONS_CONFIGS), UsersModule],
         }).compile();
 
