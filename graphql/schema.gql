@@ -2,6 +2,16 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type FundsRequest {
+  amount: Float
+  description: String
+  fulfilled: Boolean
+  initiatorAddress: String
+  network: String
+  stableCoin: String
+  timestamp: Float
+}
+
 type Mutation {
   addMnemonicToAccount(mnemonic: String!): UserResponse!
   addPrivateKeyToAccount(privateKey: String!): UserResponse!
@@ -28,16 +38,6 @@ type Transaction {
   transactionBlockHash: String
   transactionCode: String
   transactionTimestamp: Float
-}
-
-type TransactionRequest {
-  amount: Float
-  description: String
-  fulfilled: Boolean
-  initiatorAddress: String
-  network: String
-  stableCoin: String
-  timestamp: Float
 }
 
 type TransactionResponse {

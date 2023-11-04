@@ -9,7 +9,7 @@ import { TEST_ACC_1, TEST_ACC_2 } from '../../../../test/test-utils/test.account
 import { UsersService } from '../../../users/users.service';
 import { CryptoWalletCreatorService } from '../../../users/crypto-wallet-creator.service';
 import { initializeContractKit } from '../../../utils/block-chain-utils/contract.kit.utils';
-import { RequestFundsService } from '../request-funds.service';
+import { RequestFundsService } from '../../services/request-funds.service';
 
 describe('RequestFundsService: VALIDATE REQUEST FUNDS REQUEST DETAILS : TEST SUIT', () => {
   let service: RequestFundsService;

@@ -10,7 +10,7 @@ import {
 import { User } from '../../../datatypes/user/user';
 import { initializeContractKit } from '../../../utils/block-chain-utils/contract.kit.utils'
 import { RequestFundsService } from '../request-funds.service';
-import { TransactionRequest, nodeToTransactionRequest } from '../../../datatypes/transaction/transaction.request';
+import { FundsRequest, nodeToFundsRequest } from '../../../datatypes/transaction/funds.request';
 
 describe('RequestFundsService : CREATE TRANSACTION REQUEST CYPHER QUERY : TEST SUIT', () => {
     let service: RequestFundsService;
@@ -57,7 +57,7 @@ describe('RequestFundsService : CREATE TRANSACTION REQUEST CYPHER QUERY : TEST S
             tx.records[0].get('target').timestamp,
         );
 
-        const savedTxRequest: TransactionRequest = nodeToTransactionRequest(tx.records[0].get('tx'));
+        const savedTxRequest: FundsRequest = nodeToFundsRequest(tx.records[0].get('tx'));
 
         expect(savedTxRequest.amount).toBe(0.0001);
         expect(savedTxRequest.stableCoin).toBe('cUSD');
@@ -87,7 +87,7 @@ async function setUpTestUsers(dbService: Neo4jService) {
 }
 
 async function deleteUsers(dbService: Neo4jService) {
-    const qry = `MATCH (u:User)-[:REQUESTED_FUNDS_ON]-(d:Day)-[:RECORDED]-(t:TransactionRequest)
+    const qry = `MATCH (u:User)-[:REQUESTED_FUNDS_ON]-(d:Day)-[:RECORDED]-(t:FundsRequest)
    WHERE u.publicAddress = $address1 OR u.publicAddress = $address2
    DETACH DELETE t DETACH DELETE u DETACH DELETE d`;
 
