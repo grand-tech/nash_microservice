@@ -2,7 +2,7 @@ import { Type } from '@nestjs/common';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { User } from '../datatypes/user/user';
 import { Transaction } from '../datatypes/transaction/transaction';
-import { TransactionRequest } from '../datatypes/transaction/transaction.request';
+import { FundsRequest } from '../datatypes/transaction/funds.request';
 
 /**
  * Response object interface.
@@ -53,4 +53,4 @@ export class UserResponse extends Response(User!) { }
 export class TransactionResponse extends Response(Transaction!) { }
 
 @ObjectType()
-export class TransactionRequestResponse extends Response(TransactionRequest!) { }
+export class FundsRequestResponse extends Response(FundsRequest!) { }

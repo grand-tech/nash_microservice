@@ -1,8 +1,8 @@
-import { TransactionRequest, nodeToTransactionRequest } from './transaction.request';
+import { FundsRequest, nodeToFundsRequest } from "./funds.request";
 
 describe('TransactionRequest', () => {
     it('should be defined', () => {
-        expect(new TransactionRequest()).toBeDefined();
+        expect(new FundsRequest()).toBeDefined();
     });
 });
 
@@ -25,7 +25,7 @@ describe('Node to transaction request.', () => {
             },
         };
 
-        const transaction = nodeToTransactionRequest(transactionRequestNode);
+        const transaction = nodeToFundsRequest(transactionRequestNode);
 
         // Assertions.
         expect(transaction).toBeDefined();

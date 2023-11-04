@@ -6,7 +6,7 @@ import { User } from '../user/user';
  * Data model for user`s.
  */
 @ObjectType()
-export class TransactionRequest extends BaseNode {
+export class FundsRequest extends BaseNode {
     /**
      * The name of the user.
      */
@@ -64,8 +64,8 @@ export class TransactionRequest extends BaseNode {
  * Converts the node to a user object.
  * @param node the node from neo4j.
  */
-export function nodeToTransactionRequest(node: any): TransactionRequest {
-    const tx = new TransactionRequest();
+export function nodeToFundsRequest(node: any): FundsRequest {
+    const tx = new FundsRequest();
 
     tx.labels = node.labels;
     const props = node.properties;

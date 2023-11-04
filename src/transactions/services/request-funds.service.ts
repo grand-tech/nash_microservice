@@ -1,10 +1,10 @@
 import { StableToken } from '@celo/base';
 import { Injectable } from '@nestjs/common';
 import { Neo4jService } from 'nest-neo4j/dist';
-import { TransactionRequest, nodeToTransactionRequest } from '../../datatypes/transaction/transaction.request';
 import { User } from '../../datatypes/user/user';
 import { UsersService } from '../../users/users.service';
-import { TransactionRequestResponse } from '../../utils/response';
+import { nodeToFundsRequest, FundsRequest } from '../../datatypes/transaction/funds.request';
+import { FundsRequestResponse } from '../../utils/response';
 
 @Injectable()
 export class RequestFundsService {
@@ -26,8 +26,8 @@ export class RequestFundsService {
     amountUSD: number,
     targetPhoneNumber: string,
     description: string,
-  ): Promise<TransactionRequestResponse> {
-    const response: TransactionRequestResponse = {
+  ): Promise<FundsRequestResponse> {
+    const response: FundsRequestResponse = {
       status: 200,
       message: 'Success',
       body: undefined,
@@ -52,7 +52,7 @@ export class RequestFundsService {
             initiator,
             target,
           );
-          const transaction = nodeToTransactionRequest(tx.records[0].get('tx'));
+          const transaction = nodeToFundsRequest(tx.records[0].get('tx'));
           // Recipient does not exist.
           response.body = transaction;
         } else {
@@ -78,7 +78,7 @@ export class RequestFundsService {
     initiator: User,
     target: User,
   ) {
-    const tx: TransactionRequest = new TransactionRequest();
+    const tx: FundsRequest = new FundsRequest();
 
     tx.amount = usdAmount;
     tx.description = description;
@@ -93,12 +93,12 @@ export class RequestFundsService {
     r.todaysTimestamp = 1234567890;
     r.timestamp = 1234567890;
 
-    const transactionRequest = await this.neo4j.write(
+    const fundsRequest = await this.neo4j.write(
       'MATCH (initiator: User) MATCH (target: User) ' +
       ' WHERE initiator.feduid = $initiatorFeduid AND target.feduid = $targetFeduid ' +
       ' MERGE (initiator)-[:REQUESTED_FUNDS_ON]->(initiatorDay: Day {timestamp: $todaysTimestamp}) ' +
       ' MERGE (target)-[:REQUESTED_FUNDS_ON]->(targetDay: Day {timestamp: $todaysTimestamp}) ' +
-      ' CREATE (initiatorDay)-[:RECORDED]->(tx:TransactionRequest { ' +
+      ' CREATE (initiatorDay)-[:RECORDED]->(tx:FundsRequest { ' +
       '     description: $description, ' +
       '     amount: $amount, ' +
       '     stableCoin: $stableCoin, ' +
@@ -111,6 +111,6 @@ export class RequestFundsService {
       tx,
     );
 
-    return transactionRequest;
+    return fundsRequest;
   }
 }
