@@ -129,18 +129,28 @@ export class RequestFundsService {
     const fundsRequest: FundsRequest = await this.queryFundsRequestByIDAndTarget(target, requestID);
 
     let transactionResponse: TransactionResponse;
+
     if (fundsRequest) {
       const transactionResult = await this.sendFundsService.validateSendFunds(fundsRequest.target,
         fundsRequest.amount,
         fundsRequest.initiator.phoneNumber,
         fundsRequest.description
-      )
+      );
 
-      transactionResponse = transactionResult;
+      if (transactionResult) {
+        transactionResponse = transactionResult;
+      } else {
+        transactionResponse = {
+          status: 501,
+          message: 'Error performing transaction.',
+          body: undefined
+        }
+      }
+
       await this.updateFulfilledFundsRequest(fundsRequest, transactionResult.body as Transaction)
     } else {
       transactionResponse = {
-        status: 501,
+        status: 502,
         message: 'Could not find funds request!!',
         body: undefined
       }
