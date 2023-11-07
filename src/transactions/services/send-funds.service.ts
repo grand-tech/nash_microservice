@@ -110,7 +110,7 @@ export class SendFundsService {
     tx.transactionBlockHash = x.blockHash;
     tx.blockchainTransactionStatus = x.status;
 
-    const r: Record<string, any> = tx;
+    const r: Record<string, any> = tx as Record<string, any>;
     r.senderFeduid = sender.feduid;
     r.senderAddress = sender.publicAddress;
     r.recipientFeduid = recipient.feduid;
@@ -164,7 +164,6 @@ export class SendFundsService {
     qry = qry + ' RETURN transaction, senderDay, recipientDay, sender, recipient '
 
     const transactionResult = await this.neo4j.write(qry, params);
-
     return transactionResult;
   }
 }

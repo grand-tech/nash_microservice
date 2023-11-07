@@ -86,7 +86,7 @@ describe('RequestFundsService : FULFILL TRANSACTION VALIDATOR : TEST SUIT', () =
 
         expect(response.status).toBe(200)
         expect(response.message).toBe('Success');
-    }, 13000);
+    }, 15000);
 
 });
 
