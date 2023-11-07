@@ -141,8 +141,6 @@ export class SendFundsService {
       params,
     );
 
-    console.log("================>", transactionResult)
-
     return transactionResult;
   }
 }
