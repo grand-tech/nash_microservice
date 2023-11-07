@@ -50,14 +50,14 @@ export class FundsRequest extends BaseNode {
     public fulfilled: boolean;
 
     /**
-     * The account sending funds.
+     * The transaction request target.
      */
-    public sender!: User;
+    public target!: User;
 
     /**
-     * The account receiving funds.
+     * The transaction request initiator.
      */
-    public recipient!: User;
+    public initiator!: User;
 }
 
 /**

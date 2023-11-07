@@ -27,7 +27,7 @@ export class TransactionsResolver {
       user,
       amountUSD,
       recipientPhoneNumber,
-      description,
+      description
     );
   }
 }

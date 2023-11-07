@@ -49,7 +49,7 @@ describe('SendFundsService : SEND FUNDS VALIDATOR : TEST SUIT', () => {
       new User(),
       1,
       '+25479231433',
-      '',
+      ''
     );
     expect(response.status).toBe(504);
     expect(response.message).toBe('Account with phone number does not exist.');
@@ -65,7 +65,7 @@ describe('SendFundsService : SEND FUNDS VALIDATOR : TEST SUIT', () => {
       initializeContractKit();
       const rst = await dbService.write(
         'CREATE (sender:User {name: "Test User", publicAddress: $senderAddress, privateKey: $privateKey, feduid: $senderFeduid}), ' +
-          ' (receiver:User {name: "Test User", publicAddress: $receiverAddress,  phoneNumber: $phoneNumber, feduid: $receiverFeduid }) RETURN sender, receiver',
+        ' (receiver:User {name: "Test User", publicAddress: $receiverAddress,  phoneNumber: $phoneNumber, feduid: $receiverFeduid }) RETURN sender, receiver',
         {
           phoneNumber: testPhoneNumber,
           senderFeduid: TEST_ACC_1.address,
@@ -97,7 +97,7 @@ describe('SendFundsService : SEND FUNDS VALIDATOR : TEST SUIT', () => {
         sender,
         0.000001,
         testPhoneNumber,
-        'School Fees',
+        'School Fees'
       );
       expect(response.status).toBe(200);
       expect(response.message).toBe('Success');

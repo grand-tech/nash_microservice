@@ -14,6 +14,7 @@ import {
   Transaction,
   nodeToTransaction,
 } from '../../../datatypes/transaction/transaction';
+import { deleteUsers } from './test.utils';
 
 describe('SendFundsService: SEND FUNDS CYPHER QUERY : TEST SUIT', () => {
   let service: SendFundsService;
@@ -49,10 +50,10 @@ describe('SendFundsService: SEND FUNDS CYPHER QUERY : TEST SUIT', () => {
     user2.privateKey = TEST_ACC_1.privateKey;
     user2.feduid = '1234567891';
 
-    const tx = await service.sendcUSD(0.0001, 'Test Transaction', user1, user2);
-    expect(tx.records[0].get('tx')).toBeDefined;
+    const tx = await service.sendcUSD(0.0001, 'Test Transaction', user1, user2, -1);
+    expect(tx.records[0].get('transaction')).toBeDefined;
     expect(tx.records[0].get('senderDay')).toBeDefined;
-    expect(tx.records[0].get('receipientDay')).toBeDefined;
+    expect(tx.records[0].get('recipientDay')).toBeDefined;
     expect(tx.records[0].get('sender')).toBeDefined;
     expect(tx.records[0].get('recipient')).toBeDefined;
 
@@ -60,7 +61,7 @@ describe('SendFundsService: SEND FUNDS CYPHER QUERY : TEST SUIT', () => {
       tx.records[0].get('senderDay').timestamp,
     );
 
-    const savedTx: Transaction = nodeToTransaction(tx.records[0].get('tx'));
+    const savedTx: Transaction = nodeToTransaction(tx.records[0].get('transaction'));
 
     expect(savedTx.amount).toBe(0.0001);
     expect(savedTx.stableCoin).toBe('cUSD');
@@ -89,13 +90,3 @@ async function setUpTestUsers(dbService: Neo4jService) {
   assert(rst.records[0].keys.length == 2, 'Id is valid.');
 }
 
-async function deleteUsers(dbService: Neo4jService) {
-  const qry = `MATCH (u:User)-[:TRANSACTED_ON]-(d:Day)-[:RECORDED]-(t:Transaction)
-   WHERE u.publicAddress = $address1 OR u.publicAddress = $address2
-   DETACH DELETE t DETACH DELETE u DETACH DELETE d`;
-
-  await dbService.write(qry, {
-    address1: TEST_ACC_1.address,
-    address2: TEST_ACC_2.address,
-  });
-}

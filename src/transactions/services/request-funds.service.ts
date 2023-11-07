@@ -1,16 +1,19 @@
 import { StableToken } from '@celo/base';
 import { Injectable } from '@nestjs/common';
 import { Neo4jService } from 'nest-neo4j/dist';
-import { User } from '../../datatypes/user/user';
+import { User, nodeToUser } from '../../datatypes/user/user';
 import { UsersService } from '../../users/users.service';
 import { nodeToFundsRequest, FundsRequest } from '../../datatypes/transaction/funds.request';
-import { FundsRequestResponse } from '../../utils/response';
+import { FundsRequestResponse, TransactionResponse } from '../../utils/response';
+import { SendFundsService } from './send-funds.service';
+import { Transaction } from 'src/datatypes/transaction/transaction';
 
 @Injectable()
 export class RequestFundsService {
   constructor(
     private readonly neo4j: Neo4jService,
-    private readonly userService: UsersService
+    private readonly userService: UsersService,
+    private readonly sendFundsService: SendFundsService
   ) { }
 
   /**
@@ -26,6 +29,7 @@ export class RequestFundsService {
     amountUSD: number,
     targetPhoneNumber: string,
     description: string,
+    fundsRequestID: number
   ): Promise<FundsRequestResponse> {
     const response: FundsRequestResponse = {
       status: 200,
@@ -52,7 +56,7 @@ export class RequestFundsService {
             initiator,
             target,
           );
-          const transaction = nodeToFundsRequest(tx.records[0].get('tx'));
+          const transaction = nodeToFundsRequest(tx.records[0].get('request'));
           // Recipient does not exist.
           response.body = transaction;
         } else {
@@ -90,6 +94,7 @@ export class RequestFundsService {
     r.initiatorFeduid = initiator.feduid;
     r.initiatorAddress = initiator.publicAddress;
     r.targetFeduid = target.feduid;
+    r.targetAddress = target.publicAddress;
     r.todaysTimestamp = 1234567890;
     r.timestamp = 1234567890;
 
@@ -98,19 +103,115 @@ export class RequestFundsService {
       ' WHERE initiator.feduid = $initiatorFeduid AND target.feduid = $targetFeduid ' +
       ' MERGE (initiator)-[:REQUESTED_FUNDS_ON]->(initiatorDay: Day {timestamp: $todaysTimestamp}) ' +
       ' MERGE (target)-[:REQUESTED_FUNDS_ON]->(targetDay: Day {timestamp: $todaysTimestamp}) ' +
-      ' CREATE (initiatorDay)-[:RECORDED]->(tx:FundsRequest { ' +
+      ' CREATE (initiatorDay)-[:RECORDED]->(request:FundsRequest { ' +
       '     description: $description, ' +
       '     amount: $amount, ' +
       '     stableCoin: $stableCoin, ' +
       '     network: $network, ' +
       '     initiatorAddress: $initiatorAddress, ' +
+      '     targetAddress: $targetAddress, ' +
       '     timestamp: $timestamp,' +
       '     fulfilled: false' +
       ' })<-[:RECORDED]-(targetDay) ' +
-      ' return tx, initiatorDay, targetDay, initiator, target',
+      ' return request, initiatorDay, targetDay, initiator, target',
       tx,
     );
 
     return fundsRequest;
+  }
+
+  /**
+   * Fullfil funds request.
+   * @param requestID the request id.
+   * @param target the target of the transaction request(user in session).
+   * Returns transaction object.
+   */
+  async fulfillFundsRequest(target: User, requestID: number): Promise<TransactionResponse> {
+    const fundsRequest: FundsRequest = await this.queryFundsRequestByIDAndTarget(target, requestID);
+
+    let transactionResponse: TransactionResponse;
+
+    if (fundsRequest) {
+      if (fundsRequest.fulfilled) {
+        transactionResponse = {
+          status: 501,
+          message: 'Transaction request already fulfilled!!',
+          body: undefined
+        }
+      } else {
+        const transactionResult = await this.sendFundsService.validateSendFunds(fundsRequest.target,
+          fundsRequest.amount,
+          fundsRequest.initiator.phoneNumber,
+          fundsRequest.description,
+          fundsRequest.id
+        );
+
+        transactionResponse = transactionResult
+      }
+
+    } else {
+      transactionResponse = {
+        status: 503,
+        message: 'Could not find funds request!!',
+        body: undefined
+      }
+    }
+
+    return transactionResponse;
+  }
+
+  /**
+   * Query fulfilled funds request.
+   * @param fundsRequest funds request object.
+   * @param transactionResult transaction result object.
+   */
+  async updateFulfilledFundsRequest(
+    fundsRequest: FundsRequest,
+    transaction: Transaction
+  ): Promise<FundsRequest> {
+    const qry = ` MATCH (fundsRequest: FundsRequest), (transaction: Transaction) 
+       WHERE id(fundsRequest) = $fundsRequestID AND id(transaction) = $transactionID 
+       CREATE (transaction)-[:FULFILLED_FUND_REQUEST]->(fundsRequest) 
+       SET fundsRequest.fulfilled RETURN fundsRequest, transaction `
+
+    const params = {
+      fundsRequestID: fundsRequest.id,
+      transactionID: transaction.id
+    }
+
+    const request = await this.neo4j.write(qry, params);
+    return nodeToFundsRequest(request.records[0].get('fundsRequest'));
+  }
+
+  /**
+   * Queries details pertaining to the transaction request.
+   * @param target the target of the transaction request.
+   * @param requestID the request id.
+   * @returns the details of the funds request.
+   */
+  async queryFundsRequestByIDAndTarget(target: User, requestID: number): Promise<FundsRequest> {
+
+    const qry = 'MATCH (initiator: User)-[:REQUESTED_FUNDS_ON]->(:Day)-[:RECORDED]->' +
+      '(fundsRequest: FundsRequest)<-[:RECORDED]-(:Day)<-[:REQUESTED_FUNDS_ON]-(target: User) ' +
+      ' WHERE id(fundsRequest) = $requestID AND fundsRequest.targetAddress = $targetAddress AND ' +
+      ' target.publicAddress = $targetAddress RETURN fundsRequest, initiator, target'
+
+    const params = {
+      requestID: requestID,
+      targetAddress: target.publicAddress,
+    }
+
+    const data = await this.neo4j.read(qry, params);
+
+    if (data.records.length > 0) {
+      const fundsRequest: FundsRequest = nodeToFundsRequest(
+        data.records[0].get('fundsRequest'));
+
+      fundsRequest.target = nodeToUser(data.records[0].get('target'));
+      fundsRequest.initiator = nodeToUser(data.records[0].get('initiator'));
+      return fundsRequest;
+    } else {
+      return undefined
+    }
   }
 }
