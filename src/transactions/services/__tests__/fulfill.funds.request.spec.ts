@@ -12,7 +12,7 @@ import { RequestFundsService } from '../request-funds.service';
 import { SendFundsService } from '../send-funds.service';
 import { nodeToFundsRequest } from '../../../datatypes/transaction/funds.request';
 import { User } from '../../../datatypes/user/user';
-import { deleteUsers } from './test.utils.spec';
+import { deleteUsers } from './test.utils';
 
 let inititatorFeduid = '1234567890';
 let targetFeduid = '1234567891';

@@ -14,7 +14,7 @@ import {
   Transaction,
   nodeToTransaction,
 } from '../../../datatypes/transaction/transaction';
-import { deleteUsers } from './test.utils.spec';
+import { deleteUsers } from './test.utils';
 
 describe('SendFundsService: SEND FUNDS CYPHER QUERY : TEST SUIT', () => {
   let service: SendFundsService;
