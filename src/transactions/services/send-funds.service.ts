@@ -22,13 +22,14 @@ export class SendFundsService {
    * @param sender the sender.
    * @param amountUSD the amount of money to be sent.
    * @param description the description of the transactions.
+   * @param fundsRequestID the transaction request being fulfilled defaults to -1.
    */
   async validateSendFunds(
     sender: User,
     amountUSD: number,
     recipientPhoneNumber: string,
     description: string,
-    fundsRequestID: number
+    fundsRequestID: number = -1
   ): Promise<TransactionResponse> {
     const response: TransactionResponse = {
       status: 200,
@@ -78,7 +79,7 @@ export class SendFundsService {
    * @param usdAmount the amount of money to be sent in dollars.
    * @param description the transaction description.
    * @param sender the senders details.
-   * @param recipient the receipients details.
+   * @param recipient the recipients details.
    */
   async sendcUSD(
     usdAmount: number,
