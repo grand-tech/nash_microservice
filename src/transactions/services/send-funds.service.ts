@@ -50,6 +50,7 @@ export class SendFundsService {
           recipientPhoneNumber,
         );
         if (recipient.phoneNumber == recipientPhoneNumber) {
+
           const tx = await this.sendcUSD(
             amountUSD,
             description,
@@ -57,13 +58,20 @@ export class SendFundsService {
             recipient,
             fundsRequestID
           );
-          const transaction = nodeToTransaction(tx.records[0].get('transaction'));
-          // Recipient does not exist.
-          response.body = transaction;
-          if (!transaction.blockchainTransactionStatus) {
-            response.message = 'Transaction failed!!';
-            response.status = 503;
+
+          if (tx.records.length > 0) {
+            const transaction = nodeToTransaction(tx.records[0].get('transaction'));
+            // Recipient does not exist.
+            response.body = transaction;
+            if (!transaction.blockchainTransactionStatus) {
+              response.message = 'Transaction failed!!';
+              response.status = 503;
+            }
+          } else {
+            response.status = 505;
+            response.message = 'Error saving record to database.';
           }
+
         } else {
           response.status = 504;
           response.message = 'Account with phone number does not exist.';
@@ -112,11 +120,8 @@ export class SendFundsService {
     r.todaysTimestamp = 1234567890;
     r.timestamp = 1234567890;
 
-
     r.fundsRequestID = fundsRequestID
     return await this.saveTransactionCypherQry(r, fundsRequestID < 0);
-
-
   }
 
   /**
@@ -126,7 +131,7 @@ export class SendFundsService {
    * @returns the result of the transaction.
    */
   async saveTransactionCypherQry(params: Record<string, any>, hasRequest: boolean) {
-    const qry = `MATCH (sender: User) MATCH (recipient: User) 
+    let qry = `MATCH (sender: User) MATCH (recipient: User) 
     WHERE sender.feduid = $senderFeduid AND recipient.feduid = $recipientFeduid 
 
     MERGE (sender)-[:TRANSACTED_ON]->(senderDay: Day {timestamp: $todaysTimestamp})
@@ -149,14 +154,14 @@ export class SendFundsService {
 
 
     if (hasRequest) {
-      qry.concat(`WITH transaction, senderDay, recipientDay, sender, recipient 
+      qry = qry + `WITH transaction, senderDay, recipientDay, sender, recipient 
   
       MATCH (fundsRequest: FundsRequest) WHERE id(fundsRequest) = $fundsRequestID
       CREATE (transaction)-[:FULFILLED_FUND_REQUEST]->(fundsRequest) 
-      SET fundsRequest.fulfilled = true `)
+      SET fundsRequest.fulfilled = true `
     }
 
-    qry.concat(` RETURN transaction, senderDay, recipientDay, sender, recipient`)
+    qry = qry + ` RETURN transaction, senderDay, recipientDay, sender, recipient`
 
     const transactionResult = await this.neo4j.write(qry, params);
 
