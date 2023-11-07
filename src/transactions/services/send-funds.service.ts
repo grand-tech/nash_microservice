@@ -121,7 +121,7 @@ export class SendFundsService {
     r.timestamp = 1234567890;
 
     r.fundsRequestID = fundsRequestID
-    return await this.saveTransactionCypherQry(r, fundsRequestID < 0);
+    return await this.saveTransactionCypherQry(r, fundsRequestID >= 0);
   }
 
   /**
@@ -131,37 +131,37 @@ export class SendFundsService {
    * @returns the result of the transaction.
    */
   async saveTransactionCypherQry(params: Record<string, any>, hasRequest: boolean) {
-    let qry = `MATCH (sender: User) MATCH (recipient: User) 
-    WHERE sender.feduid = $senderFeduid AND recipient.feduid = $recipientFeduid 
+    let qry = 'MATCH (sender: User) MATCH (recipient: User) ' +
+      ' WHERE sender.feduid = $senderFeduid AND recipient.feduid = $recipientFeduid ' +
 
-    MERGE (sender)-[:TRANSACTED_ON]->(senderDay: Day {timestamp: $todaysTimestamp})
-    MERGE (recipient)-[:TRANSACTED_ON]->(recipientDay: Day {timestamp: $todaysTimestamp}) 
+      'MERGE (sender)-[:TRANSACTED_ON]->(senderDay: Day {timestamp: $todaysTimestamp}) ' +
+      'MERGE (recipient)-[:TRANSACTED_ON]->(recipientDay: Day {timestamp: $todaysTimestamp}) ' +
 
-    CREATE (senderDay)-[:RECORDED]->(transaction:Transaction { 
-        description: $description, 
-        transactionCode: $transactionCode, 
-        amount: $amount, 
-        stableCoin: $stableCoin,
-        network: $network, 
-        blockchainTransactionHash: $blockchainTransactionHash, 
-        blockchainTransactionIndex: $blockchainTransactionIndex, 
-        transactionBlockHash: $transactionBlockHash, 
-        blockchainTransactionStatus: $blockchainTransactionStatus, 
-        transactionTimestamp: $transactionTimestamp, 
-        senderAddress: $senderAddress, 
-        timestamp: $timestamp
-    })<-[:RECORDED]-(recipientDay) `
+      'CREATE (senderDay)-[:RECORDED]->(transaction:Transaction { ' +
+      '  description: $description, ' +
+      '  transactionCode: $transactionCode, ' +
+      '  amount: $amount, ' +
+      '  stableCoin: $stableCoin, ' +
+      '  network: $network, ' +
+      '  blockchainTransactionHash: $blockchainTransactionHash, ' +
+      '  blockchainTransactionIndex: $blockchainTransactionIndex, ' +
+      '  transactionBlockHash: $transactionBlockHash, ' +
+      '  blockchainTransactionStatus: $blockchainTransactionStatus, ' +
+      '  transactionTimestamp: $transactionTimestamp, ' +
+      ' senderAddress: $senderAddress, ' +
+      '  timestamp: $timestamp ' +
+      '})<-[:RECORDED]-(recipientDay) '
 
 
     if (hasRequest) {
-      qry = qry + `WITH transaction, senderDay, recipientDay, sender, recipient 
-  
-      MATCH (fundsRequest: FundsRequest) WHERE id(fundsRequest) = $fundsRequestID
-      CREATE (transaction)-[:FULFILLED_FUND_REQUEST]->(fundsRequest) 
-      SET fundsRequest.fulfilled = true `
+      qry = qry + 'WITH transaction, senderDay, recipientDay, sender, recipient ' +
+
+        ' MATCH (fundsRequest: FundsRequest) WHERE id(fundsRequest) = $fundsRequestID ' +
+        ' CREATE (transaction)-[:FULFILLED_FUND_REQUEST]->(fundsRequest) ' +
+        ' SET fundsRequest.fulfilled = true '
     }
 
-    qry = qry + ` RETURN transaction, senderDay, recipientDay, sender, recipient`
+    qry = qry + ' RETURN transaction, senderDay, recipientDay, sender, recipient '
 
     const transactionResult = await this.neo4j.write(qry, params);
 
