@@ -1,7 +1,7 @@
 import { StableToken } from '@celo/base';
 import { Injectable } from '@nestjs/common';
 import { Neo4jService } from 'nest-neo4j/dist';
-import { User } from '../../datatypes/user/user';
+import { User, nodeToUser } from '../../datatypes/user/user';
 import { UsersService } from '../../users/users.service';
 import { nodeToFundsRequest, FundsRequest } from '../../datatypes/transaction/funds.request';
 import { FundsRequestResponse, TransactionResponse } from '../../utils/response';
@@ -55,7 +55,7 @@ export class RequestFundsService {
             initiator,
             target,
           );
-          const transaction = nodeToFundsRequest(tx.records[0].get('tx'));
+          const transaction = nodeToFundsRequest(tx.records[0].get('request'));
           // Recipient does not exist.
           response.body = transaction;
         } else {
@@ -102,7 +102,7 @@ export class RequestFundsService {
       ' WHERE initiator.feduid = $initiatorFeduid AND target.feduid = $targetFeduid ' +
       ' MERGE (initiator)-[:REQUESTED_FUNDS_ON]->(initiatorDay: Day {timestamp: $todaysTimestamp}) ' +
       ' MERGE (target)-[:REQUESTED_FUNDS_ON]->(targetDay: Day {timestamp: $todaysTimestamp}) ' +
-      ' CREATE (initiatorDay)-[:RECORDED]->(tx:FundsRequest { ' +
+      ' CREATE (initiatorDay)-[:RECORDED]->(request:FundsRequest { ' +
       '     description: $description, ' +
       '     amount: $amount, ' +
       '     stableCoin: $stableCoin, ' +
@@ -112,7 +112,7 @@ export class RequestFundsService {
       '     timestamp: $timestamp,' +
       '     fulfilled: false' +
       ' })<-[:RECORDED]-(targetDay) ' +
-      ' return tx, initiatorDay, targetDay, initiator, target',
+      ' return request, initiatorDay, targetDay, initiator, target',
       tx,
     );
 
@@ -182,7 +182,7 @@ export class RequestFundsService {
 
     const qry = 'MATCH (initiator: User)-[:REQUESTED_FUNDS_ON]->(:Day)-[:RECORDED]->' +
       '(fundsRequest: FundsRequest)<-[:RECORDED]-(:Day)<-[:REQUESTED_FUNDS_ON]-(target: User) ' +
-      ' WHERE fundsRequest.id = $requestID, fundsRequest.targetAddress = $targetAddress, ' +
+      ' WHERE id(fundsRequest) = $requestID AND fundsRequest.targetAddress = $targetAddress AND ' +
       ' target.publicAddress = $targetAddress RETURN fundsRequest, initiator, target'
 
     const params = {
@@ -192,11 +192,11 @@ export class RequestFundsService {
 
     const data = await this.neo4j.read(qry, params);
 
-    const fundsRequest: FundsRequest =
-      data.records[0].get('fundsRequest');
+    const fundsRequest: FundsRequest = nodeToFundsRequest(
+      data.records[0].get('fundsRequest'));
 
-    fundsRequest.target = data.records[0].get('target');
-    fundsRequest.initiator = data.records[0].get('initiator');
+    fundsRequest.target = nodeToUser(data.records[0].get('target'));
+    fundsRequest.initiator = nodeToUser(data.records[0].get('initiator'));
 
     return fundsRequest;
   }

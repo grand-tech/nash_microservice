@@ -15,7 +15,7 @@ export class SendFundsService {
   constructor(
     private readonly neo4j: Neo4jService,
     private readonly userService: UsersService,
-  ) {}
+  ) { }
 
   /**
    * Validates the transaction request and send the money.
@@ -54,7 +54,7 @@ export class SendFundsService {
             sender,
             recipient,
           );
-          const transaction = nodeToTransaction(tx.records[0].get('tx'));
+          const transaction = nodeToTransaction(tx.records[0].get('transaction'));
           // Recipient does not exist.
           response.body = transaction;
           if (!transaction.blockchainTransactionStatus) {
@@ -108,28 +108,40 @@ export class SendFundsService {
     r.todaysTimestamp = 1234567890;
     r.timestamp = 1234567890;
 
+
+    return await this.saveTransactionCypherQry(r);
+  }
+
+  /**
+   * Saves the transaction details to the cypher query.
+   * @param params the transaction data.
+   * @returns the result of the transaction.
+   */
+  async saveTransactionCypherQry(params: Record<string, any>) {
     const transactionResult = await this.neo4j.write(
       'MATCH (sender: User) MATCH (recipient: User) ' +
-        ' WHERE sender.feduid = $senderFeduid AND recipient.feduid = $recipientFeduid ' +
-        ' MERGE (sender)-[:TRANSACTED_ON]->(senderDay: Day {timestamp: $todaysTimestamp}) MERGE' +
-        ' (recipient)-[:TRANSACTED_ON]->(receipientDay: Day {timestamp: $todaysTimestamp}) ' +
-        ' CREATE (senderDay)-[:RECORDED]->(tx:Transaction { ' +
-        '     description: $description, ' +
-        '     transactionCode: $transactionCode, ' +
-        '     amount: $amount, ' +
-        '     stableCoin: $stableCoin, ' +
-        '     network: $network, ' +
-        '     blockchainTransactionHash: $blockchainTransactionHash, ' +
-        '     blockchainTransactionIndex: $blockchainTransactionIndex, ' +
-        '     transactionBlockHash: $transactionBlockHash, ' +
-        '     blockchainTransactionStatus: $blockchainTransactionStatus, ' +
-        '     transactionTimestamp: $transactionTimestamp, ' +
-        '     senderAddress: $senderAddress, ' +
-        '     timestamp: $timestamp' +
-        ' })<-[:RECORDED]-(receipientDay) ' +
-        ' return tx, senderDay, receipientDay, sender, recipient',
-      tx,
+      ' WHERE sender.feduid = $senderFeduid AND recipient.feduid = $recipientFeduid ' +
+      ' MERGE (sender)-[:TRANSACTED_ON]->(senderDay: Day {timestamp: $todaysTimestamp}) MERGE' +
+      ' (recipient)-[:TRANSACTED_ON]->(recipientDay: Day {timestamp: $todaysTimestamp}) ' +
+      ' CREATE (senderDay)-[:RECORDED]->(transaction:Transaction { ' +
+      '     description: $description, ' +
+      '     transactionCode: $transactionCode, ' +
+      '     amount: $amount, ' +
+      '     stableCoin: $stableCoin, ' +
+      '     network: $network, ' +
+      '     blockchainTransactionHash: $blockchainTransactionHash, ' +
+      '     blockchainTransactionIndex: $blockchainTransactionIndex, ' +
+      '     transactionBlockHash: $transactionBlockHash, ' +
+      '     blockchainTransactionStatus: $blockchainTransactionStatus, ' +
+      '     transactionTimestamp: $transactionTimestamp, ' +
+      '     senderAddress: $senderAddress, ' +
+      '     timestamp: $timestamp' +
+      ' })<-[:RECORDED]-(recipientDay) ' +
+      ' return transaction, senderDay, recipientDay, sender, recipient',
+      params,
     );
+
+    console.log("================>", transactionResult)
 
     return transactionResult;
   }

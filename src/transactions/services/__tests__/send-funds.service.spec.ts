@@ -50,9 +50,9 @@ describe('SendFundsService: SEND FUNDS CYPHER QUERY : TEST SUIT', () => {
     user2.feduid = '1234567891';
 
     const tx = await service.sendcUSD(0.0001, 'Test Transaction', user1, user2);
-    expect(tx.records[0].get('tx')).toBeDefined;
+    expect(tx.records[0].get('transaction')).toBeDefined;
     expect(tx.records[0].get('senderDay')).toBeDefined;
-    expect(tx.records[0].get('receipientDay')).toBeDefined;
+    expect(tx.records[0].get('recipientDay')).toBeDefined;
     expect(tx.records[0].get('sender')).toBeDefined;
     expect(tx.records[0].get('recipient')).toBeDefined;
 
@@ -60,7 +60,7 @@ describe('SendFundsService: SEND FUNDS CYPHER QUERY : TEST SUIT', () => {
       tx.records[0].get('senderDay').timestamp,
     );
 
-    const savedTx: Transaction = nodeToTransaction(tx.records[0].get('tx'));
+    const savedTx: Transaction = nodeToTransaction(tx.records[0].get('transaction'));
 
     expect(savedTx.amount).toBe(0.0001);
     expect(savedTx.stableCoin).toBe('cUSD');

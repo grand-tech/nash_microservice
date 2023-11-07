@@ -7,16 +7,22 @@ import {
     TEST_ACC_1,
     TEST_ACC_2,
 } from '../../../../test/test-utils/test.accounts';
-import { User } from '../../../datatypes/user/user';
 import { initializeContractKit } from '../../../utils/block-chain-utils/contract.kit.utils'
 import { RequestFundsService } from '../request-funds.service';
-import { FundsRequest, nodeToFundsRequest } from '../../../datatypes/transaction/funds.request';
 import { SendFundsService } from '../send-funds.service';
+import { nodeToFundsRequest } from '../../../datatypes/transaction/funds.request';
+import { User } from '../../../datatypes/user/user';
 
-describe('RequestFundsService : CREATE TRANSACTION REQUEST CYPHER QUERY : TEST SUIT', () => {
+let inititatorFeduid = '1234567890';
+let targetFeduid = '1234567891';
+
+describe(' RequestFundsService : QUERY REQUEST FUNDS OBJECT BY ID AND TARGET : TEST SUIT', () => {
     let service: RequestFundsService;
+    let sendFundsService: SendFundsService;
     let dbService: Neo4jService;
     let app: TestingModule;
+    let testFundRequestID: number;
+
 
     beforeAll(async () => {
         initializeContractKit();
@@ -26,8 +32,11 @@ describe('RequestFundsService : CREATE TRANSACTION REQUEST CYPHER QUERY : TEST S
         }).compile();
 
         service = app.get<RequestFundsService>(RequestFundsService);
+        sendFundsService = app.get<SendFundsService>(SendFundsService);
         dbService = app.get<Neo4jService>(Neo4jService);
+
         await setUpTestUsers(dbService);
+        testFundRequestID = await setUpTestTransactionRequest(service);
     });
 
     afterAll(async () => {
@@ -36,36 +45,15 @@ describe('RequestFundsService : CREATE TRANSACTION REQUEST CYPHER QUERY : TEST S
         await app.close();
     }, 7000);
 
-    it('Test create transaction request cypher query.', async () => {
-        const initiator = new User();
-        initiator.publicAddress = TEST_ACC_1.address;
-        initiator.privateKey = TEST_ACC_1.privateKey;
-        initiator.feduid = '1234567890';
+    it('Run tests against DB', async () => {
 
-        const recipient = new User();
-        recipient.publicAddress = TEST_ACC_2.address;
-        recipient.privateKey = TEST_ACC_1.privateKey;
-        recipient.feduid = '1234567891';
+        const t = new User()
+        t.publicAddress = TEST_ACC_2.address
+        const fundsRequest = await service.queryFundsRequestByIDAndTarget(t, testFundRequestID)
 
-        const tx = await service.requestFundsCypherQry(0.0001, 'Test Transaction', initiator, recipient);
-        expect(tx.records[0].get('request')).toBeDefined;
-        expect(tx.records[0].get('initiatorDay')).toBeDefined;
-        expect(tx.records[0].get('targetDay')).toBeDefined;
-        expect(tx.records[0].get('initiator')).toBeDefined;
-        expect(tx.records[0].get('target')).toBeDefined;
+        expect(fundsRequest.id).toBe(testFundRequestID)
+    });
 
-        expect(tx.records[0].get('initiator').timestamp).toBe(
-            tx.records[0].get('target').timestamp,
-        );
-
-        const savedTxRequest: FundsRequest = nodeToFundsRequest(tx.records[0].get('request'));
-
-        expect(savedTxRequest.amount).toBe(0.0001);
-        expect(savedTxRequest.stableCoin).toBe('cUSD');
-        expect(savedTxRequest.network).toBe('CELO');
-        expect(savedTxRequest.initiatorAddress).toBe(initiator.publicAddress);
-        expect(savedTxRequest.fulfilled).toBe(false);
-    }, 12000);
 });
 
 async function setUpTestUsers(dbService: Neo4jService) {
@@ -73,10 +61,10 @@ async function setUpTestUsers(dbService: Neo4jService) {
      (user2: User {feduid: $feduid2, publicAddress: $publicAddress2, privateKey: $privateKey2})RETURN user1, user2`;
 
     const rst = await dbService.write(qry, {
-        feduid1: '1234567890',
+        feduid1: inititatorFeduid,
         publicAddress1: TEST_ACC_1.address,
         privateKey1: TEST_ACC_1.privateKey,
-        feduid2: '1234567891',
+        feduid2: targetFeduid,
         publicAddress2: TEST_ACC_2.address,
         privateKey2: TEST_ACC_2.privateKey,
     });
@@ -96,4 +84,34 @@ async function deleteUsers(dbService: Neo4jService) {
         address1: TEST_ACC_1.address,
         address2: TEST_ACC_2.address,
     });
+}
+
+async function setUpTestTransactionRequest(service: RequestFundsService) {
+    const tx = await service.requestFundsCypherQry(0.01, '', {
+        feduid: inititatorFeduid,
+        publicAddress: TEST_ACC_1.address,
+        name: '',
+        email: '',
+        phoneNumber: '',
+        idNumber: '',
+        privateKey: '',
+        publicKey: '',
+        mnemonic: '',
+        id: 0,
+        labels: []
+    }, {
+        feduid: targetFeduid,
+        publicAddress: TEST_ACC_2.address,
+        name: '',
+        email: '',
+        phoneNumber: '',
+        idNumber: '',
+        privateKey: '',
+        publicKey: '',
+        mnemonic: '',
+        id: 0,
+        labels: []
+    });
+
+    return nodeToFundsRequest(tx.records[0].get('request')).id
 }
