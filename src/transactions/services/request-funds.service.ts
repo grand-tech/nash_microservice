@@ -29,6 +29,7 @@ export class RequestFundsService {
     amountUSD: number,
     targetPhoneNumber: string,
     description: string,
+    fundsRequestID: number
   ): Promise<FundsRequestResponse> {
     const response: FundsRequestResponse = {
       status: 200,
@@ -131,26 +132,26 @@ export class RequestFundsService {
     let transactionResponse: TransactionResponse;
 
     if (fundsRequest) {
-      const transactionResult = await this.sendFundsService.validateSendFunds(fundsRequest.target,
-        fundsRequest.amount,
-        fundsRequest.initiator.phoneNumber,
-        fundsRequest.description
-      );
-
-      if (transactionResult) {
-        transactionResponse = transactionResult;
-      } else {
+      if (fundsRequest.fulfilled) {
         transactionResponse = {
           status: 501,
-          message: 'Error performing transaction.',
+          message: 'Transaction request already fulfilled!!',
           body: undefined
         }
+      } else {
+        const transactionResult = await this.sendFundsService.validateSendFunds(fundsRequest.target,
+          fundsRequest.amount,
+          fundsRequest.initiator.phoneNumber,
+          fundsRequest.description,
+          fundsRequest.id
+        );
+
+        transactionResponse = transactionResult
       }
 
-      await this.updateFulfilledFundsRequest(fundsRequest, transactionResult.body as Transaction)
     } else {
       transactionResponse = {
-        status: 502,
+        status: 503,
         message: 'Could not find funds request!!',
         body: undefined
       }
@@ -168,10 +169,10 @@ export class RequestFundsService {
     fundsRequest: FundsRequest,
     transaction: Transaction
   ): Promise<FundsRequest> {
-    const qry = ' MATCH (fundsRequest: FundsRequest), (transaction: Transaction) ' +
-      ' WHERE id(fundsRequest) = $fundsRequestID AND id(transaction) = $transactionID ' +
-      ' CREATE (transaction)-[:FULFILLED_FUND_REQUEST]->(fundsRequest) ' +
-      ' SET fundsRequest.fulfilled RETURN fundsRequest, transaction '
+    const qry = ` MATCH (fundsRequest: FundsRequest), (transaction: Transaction) 
+       WHERE id(fundsRequest) = $fundsRequestID AND id(transaction) = $transactionID 
+       CREATE (transaction)-[:FULFILLED_FUND_REQUEST]->(fundsRequest) 
+       SET fundsRequest.fulfilled RETURN fundsRequest, transaction `
 
     const params = {
       fundsRequestID: fundsRequest.id,
@@ -202,12 +203,15 @@ export class RequestFundsService {
 
     const data = await this.neo4j.read(qry, params);
 
-    const fundsRequest: FundsRequest = nodeToFundsRequest(
-      data.records[0].get('fundsRequest'));
+    if (data.records.length > 0) {
+      const fundsRequest: FundsRequest = nodeToFundsRequest(
+        data.records[0].get('fundsRequest'));
 
-    fundsRequest.target = nodeToUser(data.records[0].get('target'));
-    fundsRequest.initiator = nodeToUser(data.records[0].get('initiator'));
-
-    return fundsRequest;
+      fundsRequest.target = nodeToUser(data.records[0].get('target'));
+      fundsRequest.initiator = nodeToUser(data.records[0].get('initiator'));
+      return fundsRequest;
+    } else {
+      return undefined
+    }
   }
 }

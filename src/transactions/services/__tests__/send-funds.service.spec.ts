@@ -14,6 +14,7 @@ import {
   Transaction,
   nodeToTransaction,
 } from '../../../datatypes/transaction/transaction';
+import { deleteUsers } from './test.utils.spec';
 
 describe('SendFundsService: SEND FUNDS CYPHER QUERY : TEST SUIT', () => {
   let service: SendFundsService;
@@ -49,7 +50,7 @@ describe('SendFundsService: SEND FUNDS CYPHER QUERY : TEST SUIT', () => {
     user2.privateKey = TEST_ACC_1.privateKey;
     user2.feduid = '1234567891';
 
-    const tx = await service.sendcUSD(0.0001, 'Test Transaction', user1, user2);
+    const tx = await service.sendcUSD(0.0001, 'Test Transaction', user1, user2, -1);
     expect(tx.records[0].get('transaction')).toBeDefined;
     expect(tx.records[0].get('senderDay')).toBeDefined;
     expect(tx.records[0].get('recipientDay')).toBeDefined;
@@ -89,13 +90,3 @@ async function setUpTestUsers(dbService: Neo4jService) {
   assert(rst.records[0].keys.length == 2, 'Id is valid.');
 }
 
-async function deleteUsers(dbService: Neo4jService) {
-  const qry = `MATCH (u:User)-[:TRANSACTED_ON]-(d:Day)-[:RECORDED]-(t:Transaction)
-   WHERE u.publicAddress = $address1 OR u.publicAddress = $address2
-   DETACH DELETE t DETACH DELETE u DETACH DELETE d`;
-
-  await dbService.write(qry, {
-    address1: TEST_ACC_1.address,
-    address2: TEST_ACC_2.address,
-  });
-}

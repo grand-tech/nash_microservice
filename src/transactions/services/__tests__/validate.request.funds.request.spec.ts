@@ -33,14 +33,14 @@ describe('RequestFundsService: VALIDATE REQUEST FUNDS REQUEST DETAILS : TEST SUI
   });
 
   it('Test Invalid Amount.', async () => {
-    const response = await service.validateSendRequestFunds(new User(), 0, '', '');
+    const response = await service.validateSendRequestFunds(new User(), 0, '', '', -1);
 
     expect(response.status).toBe(501);
     expect(response.message).toBe('Invalid amount should be greater 0.');
   });
 
   it('Test Invalid Phone Number.', async () => {
-    const response = await service.validateSendRequestFunds(new User(), 1, '', '');
+    const response = await service.validateSendRequestFunds(new User(), 1, '', '', -1);
     expect(response.status).toBe(502);
     expect(response.message).toBe('Invalid phone number.');
   });
@@ -51,7 +51,9 @@ describe('RequestFundsService: VALIDATE REQUEST FUNDS REQUEST DETAILS : TEST SUI
       1,
       '+25479231433',
       '',
+      -1
     );
+
     expect(response.status).toBe(504);
     expect(response.message).toBe('Account with phone number does not exist.');
   });
@@ -99,6 +101,7 @@ describe('RequestFundsService: VALIDATE REQUEST FUNDS REQUEST DETAILS : TEST SUI
         0.000001,
         testPhoneNumber,
         'School Fees',
+        -1
       );
       expect(response.status).toBe(200);
       expect(response.message).toBe('Success');

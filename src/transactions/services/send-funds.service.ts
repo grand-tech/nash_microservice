@@ -28,6 +28,7 @@ export class SendFundsService {
     amountUSD: number,
     recipientPhoneNumber: string,
     description: string,
+    fundsRequestID: number
   ): Promise<TransactionResponse> {
     const response: TransactionResponse = {
       status: 200,
@@ -53,6 +54,7 @@ export class SendFundsService {
             description,
             sender,
             recipient,
+            fundsRequestID
           );
           const transaction = nodeToTransaction(tx.records[0].get('transaction'));
           // Recipient does not exist.
@@ -83,6 +85,7 @@ export class SendFundsService {
     description: string,
     sender: User,
     recipient: User,
+    fundsRequestID: number
   ) {
     const tx: Transaction = new Transaction();
 
@@ -108,8 +111,13 @@ export class SendFundsService {
     r.todaysTimestamp = 1234567890;
     r.timestamp = 1234567890;
 
+    if (fundsRequestID < 0) {
+      return await this.saveTransactionCypherQry(r);
+    } else {
+      r.fundsRequestID = fundsRequestID
+      return await this.saveFulfilledTransactionRequestCypherQry(r)
+    }
 
-    return await this.saveTransactionCypherQry(r);
   }
 
   /**
@@ -138,6 +146,48 @@ export class SendFundsService {
       '     timestamp: $timestamp' +
       ' })<-[:RECORDED]-(recipientDay) ' +
       ' return transaction, senderDay, recipientDay, sender, recipient',
+      params,
+    );
+
+    return transactionResult;
+  }
+
+
+  /**
+ * Saves the transaction details to the cypher query.
+ * @param params the transaction data.
+ * @returns the result of the transaction.
+ */
+  async saveFulfilledTransactionRequestCypherQry(params: Record<string, any>) {
+    const transactionResult = await this.neo4j.write(
+      `MATCH (sender: User) MATCH (recipient: User) 
+          WHERE sender.feduid = $senderFeduid AND recipient.feduid = $recipientFeduid 
+
+          MERGE (sender)-[:TRANSACTED_ON]->(senderDay: Day {timestamp: $todaysTimestamp})
+          MERGE (recipient)-[:TRANSACTED_ON]->(recipientDay: Day {timestamp: $todaysTimestamp}) 
+
+          CREATE (senderDay)-[:RECORDED]->(transaction:Transaction { 
+              description: $description, 
+              transactionCode: $transactionCode, 
+              amount: $amount, 
+              stableCoin: $stableCoin,
+              network: $network, 
+              blockchainTransactionHash: $blockchainTransactionHash, 
+              blockchainTransactionIndex: $blockchainTransactionIndex, 
+              transactionBlockHash: $transactionBlockHash, 
+              blockchainTransactionStatus: $blockchainTransactionStatus, 
+              transactionTimestamp: $transactionTimestamp, 
+              senderAddress: $senderAddress, 
+              timestamp: $timestamp
+          })<-[:RECORDED]-(recipientDay) 
+
+          WITH transaction, senderDay, recipientDay, sender, recipient
+
+          MATCH (fundsRequest: FundsRequest) WHERE id(fundsRequest) = $fundsRequestID
+          CREATE (transaction)-[:FULFILLED_FUND_REQUEST]->(fundsRequest) 
+          SET fundsRequest.fulfilled = true
+
+          RETURN transaction, senderDay, recipientDay, sender, recipient`,
       params,
     );
 

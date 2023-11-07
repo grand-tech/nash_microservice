@@ -32,14 +32,14 @@ describe('SendFundsService : SEND FUNDS VALIDATOR : TEST SUIT', () => {
   });
 
   it('Test Invalid Amount.', async () => {
-    const response = await service.validateSendFunds(new User(), 0, '', '');
+    const response = await service.validateSendFunds(new User(), 0, '', '', -1);
 
     expect(response.status).toBe(501);
     expect(response.message).toBe('Invalid amount should be greater 0.');
   });
 
   it('Test Invalid Phone Number.', async () => {
-    const response = await service.validateSendFunds(new User(), 1, '', '');
+    const response = await service.validateSendFunds(new User(), 1, '', '', -1);
     expect(response.status).toBe(502);
     expect(response.message).toBe('Invalid phone number.');
   });
@@ -50,6 +50,7 @@ describe('SendFundsService : SEND FUNDS VALIDATOR : TEST SUIT', () => {
       1,
       '+25479231433',
       '',
+      -1
     );
     expect(response.status).toBe(504);
     expect(response.message).toBe('Account with phone number does not exist.');
@@ -98,6 +99,7 @@ describe('SendFundsService : SEND FUNDS VALIDATOR : TEST SUIT', () => {
         0.000001,
         testPhoneNumber,
         'School Fees',
+        -1
       );
       expect(response.status).toBe(200);
       expect(response.message).toBe('Success');
