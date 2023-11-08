@@ -123,7 +123,7 @@ describe('UsersService', () => {
 
       const rsp = await service.saveUserProfile(
         user,
-        '+25491725652',
+        '+25421745952',
         'John Doe',
       );
 
