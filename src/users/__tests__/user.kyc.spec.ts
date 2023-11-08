@@ -132,7 +132,7 @@ describe('UsersService', () => {
       expect(rsp.status).toBe(200);
       expect(rsp.message).toBe('Success');
 
-      expect(usr.phoneNumber).toBe('+25491725652');
+      expect(usr.phoneNumber).toBe('+25421745952');
       expect(usr.feduid).toBe(feduid);
       expect(usr.name).toBe('John Doe');
     });
