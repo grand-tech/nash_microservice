@@ -6,18 +6,28 @@ type FundsRequest {
   amount: Float
   description: String
   fulfilled: Boolean
+  id: Int
   initiatorAddress: String
+  labels: [String!]
   network: String
   stableCoin: String
   timestamp: Float
+}
+
+type FundsRequestResponse {
+  body: FundsRequest
+  message: String!
+  status: Int!
 }
 
 type Mutation {
   addMnemonicToAccount(mnemonic: String!): UserResponse!
   addPrivateKeyToAccount(privateKey: String!): UserResponse!
   createNewCryptoWallet(feduid: String!): UserResponse!
+  fulfillFundsRequest(requestID: Float!): TransactionResponse!
+  requestFunds(description: String!, targetPhoneNumber: String!, usdAmount: Float!): FundsRequestResponse!
   saveUserProfile(fullName: String!, phoneNumber: String!): UserResponse!
-  sendUsd(amountUSD: Float!, description: String!, recipientPhoneNumber: String!): TransactionResponse!
+  sendUsd(description: String!, recipientPhoneNumber: String!, usdAmount: Float!): TransactionResponse!
   signUp(feduid: String!): UserResponse!
 }
 
@@ -31,6 +41,8 @@ type Transaction {
   blockchainTransactionIndex: Float
   blockchainTransactionStatus: Boolean
   description: String
+  id: Int
+  labels: [String!]
   network: String
   senderAddress: String
   stableCoin: String
@@ -49,7 +61,9 @@ type TransactionResponse {
 type User {
   email: String
   feduid: String
+  id: Int
   idNumber: String
+  labels: [String!]
   name: String
   phoneNumber: String
   publicAddress: String

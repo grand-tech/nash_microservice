@@ -19,17 +19,16 @@ export class RequestFundsService {
   /**
    * Validation of the send request transaction.
    * @param initiator the initiator of the transaction request.
-   * @param amountUSD the amount requested.
+   * @param usdAmount the amount requested.
    * @param targetPhoneNumber the target phone number.
    * @param description the description of the request.
    * @returns the result of the transaction request creation process.
    */
-  async validateSendRequestFunds(
+  async validateFundsRequest(
     initiator: User,
-    amountUSD: number,
+    usdAmount: number,
     targetPhoneNumber: string,
-    description: string,
-    fundsRequestID: number
+    description: string
   ): Promise<FundsRequestResponse> {
     const response: FundsRequestResponse = {
       status: 200,
@@ -37,7 +36,7 @@ export class RequestFundsService {
       body: undefined,
     };
 
-    if (amountUSD <= 0) {
+    if (usdAmount <= 0) {
       response.status = 501;
       response.message = 'Invalid amount should be greater 0.';
     } else {
@@ -51,7 +50,7 @@ export class RequestFundsService {
         );
         if (target.phoneNumber == targetPhoneNumber) {
           const tx = await this.requestFundsCypherQry(
-            amountUSD,
+            usdAmount,
             description,
             initiator,
             target,
