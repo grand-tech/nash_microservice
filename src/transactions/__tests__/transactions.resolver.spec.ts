@@ -37,7 +37,7 @@ const sendFundsServiceMock = {
   },
 };
 
-describe('Transaction Resolver Mock Graph QL Mutation Calls.', () => {
+describe('TRANSACTION RESOLVER : SEND FUNDS SERVICE MUTATION : SUIT ', () => {
   let testUtils: FirebaseTestUtilsService;
   let app: NestFastifyApplication;
   let db: Neo4jService;
@@ -75,7 +75,7 @@ describe('Transaction Resolver Mock Graph QL Mutation Calls.', () => {
 
   it(`Check if create new crypto wallet mutation exists.`, () => {
     const mutation = `mutation {
-      sendUsd(recipientPhoneNumber: "+254791235651", amountUSD: 0.00001, description: "Describe") {
+      sendUsd(recipientPhoneNumber: "+254791235651", usdAmount: 0.00001, description: "Describe") {
         status
         message
         body {

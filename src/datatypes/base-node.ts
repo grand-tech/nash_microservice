@@ -1,8 +1,9 @@
-import { Field, Int } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 
 /**
  * Contains data that must be present in a node.
  */
+@ObjectType()
 export default class BaseNode {
   /**
    * Then id of the node in the database.
