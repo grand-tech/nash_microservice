@@ -15,9 +15,9 @@ export class TestUtilsModule {}
  */
 export const DB_CONNECTIONS_CONFIGS: Neo4jConnection = {
   scheme: 'neo4j+s',
-  host: '13bba6ee.databases.neo4j.io',
+  host: '9452cd77.databases.neo4j.io',
   username: 'neo4j',
-  password: 'ntyKvExj_Gact-wswp37_E_VtqiWn_wxaw-ZY0T42BY',
+  password: 'K62QEiIfpBrEYSEu3PPKWhRt9N-8HJBUo89sf9lO0UU',
   port: '7687',
   database: 'neo4j',
 };
