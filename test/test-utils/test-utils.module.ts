@@ -8,16 +8,16 @@ import { nodeToUser, User } from '../../src/datatypes/user/user';
   providers: [FirebaseTestUtilsService],
   exports: [FirebaseTestUtilsService],
 })
-export class TestUtilsModule {}
+export class TestUtilsModule { }
 
 /**
  * Database connections configs for testing.
  */
 export const DB_CONNECTIONS_CONFIGS: Neo4jConnection = {
   scheme: 'neo4j+s',
-  host: '13bba6ee.databases.neo4j.io',
+  host: 'afcea08f.databases.neo4j.io',
   username: 'neo4j',
-  password: 'ntyKvExj_Gact-wswp37_E_VtqiWn_wxaw-ZY0T42BY',
+  password: 'GUXx3GxgNDDyAFuVdmRmmTaWyE3Ex01yPZOtqawtV0Y',
   port: '7687',
   database: 'neo4j',
 };
@@ -52,8 +52,8 @@ export async function addTestUser(feduid: string, dbService: Neo4jService) {
 
   const rst = await dbService.write(
     'MERGE (u:User {feduid: $feduid}) ON CREATE ' +
-      ' SET u.name = "Test User", u.created = timestamp() ' +
-      ' RETURN u',
+    ' SET u.name = "Test User", u.created = timestamp() ' +
+    ' RETURN u',
     params,
   );
 
