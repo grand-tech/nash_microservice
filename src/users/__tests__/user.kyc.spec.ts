@@ -35,7 +35,7 @@ describe('UsersService', () => {
     beforeEach(async () => {
       const rst = await dbService.write(
         'CREATE (user:User ' +
-          ' { email: $email, feduid: $feduid, phoneNumber: $phoneNumber}) RETURN user',
+        ' { email: $email, feduid: $feduid, phoneNumber: $phoneNumber}) RETURN user',
         {
           feduid: feduid,
           email: feduid,
@@ -97,7 +97,6 @@ describe('UsersService', () => {
       const rsp = await service.saveUserProfile(user, feduid, feduid);
 
       const usr: User = rsp.body;
-
       expect(rsp.status).toBe(200);
       expect(rsp.message).toBe('Success');
 

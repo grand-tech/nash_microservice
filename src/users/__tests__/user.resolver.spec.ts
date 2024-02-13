@@ -122,7 +122,7 @@ describe('User Controller Mock Method Calls.', () => {
     const user = await testUtils.auth('test@gmail.com', 'test123');
     await addTestUser(user.feduid, db);
     skey = user.skey;
-  }, 7000);
+  }, 10000);
 
   afterAll(async () => {
     await app.close();

@@ -37,7 +37,7 @@ describe('SendFundsService: SEND FUNDS CYPHER QUERY : TEST SUIT', () => {
     await deleteUsers(dbService);
     await dbService.getDriver().close();
     await app.close();
-  }, 7000);
+  }, 10000);
 
   it('Send funds cypher query test.', async () => {
     const user1 = new User();

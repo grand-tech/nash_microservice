@@ -35,7 +35,7 @@ describe('RequestFundsService : FULFILL TRANSACTION VALIDATOR : TEST SUIT', () =
         service = app.get<RequestFundsService>(RequestFundsService);
         sendFundsService = app.get<SendFundsService>(SendFundsService);
         dbService = app.get<Neo4jService>(Neo4jService);
-    });
+    }, 7000);
 
     beforeEach(async () => {
         await setUpTestUsers(dbService);

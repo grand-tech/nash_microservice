@@ -34,7 +34,7 @@ describe('RequestFundsService : CREATE TRANSACTION REQUEST CYPHER QUERY : TEST S
         await deleteUsers(dbService);
         await dbService.getDriver().close();
         await app.close();
-    }, 7000);
+    }, 10000);
 
     it('Test create transaction request cypher query.', async () => {
         const initiator = new User();
