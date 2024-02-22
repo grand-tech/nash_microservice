@@ -3,6 +3,13 @@ import { Injectable } from '@nestjs/common';
 import { AxiosRequestConfig } from 'axios';
 import { Buffer } from 'buffer';
 import date from 'date-and-time';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+// const username = process.env.AT_USERNAME;
+const mPesa_Consumer_Key = process.env.MPESA_CONSUMER_KEY;
+const mPesa_Consumer_Secret = process.env.MPESA_CONSUMER_SECRET;
 
 @Injectable()
 export class MPesaApisService {
@@ -14,8 +21,8 @@ export class MPesaApisService {
 
   async getAuthorization() {
     // TODO :Should go to environment variables.
-    const MPesaConsumerKey = '9QRo4KXV1BKp64GWNLfzNCFil7Uwe3gg';
-    const mPesaConsumerSecret = 'wrPokJwFQ9ykXOT3';
+    const MPesaConsumerKey = mPesa_Consumer_Key;
+    const mPesaConsumerSecret = mPesa_Consumer_Secret;
 
     const bearerToken = `Basic ${Buffer.from(
       `${MPesaConsumerKey}:${mPesaConsumerSecret}`,
