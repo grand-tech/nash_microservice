@@ -3,7 +3,6 @@ import { UsersService } from '../users.service';
 import { Neo4jModule, Neo4jService } from 'nest-neo4j/dist';
 import { User, nodeToUser } from '../../datatypes/user/user';
 import {
-  DB_CONNECTIONS_CONFIGS,
   deleteNode,
 } from '../../../test/test-utils/test-utils.module';
 import {
@@ -15,6 +14,7 @@ import {
   dismantleContractKit,
   initializeContractKit,
 } from '../../utils/block-chain-utils/contract.kit.utils';
+import { DB_CONNECTIONS_CONFIGS } from '../../db.config';
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -46,7 +46,7 @@ describe('UsersService', () => {
     beforeEach(async () => {
       const rst = await dbService.write(
         'CREATE (user:User ' +
-          ' { email: $email, feduid: $feduid}) RETURN user',
+        ' { email: $email, feduid: $feduid}) RETURN user',
         {
           feduid: feduid,
           email: feduid,
@@ -106,7 +106,7 @@ describe('UsersService', () => {
 
       const existingUser = await dbService.write(
         'MATCH (user:User { feduid: $feduid}) ' +
-          ' SET user.publicAddress = $publicAddress RETURN user',
+        ' SET user.publicAddress = $publicAddress RETURN user',
         {
           feduid: feduid,
           publicAddress: TEST_ACC_3.address,

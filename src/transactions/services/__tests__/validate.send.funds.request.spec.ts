@@ -2,7 +2,6 @@ import { TestingModule, Test } from '@nestjs/testing';
 import { Neo4jService, Neo4jModule } from 'nest-neo4j/dist';
 import { User, nodeToUser } from '../../../datatypes/user/user';
 import {
-  DB_CONNECTIONS_CONFIGS,
   deleteNode,
 } from '../../../../test/test-utils/test-utils.module';
 import { TEST_ACC_1, TEST_ACC_2 } from '../../../../test/test-utils/test.accounts';
@@ -10,6 +9,7 @@ import { SendFundsService } from '../send-funds.service';
 import { UsersService } from '../../../users/users.service';
 import { CryptoWalletCreatorService } from '../../../users/crypto-wallet-creator.service';
 import { initializeContractKit } from '../../../utils/block-chain-utils/contract.kit.utils';
+import { DB_CONNECTIONS_CONFIGS } from '../../../db.config';
 
 describe('SendFundsService : SEND FUNDS VALIDATOR : TEST SUIT', () => {
   let service: SendFundsService;

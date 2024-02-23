@@ -13,19 +13,13 @@ import { TransactionsModule } from './transactions/transactions.module';
 import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo';
 import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
+import { DB_CONNECTIONS_CONFIGS } from './db.config';
 
 @Module({
   imports: [
     UsersModule,
     UtilsModule,
-    Neo4jModule.forRoot({
-      scheme: 'neo4j+s',
-      host: 'fc312fc9.databases.neo4j.io',
-      username: 'neo4j',
-      password: 'KDSigW7ODHrfIK-HecjDiAqeu-XI8JIArCyXTRr_Nb4',
-      port: '7687',
-      database: 'neo4j',
-    }),
+    Neo4jModule.forRoot(DB_CONNECTIONS_CONFIGS),
     DataTypesModule,
     TransactionsModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({

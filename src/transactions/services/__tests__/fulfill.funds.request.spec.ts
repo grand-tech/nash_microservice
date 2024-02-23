@@ -1,5 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { DB_CONNECTIONS_CONFIGS } from '../../../../test/test-utils/test-utils.module';
 import { Neo4jModule, Neo4jService } from 'nest-neo4j/dist';
 import { UsersModule } from '../../../users/users.module';
 import assert from 'assert';
@@ -13,6 +12,7 @@ import { SendFundsService } from '../send-funds.service';
 import { nodeToFundsRequest } from '../../../datatypes/transaction/funds.request';
 import { User } from '../../../datatypes/user/user';
 import { deleteUsers } from './test.utils';
+import { DB_CONNECTIONS_CONFIGS } from '../../../db.config';
 
 let inititatorFeduid = '1234567890';
 let targetFeduid = '1234567891';
