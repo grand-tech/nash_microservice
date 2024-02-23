@@ -20,9 +20,9 @@ import { join } from 'path';
     UtilsModule,
     Neo4jModule.forRoot({
       scheme: 'neo4j+s',
-      host: '718ca89a.databases.neo4j.io',
+      host: 'fc312fc9.databases.neo4j.io',
       username: 'neo4j',
-      password: 'IPa5_Nvq0cGocBwo8N7zJQKHMMVYUvqvoICD0RLG-tI',
+      password: 'KDSigW7ODHrfIK-HecjDiAqeu-XI8JIArCyXTRr_Nb4',
       port: '7687',
       database: 'neo4j',
     }),
