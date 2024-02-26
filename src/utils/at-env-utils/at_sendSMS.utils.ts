@@ -29,7 +29,7 @@ export const SMS = async () => {
         const sendSmsResult = await africastalking.SMS.send({
             to: "to", // database query method to get user(s) numbers
             message: "message", // message to be sent from application controller
-            from: "from", // applications short code
+            from: "from", // application short code
         });
 
     } catch (ex) {
