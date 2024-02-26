@@ -3,10 +3,10 @@ import { UsersService } from '../users.service';
 import { Neo4jModule, Neo4jService } from 'nest-neo4j/dist';
 import { User, nodeToUser } from '../../datatypes/user/user';
 import {
-  DB_CONNECTIONS_CONFIGS,
   deleteNode,
 } from '../../../test/test-utils/test-utils.module';
 import { CryptoWalletCreatorService } from '../crypto-wallet-creator.service';
+import { DB_CONNECTIONS_CONFIGS } from '../../db.config';
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -35,7 +35,7 @@ describe('UsersService', () => {
     beforeEach(async () => {
       const rst = await dbService.write(
         'CREATE (user:User ' +
-          ' { email: $email, feduid: $feduid, phoneNumber: $phoneNumber}) RETURN user',
+        ' { email: $email, feduid: $feduid, phoneNumber: $phoneNumber}) RETURN user',
         {
           feduid: feduid,
           email: feduid,

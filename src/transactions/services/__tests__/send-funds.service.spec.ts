@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { SendFundsService } from '../send-funds.service';
-import { DB_CONNECTIONS_CONFIGS } from '../../../../test/test-utils/test-utils.module';
 import { Neo4jModule, Neo4jService } from 'nest-neo4j/dist';
 import { UsersModule } from '../../../users/users.module';
 import assert from 'assert';
@@ -15,6 +14,7 @@ import {
   nodeToTransaction,
 } from '../../../datatypes/transaction/transaction';
 import { deleteUsers } from './test.utils';
+import { DB_CONNECTIONS_CONFIGS } from '../../../db.config';
 
 describe('SendFundsService: SEND FUNDS CYPHER QUERY : TEST SUIT', () => {
   let service: SendFundsService;
