@@ -5,9 +5,9 @@ import { Neo4jConnection } from "nest-neo4j/dist";
  */
 export const DB_CONNECTIONS_CONFIGS: Neo4jConnection = {
     scheme: 'neo4j+s',
-    host: '2e351529.databases.neo4j.io',
+    host: '04c46740.databases.neo4j.io',
     username: 'neo4j',
-    password: 'Bi4McnhW3jtraWcbtxu65tGMqTrRnzNU1MSLsEdVeLc',
+    password: 'DzsmVwuaLRFPs8JrSZs0cFllgORNVFZYuBZEKHh5GVQ',
     port: '7687',
     database: 'neo4j',
 };
