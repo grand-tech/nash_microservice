@@ -3,40 +3,28 @@ import AfricasTalking from "africastalking";
 
 dotenv.config();
 
-declare global {
-    namespace NodeJS {
-        interface ProcessEnv {
-            AT_API_KEY: string;
-            AT_USERNAME: string;
-            // will add more .evn variable here
-        }
-    }
-}
-
-const apiKey = process.env.AT_API_KEY;
-const username = process.env.AT_USERNAME;
-
-
+// Initialization of Africa's Talking
 const africastalking = AfricasTalking({
-    apiKey: apiKey,
-    username: username,
+  apiKey: process.env.AFRICAS_TALKING_API_KEY, 
+  username: process.env.AFRICAS_TALKING_USERNAME
 });
 
-export const SMS = async () => {
-    //const token = africastalking.TOKEN;
-    const sms = africastalking.SMS;
+module.exports = async function sendSMS() {
+    
+    // Send promotional message
     try {
-        const sendSmsResult = await africastalking.SMS.send({
-            to: "to", // database query method to get user(s) numbers
-            message: "message", // message to be sent from application controller
-            from: "from", // application short code
+        const result=await africastalking.SMS.send({
+            to: '+254796259104',
+            message: 'Promotional USSD message',
+            from: '85036'
+        
         });
 
-    } catch (ex) {
-        console.error(ex)
+        console.log("Message sent succesfully");
+
+    }
+    catch(ex) {
+        console.error(ex);
     }
 
-    //const checkoutTokenResponse = await token.createCheckoutToken("phoneNumber");   
-
-    //const res = await sms.createSubscription(options);
 };
