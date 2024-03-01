@@ -17,7 +17,6 @@ module.exports = async function sendSMS() {
             to: '+254796259104',
             message: 'Promotional USSD message',
             from: '85036'
-        
         });
 
         console.log("Message sent succesfully");
