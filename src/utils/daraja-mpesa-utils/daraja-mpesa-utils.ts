@@ -1,13 +1,13 @@
-// app.ts
+// daraja-mpesa-utils.ts
 import express, { Request, Response } from 'express';
 import unirest, { Response as UnirestResponse } from 'unirest';
 
-const app = express();
+const daraja = express();
 
 const PORT = 3000;
 
 // Route to handle the MPesa payment request
-app.get('/makePayment', (req: Request, res: Response) => {
+daraja.get('/makePayment', (req: Request, res: Response) => {
   // MPesa payment request
   let request = unirest.post('https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest')
     .headers({
@@ -39,6 +39,6 @@ app.get('/makePayment', (req: Request, res: Response) => {
 });
 
 // Start the server
-app.listen(PORT, () => {
+daraja.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}/`);
 });

@@ -13,12 +13,10 @@ module.exports = async function sendSMS() {
     
     // Send promotional message
     try {
-
         const result=await africastalking.SMS.send({
             to: '+254796259104',
             message: 'Promotional USSD message',
             from: '85036'
-        
         });
 
         console.log("Message sent succesfully");
