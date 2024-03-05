@@ -10,8 +10,7 @@ import {
 } from '@celo/cryptographic-utils';
 import { Injectable } from '@nestjs/common';
 import { web3 } from '../utils/block-chain-utils/contract.kit.utils';
-
-const bip39 = require('bip39');
+import * as bip39 from 'bip39';
 
 @Injectable()
 export class CryptoWalletCreatorService {

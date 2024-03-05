@@ -18,7 +18,6 @@ const targetFeduid = '1234567891';
 
 describe(' RequestFundsService : QUERY REQUEST FUNDS OBJECT BY ID AND TARGET : TEST SUIT', () => {
   let service: RequestFundsService;
-  let sendFundsService: SendFundsService;
   let dbService: Neo4jService;
   let app: TestingModule;
   let testFundRequestID: number;
@@ -31,7 +30,6 @@ describe(' RequestFundsService : QUERY REQUEST FUNDS OBJECT BY ID AND TARGET : T
     }).compile();
 
     service = app.get<RequestFundsService>(RequestFundsService);
-    sendFundsService = app.get<SendFundsService>(SendFundsService);
     dbService = app.get<Neo4jService>(Neo4jService);
 
     await setUpTestUsers(dbService);
