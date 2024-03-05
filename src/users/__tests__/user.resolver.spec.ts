@@ -108,13 +108,13 @@ describe('User Controller Mock Method Calls.', () => {
       .compile();
 
     app = moduleRef.createNestApplication<NestFastifyApplication>(
-      new FastifyAdapter(),
+      new FastifyAdapter()
     );
     await app.init();
     await app.getHttpAdapter().getInstance().ready();
 
     testUtils = moduleRef.get<FirebaseTestUtilsService>(
-      FirebaseTestUtilsService,
+      FirebaseTestUtilsService
     );
     db = moduleRef.get<Neo4jService>(Neo4jService);
 
@@ -148,7 +148,7 @@ describe('User Controller Mock Method Calls.', () => {
         query: mutation,
       })
       .expect(200)
-      .expect((res) => {
+      .expect(res => {
         const rsp = res.body.data.signUp;
         expect(rsp.status).toBe(200);
         expect(rsp.message).toBe('Success');
@@ -179,7 +179,7 @@ describe('User Controller Mock Method Calls.', () => {
         query: mutation,
       })
       .expect(200)
-      .expect((res) => {
+      .expect(res => {
         const rsp = res.body.data.addPrivateKeyToAccount;
         expect(rsp.status).toBe(200);
         expect(rsp.message).toBe('Success');
@@ -211,7 +211,7 @@ describe('User Controller Mock Method Calls.', () => {
         query: mutation,
       })
       .expect(200)
-      .expect((res) => {
+      .expect(res => {
         const rsp = res.body.data.createNewCryptoWallet;
         expect(rsp.status).toBe(200);
         expect(rsp.message).toBe('Success');
@@ -239,7 +239,7 @@ describe('User Controller Mock Method Calls.', () => {
         query: mutation,
       })
       .expect(200)
-      .expect((res) => {
+      .expect(res => {
         const rsp = res.body.data.addMnemonicToAccount;
         expect(rsp.status).toBe(200);
         expect(rsp.message).toBe('Success');
@@ -267,7 +267,7 @@ describe('User Controller Mock Method Calls.', () => {
         query: mutation,
       })
       .expect(200)
-      .expect((res) => {
+      .expect(res => {
         const rsp = res.body.data.saveUserProfile;
         expect(rsp.status).toBe(200);
         expect(rsp.message).toBe('Success');

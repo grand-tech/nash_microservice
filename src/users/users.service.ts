@@ -12,7 +12,7 @@ import {
 export class UsersService {
   constructor(
     private readonly neo4j: Neo4jService,
-    private readonly walletCreator: CryptoWalletCreatorService,
+    private readonly walletCreator: CryptoWalletCreatorService
   ) {}
 
   /**
@@ -23,7 +23,7 @@ export class UsersService {
   async getUser(feduid: string) {
     const rst = await this.neo4j.read(
       'MATCH (user:User) WHERE user.feduid = $feduid RETURN user',
-      { feduid: feduid },
+      { feduid: feduid }
     );
 
     if (rst.records.length > 0) {
@@ -42,7 +42,7 @@ export class UsersService {
   async getUserByPublicAddress(publicAddress: string) {
     const rst = await this.neo4j.read(
       'MATCH (user:User) WHERE user.publicAddress = $publicAddress RETURN user',
-      { publicAddress: publicAddress },
+      { publicAddress: publicAddress }
     );
 
     if (rst.records.length > 0) {
@@ -61,7 +61,7 @@ export class UsersService {
   async getUserByPhoneNumber(phoneNumber: string) {
     const rst = await this.neo4j.read(
       'MATCH (user:User) WHERE user.phoneNumber = $phoneNumber RETURN user',
-      { phoneNumber: phoneNumber },
+      { phoneNumber: phoneNumber }
     );
 
     if (rst.records.length > 0) {
@@ -84,7 +84,7 @@ export class UsersService {
 
     const rst = await this.neo4j.write(
       'CREATE (user:User { feduid: $feduid}) RETURN user',
-      params,
+      params
     );
 
     if (rst.records.length > 0) {
@@ -196,7 +196,7 @@ export class UsersService {
         ' SET user.privateKey = $privateKey, user.mnemonic = $mnemonic, ' +
         ' user.publicAddress = $publicAddress, user.publicKey = $publicKey' +
         ' RETURN user',
-      params,
+      params
     );
 
     if (rst.records.length > 0) {
@@ -214,7 +214,7 @@ export class UsersService {
    */
   async addPrivateKeyToAccount(
     user: User,
-    privateKey: string,
+    privateKey: string
   ): Promise<UserResponse> {
     if ((user.privateKey ?? '') != '') {
       return {
@@ -235,7 +235,7 @@ export class UsersService {
    */
   async addMnemonicToAccount(
     user: User,
-    mnemonic: string,
+    mnemonic: string
   ): Promise<UserResponse> {
     if ((user?.privateKey ?? '').trim() != '') {
       return {
@@ -256,7 +256,7 @@ export class UsersService {
    */
   async validateExistingCryptoAccount(
     feduid: string,
-    acc: AccountInformation,
+    acc: AccountInformation
   ): Promise<UserResponse> {
     const rsp: UserResponse = {
       status: 200,
@@ -311,7 +311,7 @@ export class UsersService {
   async queryClientWithPhoneNumber(phoneNumber: string) {
     const rst = await this.neo4j.read(
       'MATCH (user:User) WHERE user.phoneNumber = $phoneNumber RETURN user',
-      { phoneNumber: phoneNumber },
+      { phoneNumber: phoneNumber }
     );
 
     if (rst.records.length > 0) {
@@ -340,7 +340,7 @@ export class UsersService {
       'MATCH (user:User { feduid: $feduid}) ' +
         ' SET user.phoneNumber = $phoneNumber, user.name = $fullName' +
         ' RETURN user',
-      params,
+      params
     );
 
     if (rst.records.length > 0) {
@@ -360,7 +360,7 @@ export class UsersService {
   async saveUserProfile(
     user: User,
     phoneNumber: string,
-    fullName: string,
+    fullName: string
   ): Promise<UserResponse> {
     const rsp: UserResponse = {
       status: 200,
@@ -378,7 +378,7 @@ export class UsersService {
       const savedUser = await this.updateProfile(
         user.feduid,
         phoneNumber,
-        fullName,
+        fullName
       );
 
       if (savedUser.phoneNumber == phoneNumber) {

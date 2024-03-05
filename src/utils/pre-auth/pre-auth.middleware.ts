@@ -20,7 +20,7 @@ export class PreAuthMiddleware implements NestMiddleware {
    */
   constructor(
     private firebaseAuthService: FirebaseAuthService,
-    private readonly neo4j: Neo4jService,
+    private readonly neo4j: Neo4jService
   ) {
     this.firebaseAuth = this.firebaseAuthService.getAuth();
   }
@@ -60,7 +60,7 @@ export class PreAuthMiddleware implements NestMiddleware {
   async getUser(feduid: string) {
     const rst = await this.neo4j.read(
       'MATCH (user:User) WHERE user.feduid = $feduid RETURN user',
-      { feduid: feduid },
+      { feduid: feduid }
     );
 
     if (rst.records.length > 0) {

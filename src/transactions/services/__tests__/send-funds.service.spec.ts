@@ -50,7 +50,13 @@ describe('SendFundsService: SEND FUNDS CYPHER QUERY : TEST SUIT', () => {
     user2.privateKey = TEST_ACC_1.privateKey;
     user2.feduid = '1234567891';
 
-    const tx = await service.sendcUSD(0.0001, 'Test Transaction', user1, user2, -1);
+    const tx = await service.sendcUSD(
+      0.0001,
+      'Test Transaction',
+      user1,
+      user2,
+      -1
+    );
     expect(tx.records[0].get('transaction')).toBeDefined;
     expect(tx.records[0].get('senderDay')).toBeDefined;
     expect(tx.records[0].get('recipientDay')).toBeDefined;
@@ -58,10 +64,12 @@ describe('SendFundsService: SEND FUNDS CYPHER QUERY : TEST SUIT', () => {
     expect(tx.records[0].get('recipient')).toBeDefined;
 
     expect(tx.records[0].get('senderDay').timestamp).toBe(
-      tx.records[0].get('senderDay').timestamp,
+      tx.records[0].get('senderDay').timestamp
     );
 
-    const savedTx: Transaction = nodeToTransaction(tx.records[0].get('transaction'));
+    const savedTx: Transaction = nodeToTransaction(
+      tx.records[0].get('transaction')
+    );
 
     expect(savedTx.amount).toBe(0.0001);
     expect(savedTx.stableCoin).toBe('cUSD');
@@ -89,4 +97,3 @@ async function setUpTestUsers(dbService: Neo4jService) {
 
   assert(rst.records[0].keys.length == 2, 'Id is valid.');
 }
-

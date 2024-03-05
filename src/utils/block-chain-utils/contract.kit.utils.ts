@@ -38,7 +38,7 @@ export async function sendFunds(
   token: StableToken,
   senderAccount: User,
   recipientAccount: User,
-  amount: number,
+  amount: number
 ) {
   // prepare for transaction.
   contractKit.connection.addAccount(senderAccount.privateKey);
@@ -50,13 +50,13 @@ export async function sendFunds(
     txReceipt = await sendCUSD(
       senderAccount.publicAddress,
       recipientAccount.publicAddress,
-      amountWei,
+      amountWei
     );
   } else {
     txReceipt = await sendCEUR(
       senderAccount.publicAddress,
       recipientAccount.publicAddress,
-      amountWei,
+      amountWei
     );
   }
 
@@ -76,10 +76,10 @@ export async function sendFunds(
 export async function sendCUSD(
   senderAddress: string,
   recipientAddress: string,
-  amount: string,
+  amount: string
 ) {
   const cUSDToken = await contractKit.contracts.getStableToken(
-    StableToken.cUSD,
+    StableToken.cUSD
   );
   const cUSDtx = await cUSDToken
     ?.transfer(recipientAddress, amount)
@@ -100,10 +100,10 @@ export async function sendCUSD(
 export async function sendCEUR(
   senderAddress: string,
   recipientAddress: string,
-  amount: string,
+  amount: string
 ): Promise<CeloTxReceipt> {
   const cEURToken = await contractKit.contracts.getStableToken(
-    StableToken.cEUR,
+    StableToken.cEUR
   );
   const cUSDtx = await cEURToken
     ?.transfer(recipientAddress, amount)

@@ -1,10 +1,11 @@
 import { TestingModule, Test } from '@nestjs/testing';
 import { Neo4jService, Neo4jModule } from 'nest-neo4j/dist';
 import { User, nodeToUser } from '../../../datatypes/user/user';
+import { deleteNode } from '../../../../test/test-utils/test-utils.module';
 import {
-  deleteNode,
-} from '../../../../test/test-utils/test-utils.module';
-import { TEST_ACC_1, TEST_ACC_2 } from '../../../../test/test-utils/test.accounts';
+  TEST_ACC_1,
+  TEST_ACC_2,
+} from '../../../../test/test-utils/test.accounts';
 import { UsersService } from '../../../users/users.service';
 import { CryptoWalletCreatorService } from '../../../users/crypto-wallet-creator.service';
 import { initializeContractKit } from '../../../utils/block-chain-utils/contract.kit.utils';
@@ -19,7 +20,12 @@ describe('RequestFundsService : VALIDATE REQUEST FUNDS REQUEST DETAILS : TEST SU
 
   beforeAll(async () => {
     module = await Test.createTestingModule({
-      providers: [RequestFundsService, UsersService, CryptoWalletCreatorService, SendFundsService],
+      providers: [
+        RequestFundsService,
+        UsersService,
+        CryptoWalletCreatorService,
+        SendFundsService,
+      ],
       imports: [Neo4jModule.forRoot(DB_CONNECTIONS_CONFIGS)],
     }).compile();
 
@@ -67,7 +73,7 @@ describe('RequestFundsService : VALIDATE REQUEST FUNDS REQUEST DETAILS : TEST SU
       initializeContractKit();
       const rst = await dbService.write(
         'CREATE (sender:User {name: "Test User", publicAddress: $senderAddress, privateKey: $privateKey, feduid: $senderFeduid}), ' +
-        ' (receiver:User {name: "Test User", publicAddress: $receiverAddress,  phoneNumber: $phoneNumber, feduid: $receiverFeduid }) RETURN sender, receiver',
+          ' (receiver:User {name: "Test User", publicAddress: $receiverAddress,  phoneNumber: $phoneNumber, feduid: $receiverFeduid }) RETURN sender, receiver',
         {
           phoneNumber: testPhoneNumber,
           senderFeduid: TEST_ACC_1.address,
@@ -75,7 +81,7 @@ describe('RequestFundsService : VALIDATE REQUEST FUNDS REQUEST DETAILS : TEST SU
           senderAddress: TEST_ACC_1.address,
           receiverAddress: TEST_ACC_2.address,
           receiverFeduid: TEST_ACC_2.address,
-        },
+        }
       );
 
       const usr = rst.records[0].get('sender');

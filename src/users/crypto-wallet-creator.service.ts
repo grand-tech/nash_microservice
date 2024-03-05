@@ -52,7 +52,7 @@ export class CryptoWalletCreatorService {
     let mnemonic = await generateMnemonic(
       this.MNEMONIC_BIT_LENGTH,
       mnemonicLanguage,
-      bip39,
+      bip39
     );
 
     let isDuplicateInMnemonic = this.checkDuplicate(mnemonic);
@@ -60,7 +60,7 @@ export class CryptoWalletCreatorService {
       mnemonic = await generateMnemonic(
         this.MNEMONIC_BIT_LENGTH,
         mnemonicLanguage,
-        bip39,
+        bip39
       );
       isDuplicateInMnemonic = this.checkDuplicate(mnemonic);
     }
@@ -100,7 +100,7 @@ export class CryptoWalletCreatorService {
         undefined,
         undefined,
         undefined,
-        bip39,
+        bip39
       );
 
       accountInfo.mnemonic = mnemonic;
@@ -157,7 +157,7 @@ export function getAccountInformation(privateKey: string): AccountInformation {
   };
   try {
     const acc = web3.eth.accounts.privateKeyToAccount(
-      bufferToHex(hexToBuffer(privateKey)),
+      bufferToHex(hexToBuffer(privateKey))
     );
     account.address = acc.address;
     account.privateKey = acc.privateKey;

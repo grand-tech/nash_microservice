@@ -28,7 +28,7 @@ export class RolesGuard implements CanActivate {
     const u = x.req.raw.user as User;
 
     // do the rbac.
-    return requiredRoles.some((role) => {
+    return requiredRoles.some(role => {
       return (u?.labels ?? []).includes(role.toString());
     });
   }

@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { FirebaseTestUtilsService } from './firebase-test-utils/firebase-test-utils.service';
-import { Neo4jConnection, Neo4jService } from 'nest-neo4j/dist';
+import { Neo4jService } from 'nest-neo4j/dist';
 import { nodeToUser, User } from '../../src/datatypes/user/user';
 
 @Module({
@@ -8,7 +8,7 @@ import { nodeToUser, User } from '../../src/datatypes/user/user';
   providers: [FirebaseTestUtilsService],
   exports: [FirebaseTestUtilsService],
 })
-export class TestUtilsModule { }
+export class TestUtilsModule {}
 
 /**
  * Deletes a node.
@@ -20,7 +20,7 @@ export async function deleteNode(id: number, dbService: Neo4jService) {
     'MATCH (n) WHERE ID(n)=$id DETACH DELETE n',
     {
       id: id,
-    },
+    }
   );
   return rst;
 }
@@ -40,9 +40,9 @@ export async function addTestUser(feduid: string, dbService: Neo4jService) {
 
   const rst = await dbService.write(
     'MERGE (u:User {feduid: $feduid}) ON CREATE ' +
-    ' SET u.name = "Test User", u.created = timestamp() ' +
-    ' RETURN u',
-    params,
+      ' SET u.name = "Test User", u.created = timestamp() ' +
+      ' RETURN u',
+    params
   );
 
   if (rst.records.length > 0) {

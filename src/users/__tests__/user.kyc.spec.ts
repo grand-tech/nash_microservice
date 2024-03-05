@@ -2,9 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from '../users.service';
 import { Neo4jModule, Neo4jService } from 'nest-neo4j/dist';
 import { User, nodeToUser } from '../../datatypes/user/user';
-import {
-  deleteNode,
-} from '../../../test/test-utils/test-utils.module';
+import { deleteNode } from '../../../test/test-utils/test-utils.module';
 import { CryptoWalletCreatorService } from '../crypto-wallet-creator.service';
 import { DB_CONNECTIONS_CONFIGS } from '../../db.config';
 
@@ -35,12 +33,12 @@ describe('UsersService', () => {
     beforeEach(async () => {
       const rst = await dbService.write(
         'CREATE (user:User ' +
-        ' { email: $email, feduid: $feduid, phoneNumber: $phoneNumber}) RETURN user',
+          ' { email: $email, feduid: $feduid, phoneNumber: $phoneNumber}) RETURN user',
         {
           feduid: feduid,
           email: feduid,
           phoneNumber: feduid,
-        },
+        }
       );
 
       const usr = rst.records[0].get('user');
@@ -75,7 +73,7 @@ describe('UsersService', () => {
 
       expect(rsp.status).toBe(500);
       expect(rsp.message).toBe(
-        'Phone number already in use by another account.',
+        'Phone number already in use by another account.'
       );
     });
 
@@ -124,7 +122,7 @@ describe('UsersService', () => {
       const rsp = await service.saveUserProfile(
         user,
         '+25421745952',
-        'John Doe',
+        'John Doe'
       );
 
       const usr: User = rsp.body;

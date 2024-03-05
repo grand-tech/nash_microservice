@@ -1,10 +1,11 @@
 import { TestingModule, Test } from '@nestjs/testing';
 import { Neo4jService, Neo4jModule } from 'nest-neo4j/dist';
 import { User, nodeToUser } from '../../../datatypes/user/user';
+import { deleteNode } from '../../../../test/test-utils/test-utils.module';
 import {
-  deleteNode,
-} from '../../../../test/test-utils/test-utils.module';
-import { TEST_ACC_1, TEST_ACC_2 } from '../../../../test/test-utils/test.accounts';
+  TEST_ACC_1,
+  TEST_ACC_2,
+} from '../../../../test/test-utils/test.accounts';
 import { SendFundsService } from '../send-funds.service';
 import { UsersService } from '../../../users/users.service';
 import { CryptoWalletCreatorService } from '../../../users/crypto-wallet-creator.service';
@@ -65,7 +66,7 @@ describe('SendFundsService : SEND FUNDS VALIDATOR : TEST SUIT', () => {
       initializeContractKit();
       const rst = await dbService.write(
         'CREATE (sender:User {name: "Test User", publicAddress: $senderAddress, privateKey: $privateKey, feduid: $senderFeduid}), ' +
-        ' (receiver:User {name: "Test User", publicAddress: $receiverAddress,  phoneNumber: $phoneNumber, feduid: $receiverFeduid }) RETURN sender, receiver',
+          ' (receiver:User {name: "Test User", publicAddress: $receiverAddress,  phoneNumber: $phoneNumber, feduid: $receiverFeduid }) RETURN sender, receiver',
         {
           phoneNumber: testPhoneNumber,
           senderFeduid: TEST_ACC_1.address,
@@ -73,7 +74,7 @@ describe('SendFundsService : SEND FUNDS VALIDATOR : TEST SUIT', () => {
           senderAddress: TEST_ACC_1.address,
           receiverAddress: TEST_ACC_2.address,
           receiverFeduid: TEST_ACC_2.address,
-        },
+        }
       );
 
       const usr = rst.records[0].get('sender');

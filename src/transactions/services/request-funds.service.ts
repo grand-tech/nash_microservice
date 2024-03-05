@@ -3,8 +3,14 @@ import { Injectable } from '@nestjs/common';
 import { Neo4jService } from 'nest-neo4j/dist';
 import { User, nodeToUser } from '../../datatypes/user/user';
 import { UsersService } from '../../users/users.service';
-import { nodeToFundsRequest, FundsRequest } from '../../datatypes/transaction/funds.request';
-import { FundsRequestResponse, TransactionResponse } from '../../utils/response';
+import {
+  nodeToFundsRequest,
+  FundsRequest,
+} from '../../datatypes/transaction/funds.request';
+import {
+  FundsRequestResponse,
+  TransactionResponse,
+} from '../../utils/response';
 import { SendFundsService } from './send-funds.service';
 import { Transaction } from 'src/datatypes/transaction/transaction';
 
@@ -14,7 +20,7 @@ export class RequestFundsService {
     private readonly neo4j: Neo4jService,
     private readonly userService: UsersService,
     private readonly sendFundsService: SendFundsService
-  ) { }
+  ) {}
 
   /**
    * Validation of the send request transaction.
@@ -46,14 +52,14 @@ export class RequestFundsService {
         response.message = 'Invalid phone number.';
       } else {
         const target = await this.userService.getUserByPhoneNumber(
-          targetPhoneNumber,
+          targetPhoneNumber
         );
         if (target.phoneNumber == targetPhoneNumber) {
           const tx = await this.requestFundsCypherQry(
             usdAmount,
             description,
             initiator,
-            target,
+            target
           );
           const transaction = nodeToFundsRequest(tx.records[0].get('request'));
           // Recipient does not exist.
@@ -79,7 +85,7 @@ export class RequestFundsService {
     usdAmount: number,
     description: string,
     initiator: User,
-    target: User,
+    target: User
   ) {
     const tx: FundsRequest = new FundsRequest();
 
@@ -87,7 +93,6 @@ export class RequestFundsService {
     tx.description = description;
     tx.network = 'CELO';
     tx.stableCoin = StableToken.cUSD;
-
 
     const r: Record<string, any> = tx;
     r.initiatorFeduid = initiator.feduid;
@@ -99,21 +104,21 @@ export class RequestFundsService {
 
     const fundsRequest = await this.neo4j.write(
       'MATCH (initiator: User) MATCH (target: User) ' +
-      ' WHERE initiator.feduid = $initiatorFeduid AND target.feduid = $targetFeduid ' +
-      ' MERGE (initiator)-[:REQUESTED_FUNDS_ON]->(initiatorDay: Day {timestamp: $todaysTimestamp}) ' +
-      ' MERGE (target)-[:REQUESTED_FUNDS_ON]->(targetDay: Day {timestamp: $todaysTimestamp}) ' +
-      ' CREATE (initiatorDay)-[:RECORDED]->(request:FundsRequest { ' +
-      '     description: $description, ' +
-      '     amount: $amount, ' +
-      '     stableCoin: $stableCoin, ' +
-      '     network: $network, ' +
-      '     initiatorAddress: $initiatorAddress, ' +
-      '     targetAddress: $targetAddress, ' +
-      '     timestamp: $timestamp,' +
-      '     fulfilled: false' +
-      ' })<-[:RECORDED]-(targetDay) ' +
-      ' return request, initiatorDay, targetDay, initiator, target',
-      tx,
+        ' WHERE initiator.feduid = $initiatorFeduid AND target.feduid = $targetFeduid ' +
+        ' MERGE (initiator)-[:REQUESTED_FUNDS_ON]->(initiatorDay: Day {timestamp: $todaysTimestamp}) ' +
+        ' MERGE (target)-[:REQUESTED_FUNDS_ON]->(targetDay: Day {timestamp: $todaysTimestamp}) ' +
+        ' CREATE (initiatorDay)-[:RECORDED]->(request:FundsRequest { ' +
+        '     description: $description, ' +
+        '     amount: $amount, ' +
+        '     stableCoin: $stableCoin, ' +
+        '     network: $network, ' +
+        '     initiatorAddress: $initiatorAddress, ' +
+        '     targetAddress: $targetAddress, ' +
+        '     timestamp: $timestamp,' +
+        '     fulfilled: false' +
+        ' })<-[:RECORDED]-(targetDay) ' +
+        ' return request, initiatorDay, targetDay, initiator, target',
+      tx
     );
 
     return fundsRequest;
@@ -125,8 +130,12 @@ export class RequestFundsService {
    * @param target the target of the transaction request(user in session).
    * Returns transaction object.
    */
-  async fulfillFundsRequest(target: User, requestID: number): Promise<TransactionResponse> {
-    const fundsRequest: FundsRequest = await this.queryFundsRequestByIDAndTarget(target, requestID);
+  async fulfillFundsRequest(
+    target: User,
+    requestID: number
+  ): Promise<TransactionResponse> {
+    const fundsRequest: FundsRequest =
+      await this.queryFundsRequestByIDAndTarget(target, requestID);
 
     let transactionResponse: TransactionResponse;
 
@@ -135,25 +144,25 @@ export class RequestFundsService {
         transactionResponse = {
           status: 501,
           message: 'Transaction request already fulfilled!!',
-          body: undefined
-        }
+          body: undefined,
+        };
       } else {
-        const transactionResult = await this.sendFundsService.validateSendFunds(fundsRequest.target,
+        const transactionResult = await this.sendFundsService.validateSendFunds(
+          fundsRequest.target,
           fundsRequest.amount,
           fundsRequest.initiator.phoneNumber,
           fundsRequest.description,
           fundsRequest.id
         );
 
-        transactionResponse = transactionResult
+        transactionResponse = transactionResult;
       }
-
     } else {
       transactionResponse = {
         status: 503,
         message: 'Could not find funds request!!',
-        body: undefined
-      }
+        body: undefined,
+      };
     }
 
     return transactionResponse;
@@ -171,12 +180,12 @@ export class RequestFundsService {
     const qry = ` MATCH (fundsRequest: FundsRequest), (transaction: Transaction) 
        WHERE id(fundsRequest) = $fundsRequestID AND id(transaction) = $transactionID 
        CREATE (transaction)-[:FULFILLED_FUND_REQUEST]->(fundsRequest) 
-       SET fundsRequest.fulfilled RETURN fundsRequest, transaction `
+       SET fundsRequest.fulfilled RETURN fundsRequest, transaction `;
 
     const params = {
       fundsRequestID: fundsRequest.id,
-      transactionID: transaction.id
-    }
+      transactionID: transaction.id,
+    };
 
     const request = await this.neo4j.write(qry, params);
     return nodeToFundsRequest(request.records[0].get('fundsRequest'));
@@ -188,29 +197,33 @@ export class RequestFundsService {
    * @param requestID the request id.
    * @returns the details of the funds request.
    */
-  async queryFundsRequestByIDAndTarget(target: User, requestID: number): Promise<FundsRequest> {
-
-    const qry = 'MATCH (initiator: User)-[:REQUESTED_FUNDS_ON]->(:Day)-[:RECORDED]->' +
+  async queryFundsRequestByIDAndTarget(
+    target: User,
+    requestID: number
+  ): Promise<FundsRequest> {
+    const qry =
+      'MATCH (initiator: User)-[:REQUESTED_FUNDS_ON]->(:Day)-[:RECORDED]->' +
       '(fundsRequest: FundsRequest)<-[:RECORDED]-(:Day)<-[:REQUESTED_FUNDS_ON]-(target: User) ' +
       ' WHERE id(fundsRequest) = $requestID AND fundsRequest.targetAddress = $targetAddress AND ' +
-      ' target.publicAddress = $targetAddress RETURN fundsRequest, initiator, target'
+      ' target.publicAddress = $targetAddress RETURN fundsRequest, initiator, target';
 
     const params = {
       requestID: requestID,
       targetAddress: target.publicAddress,
-    }
+    };
 
     const data = await this.neo4j.read(qry, params);
 
     if (data.records.length > 0) {
       const fundsRequest: FundsRequest = nodeToFundsRequest(
-        data.records[0].get('fundsRequest'));
+        data.records[0].get('fundsRequest')
+      );
 
       fundsRequest.target = nodeToUser(data.records[0].get('target'));
       fundsRequest.initiator = nodeToUser(data.records[0].get('initiator'));
       return fundsRequest;
     } else {
-      return undefined
+      return undefined;
     }
   }
 }

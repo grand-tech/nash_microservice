@@ -11,53 +11,50 @@ export class TransactionsResolver {
   constructor(
     private readonly airtimeService: PurchaseAirtimeService,
     private readonly requestFundsService: RequestFundsService,
-    private readonly sendFundsService: SendFundsService,
-  ) { }
+    private readonly sendFundsService: SendFundsService
+  ) {}
 
-  @Mutation((returns) => TransactionResponse)
+  @Mutation(returns => TransactionResponse)
   @Roles(Role.User)
   async sendUsd(
     @Args('recipientPhoneNumber') recipientPhoneNumber: string,
     @Args('usdAmount') usdAmount: number,
     @Args('description') description: string,
-    @Context() context,
+    @Context() context
   ): Promise<TransactionResponse> {
     const user: User = context.req.raw.user as User;
     return await this.sendFundsService.validateSendFunds(
       user,
       usdAmount,
       recipientPhoneNumber,
-      description,
+      description
     );
   }
 
-  @Mutation((returns) => FundsRequestResponse)
+  @Mutation(returns => FundsRequestResponse)
   @Roles(Role.User)
   async requestFunds(
     @Args('targetPhoneNumber') targetPhoneNumber: string,
     @Args('usdAmount') usdAmount: number,
     @Args('description') description: string,
-    @Context() context,
+    @Context() context
   ): Promise<FundsRequestResponse> {
     const user: User = context.req.raw.user as User;
     return await this.requestFundsService.validateFundsRequest(
       user,
       usdAmount,
       targetPhoneNumber,
-      description,
+      description
     );
   }
 
-  @Mutation((returns) => TransactionResponse)
+  @Mutation(returns => TransactionResponse)
   @Roles(Role.User)
   async fulfillFundsRequest(
     @Args('requestID') requestID: number,
-    @Context() context,
+    @Context() context
   ): Promise<TransactionResponse> {
     const user: User = context.req.raw.user as User;
-    return await this.requestFundsService.fulfillFundsRequest(
-      user,
-      requestID
-    );
+    return await this.requestFundsService.fulfillFundsRequest(user, requestID);
   }
 }
