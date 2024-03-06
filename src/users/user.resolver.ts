@@ -9,11 +9,11 @@ import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 export default class UserResolver {
   constructor(private readonly userService: UsersService) {}
 
-  @Mutation((returns) => UserResponse)
+  @Mutation(returns => UserResponse)
   async signUp(
     @Args({ name: 'feduid', type: () => String })
     @Req()
-    request,
+    request
   ): Promise<UserResponse> {
     const user: User = {
       feduid: request['feduid'] ?? '',
@@ -32,48 +32,48 @@ export default class UserResolver {
     return await this.userService.validateNewUser(user);
   }
 
-  @Mutation((returns) => UserResponse)
+  @Mutation(returns => UserResponse)
   @Roles(Role.User)
   async createNewCryptoWallet(
     @Args('feduid') feduid: string,
-    @Context() context,
+    @Context() context
   ): Promise<UserResponse> {
     const user: User = context.req.raw.user as User;
     return await this.userService.createCryptoAccount(user);
   }
 
-  @Mutation((returns) => UserResponse)
+  @Mutation(returns => UserResponse)
   @Roles(Role.User)
   async addPrivateKeyToAccount(
     @Args('privateKey') privateKey: string,
-    @Context() context,
+    @Context() context
   ): Promise<UserResponse> {
     const user: User = context.req.raw.user as User;
     return await this.userService.addPrivateKeyToAccount(user, privateKey);
   }
 
-  @Mutation((returns) => UserResponse)
+  @Mutation(returns => UserResponse)
   @Roles(Role.User)
   async addMnemonicToAccount(
     @Args('mnemonic') mnemonic: string,
-    @Context() context,
+    @Context() context
   ): Promise<UserResponse> {
     const user: User = context.req.raw.user as User;
     return await this.userService.addMnemonicToAccount(user, mnemonic);
   }
 
-  @Mutation((returns) => UserResponse)
+  @Mutation(returns => UserResponse)
   @Roles(Role.User)
   async saveUserProfile(
     @Args('phoneNumber') phoneNumber: string,
     @Args('fullName') fullName: string,
-    @Context() context,
+    @Context() context
   ): Promise<UserResponse> {
     const user: User = context.req.raw.user as User;
     return await this.userService.saveUserProfile(user, phoneNumber, fullName);
   }
 
-  @Query((returns) => [User])
+  @Query(returns => [User])
   async getUsers() {
     return [];
   }

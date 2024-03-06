@@ -8,12 +8,12 @@ export default class BaseNode {
   /**
    * Then id of the node in the database.
    */
-  @Field((type) => Int, { nullable: true })
+  @Field(type => Int, { nullable: true })
   public id!: number;
 
   /**
    * The labels of the node in the database.
    */
-  @Field((type) => [String], { nullable: true })
+  @Field(type => [String], { nullable: true })
   public labels!: string[];
 }

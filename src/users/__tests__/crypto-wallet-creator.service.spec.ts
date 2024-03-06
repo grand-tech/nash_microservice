@@ -20,7 +20,7 @@ describe('CryptoWalletCreatorService', () => {
     }).compile();
 
     service = module.get<CryptoWalletCreatorService>(
-      CryptoWalletCreatorService,
+      CryptoWalletCreatorService
     );
   });
 

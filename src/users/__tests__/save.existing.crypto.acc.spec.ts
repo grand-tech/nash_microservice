@@ -2,9 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from '../users.service';
 import { Neo4jModule, Neo4jService } from 'nest-neo4j/dist';
 import { User, nodeToUser } from '../../datatypes/user/user';
-import {
-  deleteNode,
-} from '../../../test/test-utils/test-utils.module';
+import { deleteNode } from '../../../test/test-utils/test-utils.module';
 import {
   AccountInformation,
   CryptoWalletCreatorService,
@@ -46,11 +44,11 @@ describe('UsersService', () => {
     beforeEach(async () => {
       const rst = await dbService.write(
         'CREATE (user:User ' +
-        ' { email: $email, feduid: $feduid}) RETURN user',
+          ' { email: $email, feduid: $feduid}) RETURN user',
         {
           feduid: feduid,
           email: feduid,
-        },
+        }
       );
 
       const usr = rst.records[0].get('user');
@@ -82,7 +80,7 @@ describe('UsersService', () => {
 
       expect(rsp.status).toBe(502);
       expect(rsp.message).toBe(
-        'Invalid private key or mnemonic(seed phrase)!!',
+        'Invalid private key or mnemonic(seed phrase)!!'
       );
     });
 
@@ -106,11 +104,11 @@ describe('UsersService', () => {
 
       const existingUser = await dbService.write(
         'MATCH (user:User { feduid: $feduid}) ' +
-        ' SET user.publicAddress = $publicAddress RETURN user',
+          ' SET user.publicAddress = $publicAddress RETURN user',
         {
           feduid: feduid,
           publicAddress: TEST_ACC_3.address,
-        },
+        }
       );
 
       existingUID = nodeToUser(existingUser.records[0].get('user')).id;
@@ -118,7 +116,7 @@ describe('UsersService', () => {
 
       expect(rsp.status).toBe(503);
       expect(rsp.message).toBe(
-        'Private key is already in use by another account!!',
+        'Private key is already in use by another account!!'
       );
     });
   });
@@ -195,7 +193,7 @@ describe('UsersService', () => {
 
       const rsp = await service.addPrivateKeyToAccount(
         user,
-        TEST_ACC_3.privateKey,
+        TEST_ACC_3.privateKey
       );
       expect(rsp.status).toBe(504);
     });

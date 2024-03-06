@@ -9,23 +9,25 @@ const PORT = 3000;
 // Route to handle the MPesa payment request
 daraja.get('/makePayment', (req: Request, res: Response) => {
   // MPesa payment request
-  let request = unirest.post('https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest')
+  const request = unirest
+    .post('https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest')
     .headers({
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer 5KugKPzXNWwGxB2D2EZPIFmMSdtG'
+      Authorization: 'Bearer 5KugKPzXNWwGxB2D2EZPIFmMSdtG',
     })
     .send({
-      "BusinessShortCode": 174379,
-      "Password": "MTc0Mzc5YmZiMjc5ZjlhYTliZGJjZjE1OGU5N2RkNzFhNDY3Y2QyZTBjODkzMDU5YjEwZjc4ZTZiNzJhZGExZWQyYzkxOTIwMjQwMzAxMDgxMDQw",
-      "Timestamp": "20240301081040",
-      "TransactionType": "CustomerPayBillOnline",
-      "Amount": 1,
-      "PartyA": 254796259104,
-      "PartyB": 174379,
-      "PhoneNumber": 254796259104,
-      "CallBackURL": "https://mydomain.com/path",
-      "AccountReference": "CompanyXLTD",
-      "TransactionDesc": "Payment of X"
+      BusinessShortCode: 174379,
+      Password:
+        'MTc0Mzc5YmZiMjc5ZjlhYTliZGJjZjE1OGU5N2RkNzFhNDY3Y2QyZTBjODkzMDU5YjEwZjc4ZTZiNzJhZGExZWQyYzkxOTIwMjQwMzAxMDgxMDQw',
+      Timestamp: '20240301081040',
+      TransactionType: 'CustomerPayBillOnline',
+      Amount: 1,
+      PartyA: 254796259104,
+      PartyB: 174379,
+      PhoneNumber: 254796259104,
+      CallBackURL: 'https://mydomain.com/path',
+      AccountReference: 'CompanyXLTD',
+      TransactionDesc: 'Payment of X',
     })
     .end((response: UnirestResponse) => {
       if (response.error) {
@@ -36,6 +38,8 @@ daraja.get('/makePayment', (req: Request, res: Response) => {
         res.send('Payment request sent successfully!');
       }
     });
+
+  return request;
 });
 
 // Start the server

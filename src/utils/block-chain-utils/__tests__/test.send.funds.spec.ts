@@ -60,7 +60,7 @@ describe('Account Balance Utils', () => {
         StableToken.cUSD,
         senderAccount,
         receipientAccount,
-        0.001,
+        0.001
       );
       expect(receipt.status).toBe(true);
       const accs = await contractKit.connection.getAccounts();
@@ -72,7 +72,7 @@ describe('Account Balance Utils', () => {
         StableToken.cEUR,
         senderAccount,
         receipientAccount,
-        0.001,
+        0.001
       );
       expect(receipt.status).toBe(true);
       const accs = await contractKit.connection.getAccounts();

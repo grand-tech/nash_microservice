@@ -39,16 +39,16 @@ export interface IListResponse<T> {
 export function ListResponse<T>(classRef: Type<T>): Type<IListResponse<T>> {
   @ObjectType(`${classRef.name}Edge`)
   abstract class ListResponseType {
-    @Field((type) => Int)
+    @Field(type => Int)
     status: number;
 
-    @Field((type) => String)
+    @Field(type => String)
     message: string;
 
-    @Field((type) => [classRef], { nullable: true })
+    @Field(type => [classRef], { nullable: true })
     body: T[];
 
-    @Field((type) => Int)
+    @Field(type => Int)
     totalCount: number;
 
     @Field()

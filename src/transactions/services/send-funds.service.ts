@@ -14,8 +14,8 @@ import { TransactionResponse } from 'src/utils/response';
 export class SendFundsService {
   constructor(
     private readonly neo4j: Neo4jService,
-    private readonly userService: UsersService,
-  ) { }
+    private readonly userService: UsersService
+  ) {}
 
   /**
    * Validates the transaction request and send the money.
@@ -29,7 +29,7 @@ export class SendFundsService {
     amountUSD: number,
     recipientPhoneNumber: string,
     description: string,
-    fundsRequestID: number = -1
+    fundsRequestID = -1
   ): Promise<TransactionResponse> {
     const response: TransactionResponse = {
       status: 200,
@@ -47,10 +47,9 @@ export class SendFundsService {
         response.message = 'Invalid phone number.';
       } else {
         const recipient = await this.userService.getUserByPhoneNumber(
-          recipientPhoneNumber,
+          recipientPhoneNumber
         );
         if (recipient.phoneNumber == recipientPhoneNumber) {
-
           const tx = await this.sendcUSD(
             amountUSD,
             description,
@@ -60,7 +59,9 @@ export class SendFundsService {
           );
 
           if (tx.records.length > 0) {
-            const transaction = nodeToTransaction(tx.records[0].get('transaction'));
+            const transaction = nodeToTransaction(
+              tx.records[0].get('transaction')
+            );
             // Recipient does not exist.
             response.body = transaction;
             if (!transaction.blockchainTransactionStatus) {
@@ -71,7 +72,6 @@ export class SendFundsService {
             response.status = 505;
             response.message = 'Error saving record to database.';
           }
-
         } else {
           response.status = 504;
           response.message = 'Account with phone number does not exist.';
@@ -120,7 +120,7 @@ export class SendFundsService {
     r.todaysTimestamp = 1234567890;
     r.timestamp = 1234567890;
 
-    r.fundsRequestID = fundsRequestID
+    r.fundsRequestID = fundsRequestID;
     return await this.saveTransactionCypherQry(r, fundsRequestID >= 0);
   }
 
@@ -130,13 +130,15 @@ export class SendFundsService {
    * @param hasRequest the transaction has preset funds request.
    * @returns the result of the transaction.
    */
-  async saveTransactionCypherQry(params: Record<string, any>, hasRequest: boolean) {
-    let qry = 'MATCH (sender: User) MATCH (recipient: User) ' +
+  async saveTransactionCypherQry(
+    params: Record<string, any>,
+    hasRequest: boolean
+  ) {
+    let qry =
+      'MATCH (sender: User) MATCH (recipient: User) ' +
       ' WHERE sender.feduid = $senderFeduid AND recipient.feduid = $recipientFeduid ' +
-
       'MERGE (sender)-[:TRANSACTED_ON]->(senderDay: Day {timestamp: $todaysTimestamp}) ' +
       'MERGE (recipient)-[:TRANSACTED_ON]->(recipientDay: Day {timestamp: $todaysTimestamp}) ' +
-
       'CREATE (senderDay)-[:RECORDED]->(transaction:Transaction { ' +
       '  description: $description, ' +
       '  transactionCode: $transactionCode, ' +
@@ -150,18 +152,19 @@ export class SendFundsService {
       '  transactionTimestamp: $transactionTimestamp, ' +
       ' senderAddress: $senderAddress, ' +
       '  timestamp: $timestamp ' +
-      '})<-[:RECORDED]-(recipientDay) '
-
+      '})<-[:RECORDED]-(recipientDay) ';
 
     if (hasRequest) {
-      qry = qry + 'WITH transaction, senderDay, recipientDay, sender, recipient ' +
-
+      qry =
+        qry +
+        'WITH transaction, senderDay, recipientDay, sender, recipient ' +
         ' MATCH (fundsRequest: FundsRequest) WHERE id(fundsRequest) = $fundsRequestID ' +
         ' CREATE (transaction)-[:FULFILLED_FUND_REQUEST]->(fundsRequest) ' +
-        ' SET fundsRequest.fulfilled = true '
+        ' SET fundsRequest.fulfilled = true ';
     }
 
-    qry = qry + ' RETURN transaction, senderDay, recipientDay, sender, recipient '
+    qry =
+      qry + ' RETURN transaction, senderDay, recipientDay, sender, recipient ';
 
     const transactionResult = await this.neo4j.write(qry, params);
     return transactionResult;

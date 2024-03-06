@@ -53,13 +53,13 @@ describe('TRANSACTION RESOLVER : SEND FUNDS SERVICE MUTATION : SUIT ', () => {
       .compile();
 
     app = moduleRef.createNestApplication<NestFastifyApplication>(
-      new FastifyAdapter(),
+      new FastifyAdapter()
     );
     await app.init();
     await app.getHttpAdapter().getInstance().ready();
 
     testUtils = moduleRef.get<FirebaseTestUtilsService>(
-      FirebaseTestUtilsService,
+      FirebaseTestUtilsService
     );
     db = moduleRef.get<Neo4jService>(Neo4jService);
 
@@ -95,7 +95,7 @@ describe('TRANSACTION RESOLVER : SEND FUNDS SERVICE MUTATION : SUIT ', () => {
         query: mutation,
       })
       .expect(200)
-      .expect((res) => {
+      .expect(res => {
         const rsp = res.body.data.sendUsd;
         expect(rsp.status).toBe(200);
         expect(rsp.message).toBe('Success');

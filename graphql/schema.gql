@@ -25,9 +25,17 @@ type Mutation {
   addPrivateKeyToAccount(privateKey: String!): UserResponse!
   createNewCryptoWallet(feduid: String!): UserResponse!
   fulfillFundsRequest(requestID: Float!): TransactionResponse!
-  requestFunds(description: String!, targetPhoneNumber: String!, usdAmount: Float!): FundsRequestResponse!
+  requestFunds(
+    description: String!
+    targetPhoneNumber: String!
+    usdAmount: Float!
+  ): FundsRequestResponse!
   saveUserProfile(fullName: String!, phoneNumber: String!): UserResponse!
-  sendUsd(description: String!, recipientPhoneNumber: String!, usdAmount: Float!): TransactionResponse!
+  sendUsd(
+    description: String!
+    recipientPhoneNumber: String!
+    usdAmount: Float!
+  ): TransactionResponse!
   signUp(feduid: String!): UserResponse!
 }
 

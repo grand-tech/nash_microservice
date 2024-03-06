@@ -25,7 +25,7 @@ export class MPesaApisService {
     const mPesaConsumerSecret = mPesa_Consumer_Secret;
 
     const bearerToken = `Basic ${Buffer.from(
-      `${MPesaConsumerKey}:${mPesaConsumerSecret}`,
+      `${MPesaConsumerKey}:${mPesaConsumerSecret}`
     ).toString('base64')}`;
     try {
       const r: AxiosRequestConfig = {
@@ -35,7 +35,7 @@ export class MPesaApisService {
       };
       const rsp = await this.http.axiosRef.get(
         'https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials',
-        r,
+        r
       );
 
       if (rsp.status == 200) {
@@ -59,7 +59,7 @@ export class MPesaApisService {
     recipientPhoneNumber: string,
     kshAmount: number,
     feduid: string,
-    transactionId: number,
+    transactionId: number
   ) {
     try {
       const authToken = await this.getAuthorization();
@@ -87,7 +87,7 @@ export class MPesaApisService {
       const rsp = await this.http.axiosRef.post(
         this.mpesaURL + '/mpesa/b2c/v1/paymentrequest',
         body,
-        r,
+        r
       );
 
       if (rsp.status == 200) {
@@ -120,7 +120,7 @@ export class MPesaApisService {
     kshAmount: number,
     targetPhoneNumber: string,
     feduid: string,
-    transactionID: number,
+    transactionID: number
   ) {
     try {
       const now = new Date();
@@ -137,7 +137,7 @@ export class MPesaApisService {
       };
 
       const password = Buffer.from(
-        `${shortCode}${passKey}${timestampStr}`,
+        `${shortCode}${passKey}${timestampStr}`
       ).toString('base64');
 
       const body = {
@@ -159,7 +159,7 @@ export class MPesaApisService {
       const rsp = await this.http.axiosRef.post(
         this.mpesaURL + '/mpesa/stkpush/v1/processrequest',
         body,
-        r,
+        r
       );
 
       console.log(rsp.data);
