@@ -14,7 +14,7 @@ router.get('/api/home', (req: Request, res: Response) => {
 router.get('/api/access_token', (req: Request, res: Response) => {
   getAccessToken()
     .then((accessToken: string) => {
-      res.json({ message: '😀 Your access token is ' + accessToken });
+      res.json({ message: 'Your access token is ' + accessToken });
     })
     .catch(console.log);
 });
