@@ -151,7 +151,7 @@ app.get('/registerurl', (req: Request, res: Response) => {
 });
 
 app.get('/confirmation', (req: Request, res: Response) => {
-  console.log('All transaction will be sent to this URL');
+  console.log('All transactions will be sent to this URL');
   console.log(req.body);
 });
 
