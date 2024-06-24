@@ -128,8 +128,7 @@ export class UsersService {
       response.message = 'Invalid session key!!';
     } else {
       const usr = await this.createUser(user);
-
-      if (usr?.id?.valueOf() ?? 0 > 0) {
+      if ((usr?.id?.valueOf() ?? -1) > -1) {
         response.body = usr;
       } else {
         response.status = 501;
