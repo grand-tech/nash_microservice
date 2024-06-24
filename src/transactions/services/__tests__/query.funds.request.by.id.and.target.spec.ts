@@ -50,7 +50,6 @@ describe(' RequestFundsService : QUERY REQUEST FUNDS OBJECT BY ID AND TARGET : T
       testFundRequestID
     );
 
-    console.log(fundsRequest);
     expect(fundsRequest.id).toBe(testFundRequestID);
   });
 });
