@@ -12,7 +12,6 @@ import {
   sendFunds,
 } from '../contract.kit.utils';
 import { User } from '../../../datatypes/user/user';
-
 describe('Account Balance Utils', () => {
   beforeAll(() => {
     initializeContractKit();

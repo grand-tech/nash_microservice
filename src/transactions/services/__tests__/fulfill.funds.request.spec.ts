@@ -129,7 +129,6 @@ async function setUpTestTransactionRequest(service: RequestFundsService) {
       idNumber: '',
       privateKey: '',
       publicKey: '',
-      mnemonic: '',
       id: 0,
       labels: [],
     },
@@ -142,7 +141,6 @@ async function setUpTestTransactionRequest(service: RequestFundsService) {
       idNumber: '',
       privateKey: '',
       publicKey: '',
-      mnemonic: '',
       id: 0,
       labels: [],
     }

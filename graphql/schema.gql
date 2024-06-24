@@ -21,7 +21,6 @@ type FundsRequestResponse {
 }
 
 type Mutation {
-  addMnemonicToAccount(mnemonic: String!): UserResponse!
   addPrivateKeyToAccount(privateKey: String!): UserResponse!
   createNewCryptoWallet(feduid: String!): UserResponse!
   fulfillFundsRequest(requestID: Float!): TransactionResponse!

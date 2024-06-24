@@ -4,16 +4,13 @@ import { nodeToUser, User } from '../datatypes/user/user';
 import { UserResponse } from 'src/utils/response';
 import {
   AccountInformation,
-  CryptoWalletCreatorService,
   getAccountInformation,
 } from './crypto-wallet-creator.service';
+import { web3 } from '../utils/block-chain-utils/contract.kit.utils';
 
 @Injectable()
 export class UsersService {
-  constructor(
-    private readonly neo4j: Neo4jService,
-    private readonly walletCreator: CryptoWalletCreatorService
-  ) {}
+  constructor(private readonly neo4j: Neo4jService) {}
 
   /**
    * Queries for user information given their feduidd.
@@ -131,8 +128,7 @@ export class UsersService {
       response.message = 'Invalid session key!!';
     } else {
       const usr = await this.createUser(user);
-
-      if (usr?.id?.valueOf() ?? 0 > 0) {
+      if ((usr?.id?.valueOf() ?? -1) > -1) {
         response.body = usr;
       } else {
         response.status = 501;
@@ -158,12 +154,10 @@ export class UsersService {
     rsp.body = user;
 
     if (typeof user.privateKey == 'undefined' || user.privateKey.trim() == '') {
-      const wallet = await this.walletCreator.createNewAccountWithMnemonic();
+      const wallet = await web3.eth.accounts.create();
 
       user.publicAddress = wallet.address;
       user.privateKey = wallet.privateKey;
-      user.mnemonic = wallet.mnemonic;
-      user.publicKey = wallet.publicKey;
 
       const u = await this.saveCryptoWalletDetails(user);
       if (u.feduid != user.feduid) {
@@ -187,13 +181,12 @@ export class UsersService {
       feduid: user.feduid,
       privateKey: user.privateKey,
       publicAddress: user.publicAddress,
-      mnemonic: user.mnemonic,
       publicKey: user.publicKey,
     };
 
     const rst = await this.neo4j.write(
       'MATCH (user:User { feduid: $feduid}) ' +
-        ' SET user.privateKey = $privateKey, user.mnemonic = $mnemonic, ' +
+        ' SET user.privateKey = $privateKey, ' +
         ' user.publicAddress = $publicAddress, user.publicKey = $publicKey' +
         ' RETURN user',
       params
@@ -226,27 +219,6 @@ export class UsersService {
 
     const web3Acc = getAccountInformation(privateKey);
     return await this.validateExistingCryptoAccount(user.feduid, web3Acc);
-  }
-
-  /**
-   * Adds a private key to the users account.
-   * @param feduid the users feduid.
-   * @param mnemonic the users private mnemonic.
-   */
-  async addMnemonicToAccount(
-    user: User,
-    mnemonic: string
-  ): Promise<UserResponse> {
-    if ((user?.privateKey ?? '').trim() != '') {
-      return {
-        message: 'Account alreay has a private key!!',
-        status: 501,
-        body: undefined,
-      };
-    }
-
-    const acc = await this.walletCreator.getAccountFromMnemonic(mnemonic);
-    return await this.validateExistingCryptoAccount(user.feduid, acc);
   }
 
   /**
@@ -300,7 +272,6 @@ export class UsersService {
     user.privateKey = acc.privateKey;
     user.publicAddress = acc.address;
     user.publicKey = acc.publicKey ?? '';
-    user.mnemonic = acc.mnemonic ?? '';
   }
 
   /**

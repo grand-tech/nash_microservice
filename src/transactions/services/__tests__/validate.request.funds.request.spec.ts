@@ -7,7 +7,6 @@ import {
   TEST_ACC_2,
 } from '../../../../test/test-utils/test.accounts';
 import { UsersService } from '../../../users/users.service';
-import { CryptoWalletCreatorService } from '../../../users/crypto-wallet-creator.service';
 import { initializeContractKit } from '../../../utils/block-chain-utils/contract.kit.utils';
 import { RequestFundsService } from '../../services/request-funds.service';
 import { SendFundsService } from '../send-funds.service';
@@ -20,12 +19,7 @@ describe('RequestFundsService : VALIDATE REQUEST FUNDS REQUEST DETAILS : TEST SU
 
   beforeAll(async () => {
     module = await Test.createTestingModule({
-      providers: [
-        RequestFundsService,
-        UsersService,
-        CryptoWalletCreatorService,
-        SendFundsService,
-      ],
+      providers: [RequestFundsService, UsersService, SendFundsService],
       imports: [Neo4jModule.forRoot(DB_CONNECTIONS_CONFIGS)],
     }).compile();
 
