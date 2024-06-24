@@ -3,7 +3,6 @@ import { UsersService } from '../users.service';
 import { Neo4jModule, Neo4jService } from 'nest-neo4j/dist';
 import { User, nodeToUser } from '../../datatypes/user/user';
 import { deleteNode } from '../../../test/test-utils/test-utils.module';
-import { CryptoWalletCreatorService } from '../crypto-wallet-creator.service';
 import { DB_CONNECTIONS_CONFIGS } from '../../db.config';
 
 describe('UsersService', () => {
@@ -13,7 +12,7 @@ describe('UsersService', () => {
 
   beforeAll(async () => {
     module = await Test.createTestingModule({
-      providers: [UsersService, CryptoWalletCreatorService],
+      providers: [UsersService],
       imports: [Neo4jModule.forRoot(DB_CONNECTIONS_CONFIGS)],
     }).compile();
 
@@ -66,7 +65,6 @@ describe('UsersService', () => {
         labels: [],
         privateKey: '',
         publicKey: '',
-        mnemonic: '',
       };
 
       const rsp = await service.saveUserProfile(user, feduid, feduid);
@@ -89,7 +87,6 @@ describe('UsersService', () => {
         labels: [],
         privateKey: '',
         publicKey: '',
-        mnemonic: '',
       };
 
       const rsp = await service.saveUserProfile(user, feduid, feduid);
@@ -116,7 +113,6 @@ describe('UsersService', () => {
         labels: [],
         privateKey: '',
         publicKey: '',
-        mnemonic: '',
       };
 
       const rsp = await service.saveUserProfile(

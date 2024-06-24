@@ -18,7 +18,6 @@ describe('Node to users', () => {
         privateKey: 'privateKey',
         publicKey: 'publicKey',
         publicAddress: 'publicAddress',
-        mnemonic: 'mnemonic',
       },
       identity: {
         low: 10,
@@ -38,7 +37,6 @@ describe('Node to users', () => {
     expect(user.privateKey).toBe('privateKey');
     expect(user.publicAddress).toBe('publicAddress');
     expect(user.publicKey).toBe('publicKey');
-    expect(user.mnemonic).toBe('mnemonic');
     expect(user.labels).toEqual(['User', 'Customer']);
   });
 });

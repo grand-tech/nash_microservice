@@ -44,26 +44,7 @@ const userService = {
       body: u,
     };
   },
-  addMnemonicToAccount: () => {
-    const u = {
-      feduid: '1234567892',
-      email: 'testuser@gmail.com',
-      idNumber: '1234567890',
-      name: 'John Doe',
-      publicAddress: '1234567892',
-      phoneNumber: undefined,
-      privateKey: undefined,
-      publicKey: undefined,
-      mnemonic: undefined,
-      id: 0,
-      labels: [],
-    };
-    return {
-      status: 200,
-      message: 'Success',
-      body: u,
-    };
-  },
+
   saveUserProfile: () => {
     const u = {
       name: 'John Doe',
@@ -218,33 +199,6 @@ describe('User Controller Mock Method Calls.', () => {
 
         const body = rsp.body;
         expect(body.feduid).toBe('1234567890');
-      });
-  }, 6000);
-
-  it(`Check if add mnemonic to account mutation exists.`, () => {
-    const mutation = `mutation {
-      addMnemonicToAccount(mnemonic: "1234567890") {
-        status
-        message
-        body {
-          publicAddress
-        }
-      }
-    }`;
-
-    return request(app.getHttpServer())
-      .post('/graphql')
-      .set('Authorization', skey)
-      .send({
-        query: mutation,
-      })
-      .expect(200)
-      .expect(res => {
-        const rsp = res.body.data.addMnemonicToAccount;
-        expect(rsp.status).toBe(200);
-        expect(rsp.message).toBe('Success');
-        const body = rsp.body;
-        expect(body.publicAddress).toBe('1234567892');
       });
   }, 6000);
 

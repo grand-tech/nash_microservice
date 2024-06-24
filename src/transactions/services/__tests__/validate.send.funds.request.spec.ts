@@ -8,7 +8,6 @@ import {
 } from '../../../../test/test-utils/test.accounts';
 import { SendFundsService } from '../send-funds.service';
 import { UsersService } from '../../../users/users.service';
-import { CryptoWalletCreatorService } from '../../../users/crypto-wallet-creator.service';
 import { initializeContractKit } from '../../../utils/block-chain-utils/contract.kit.utils';
 import { DB_CONNECTIONS_CONFIGS } from '../../../db.config';
 
@@ -19,7 +18,7 @@ describe('SendFundsService : SEND FUNDS VALIDATOR : TEST SUIT', () => {
 
   beforeAll(async () => {
     module = await Test.createTestingModule({
-      providers: [SendFundsService, UsersService, CryptoWalletCreatorService],
+      providers: [SendFundsService, UsersService],
       imports: [Neo4jModule.forRoot(DB_CONNECTIONS_CONFIGS)],
     }).compile();
 

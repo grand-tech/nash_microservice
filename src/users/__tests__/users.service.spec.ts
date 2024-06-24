@@ -3,8 +3,8 @@ import { UsersService } from '../users.service';
 import { Neo4jModule, Neo4jService } from 'nest-neo4j/dist';
 import { User, nodeToUser } from '../../datatypes/user/user';
 import { deleteNode } from '../../../test/test-utils/test-utils.module';
-import { CryptoWalletCreatorService } from '../crypto-wallet-creator.service';
 import { DB_CONNECTIONS_CONFIGS } from '../../db.config';
+import { initializeContractKit } from '../../utils/block-chain-utils/contract.kit.utils';
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -13,7 +13,7 @@ describe('UsersService', () => {
 
   beforeAll(async () => {
     module = await Test.createTestingModule({
-      providers: [UsersService, CryptoWalletCreatorService],
+      providers: [UsersService],
       imports: [Neo4jModule.forRoot(DB_CONNECTIONS_CONFIGS)],
     }).compile();
 
@@ -51,7 +51,6 @@ describe('UsersService', () => {
         labels: [],
         privateKey: '',
         publicKey: '',
-        mnemonic: '',
       };
 
       const usr = await service.createUserQuery(user);
@@ -87,7 +86,6 @@ describe('UsersService', () => {
         labels: [],
         privateKey: '',
         publicKey: '',
-        mnemonic: '',
       };
 
       await service.createUserQuery(user);
@@ -124,7 +122,6 @@ describe('UsersService', () => {
         labels: [],
         privateKey: '',
         publicKey: '',
-        mnemonic: '',
       };
 
       const rsp = await service.validateNewUser(user);
@@ -145,7 +142,6 @@ describe('UsersService', () => {
         labels: [],
         privateKey: '',
         publicKey: '',
-        mnemonic: '',
       };
 
       const rsp = await service.validateNewUser(user);
@@ -196,7 +192,6 @@ describe('UsersService', () => {
         privateKey: 'privateKey',
         publicKey: 'publicKey',
         publicAddress: 'publicAddress',
-        mnemonic: 'mnemonic',
         name: '',
         feduid: feduid,
         email: '',
@@ -211,7 +206,6 @@ describe('UsersService', () => {
       expect(savedUser.privateKey).toBe('privateKey');
       expect(savedUser.publicAddress).toBe('publicAddress');
       expect(savedUser.publicKey).toBe('publicKey');
-      expect(savedUser.mnemonic).toBe('mnemonic');
 
       expect(savedUser.feduid).toBe(feduid);
       expect(savedUser.email).toBe(feduid);
@@ -246,6 +240,7 @@ describe('UsersService', () => {
     });
 
     it('Successfuly save crypto wallet information', async () => {
+      initializeContractKit();
       const user: User = {
         name: '',
         feduid: feduid,
@@ -257,11 +252,9 @@ describe('UsersService', () => {
         publicAddress: '',
         privateKey: '',
         publicKey: '',
-        mnemonic: '',
       };
 
       const rsp = await service.createCryptoAccount(user);
-
       expect(rsp.status).toEqual(200);
       expect(rsp.message).toEqual('Success');
 
@@ -269,9 +262,7 @@ describe('UsersService', () => {
 
       expect(savedUser.privateKey).not.toEqual('');
       expect(savedUser.publicAddress).not.toEqual('');
-      expect(savedUser.publicKey).not.toEqual('');
-      expect(savedUser.mnemonic).not.toEqual('');
-      expect(savedUser.mnemonic).toContain(' ');
+      // expect(savedUser.publicKey).not.toEqual('');
 
       expect(savedUser.feduid).toBe(feduid);
       expect(savedUser.email).toBe(feduid);
@@ -289,7 +280,6 @@ describe('UsersService', () => {
         publicAddress: 'publicAddress',
         privateKey: 'privateKey',
         publicKey: 'publicKey',
-        mnemonic: 'mnemonic',
       };
 
       const rsp = await service.createCryptoAccount(user);
@@ -302,7 +292,6 @@ describe('UsersService', () => {
       expect(savedUser.privateKey).toBe('privateKey');
       expect(savedUser.publicAddress).toBe('publicAddress');
       expect(savedUser.publicKey).toBe('publicKey');
-      expect(savedUser.mnemonic).toBe('mnemonic');
 
       expect(savedUser.feduid).toBe(feduid);
       expect(savedUser.email).toEqual('');

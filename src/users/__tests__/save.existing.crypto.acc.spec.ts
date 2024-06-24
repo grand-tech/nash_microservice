@@ -3,10 +3,7 @@ import { UsersService } from '../users.service';
 import { Neo4jModule, Neo4jService } from 'nest-neo4j/dist';
 import { User, nodeToUser } from '../../datatypes/user/user';
 import { deleteNode } from '../../../test/test-utils/test-utils.module';
-import {
-  AccountInformation,
-  CryptoWalletCreatorService,
-} from '../crypto-wallet-creator.service';
+import { AccountInformation } from '../crypto-wallet-creator.service';
 import { TEST_ACC_3 } from '../../../test/test-utils/test.accounts';
 import {
   dismantleContractKit,
@@ -22,7 +19,7 @@ describe('UsersService', () => {
   beforeAll(async () => {
     initializeContractKit();
     module = await Test.createTestingModule({
-      providers: [UsersService, CryptoWalletCreatorService],
+      providers: [UsersService],
       imports: [Neo4jModule.forRoot(DB_CONNECTIONS_CONFIGS)],
     }).compile();
 
@@ -70,7 +67,6 @@ describe('UsersService', () => {
 
     it('Test Invalid Private Key', async () => {
       const account: AccountInformation = {
-        mnemonic: '',
         privateKey: '',
         publicKey: '',
         address: '',
@@ -95,7 +91,6 @@ describe('UsersService', () => {
       expect(rsp.body.privateKey).toBe(TEST_ACC_3.privateKey);
       expect(rsp.body.publicAddress).toBe(TEST_ACC_3.address);
       expect(rsp.body.publicKey).toBe(TEST_ACC_3.publicKey);
-      expect(rsp.body.mnemonic).toBe(TEST_ACC_3.mnemonic);
       expect(rsp.body.feduid).toBe(feduid);
     });
 
@@ -129,7 +124,6 @@ describe('UsersService', () => {
         privateKey: 'privateKey',
         address: 'address',
         publicKey: undefined,
-        mnemonic: undefined,
       };
 
       service.composeAddWeb3AccQryParams(user, acc);
@@ -137,7 +131,6 @@ describe('UsersService', () => {
       expect(user.privateKey).toBe('privateKey');
       expect(user.publicAddress).toBe('address');
       expect(user.publicKey).toBe('');
-      expect(user.mnemonic).toBe('');
     });
 
     it('Test valid public key and mnemonic', () => {
@@ -148,29 +141,6 @@ describe('UsersService', () => {
       expect(user.privateKey).toBe(TEST_ACC_3.privateKey);
       expect(user.publicAddress).toBe(TEST_ACC_3.address);
       expect(user.publicKey).toBe(TEST_ACC_3.publicKey);
-      expect(user.mnemonic).toBe(TEST_ACC_3.mnemonic);
-    });
-  });
-
-  describe('addMnemonicToAccount', () => {
-    const feduid = Math.random().toString();
-
-    it('Test user with private key', async () => {
-      const user = new User();
-
-      user.privateKey = feduid;
-
-      const rsp = await service.addMnemonicToAccount(user, '');
-
-      expect(rsp.status).toBe(501);
-    });
-
-    it('Test user without private key', async () => {
-      const user = new User();
-      user.feduid = feduid;
-
-      const rsp = await service.addMnemonicToAccount(user, TEST_ACC_3.mnemonic);
-      expect(rsp.status).toBe(504);
     });
   });
 

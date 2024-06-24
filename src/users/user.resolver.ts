@@ -26,7 +26,6 @@ export default class UserResolver {
       labels: [],
       privateKey: '',
       publicKey: '',
-      mnemonic: '',
     };
 
     return await this.userService.validateNewUser(user);
@@ -52,15 +51,15 @@ export default class UserResolver {
     return await this.userService.addPrivateKeyToAccount(user, privateKey);
   }
 
-  @Mutation(returns => UserResponse)
-  @Roles(Role.User)
-  async addMnemonicToAccount(
-    @Args('mnemonic') mnemonic: string,
-    @Context() context
-  ): Promise<UserResponse> {
-    const user: User = context.req.raw.user as User;
-    return await this.userService.addMnemonicToAccount(user, mnemonic);
-  }
+  // @Mutation(returns => UserResponse)
+  // @Roles(Role.User)
+  // async addMnemonicToAccount(
+  //   @Args('mnemonic') mnemonic: string,
+  //   @Context() context
+  // ): Promise<UserResponse> {
+  //   const user: User = context.req.raw.user as User;
+  //   return await this.userService.addMnemonicToAccount(user, mnemonic);
+  // }
 
   @Mutation(returns => UserResponse)
   @Roles(Role.User)
