@@ -9,13 +9,13 @@ const africastalking = AfricasTalking({
   username: process.env.AFRICAS_TALKING_USERNAME,
 });
 
-module.exports = async function sendSMS() {
+module.exports = async function sendSMS(to: string[], message: string) {
   // Send promotional message
   try {
     const options = await africastalking.SMS.send({
       // list to be sourced from database
-      to: ['+254796566475', '+254733XYZABC'],
-      message: 'Promotional USSD message',
+      to: to,
+      message: message,
       from: '85036',
     });
 
